@@ -2,6 +2,7 @@ import { ProductCard } from '@/components/product/product-card';
 import { Colors, Spacing, Typography } from '@/constants/theme';
 import { mockProducts } from '@/data/mock-data';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import {
@@ -15,6 +16,7 @@ import {
 export default function FavoritesScreen() {
   const colorScheme = useColorScheme() ?? 'light';
   const colors = Colors[colorScheme];
+  const router = useRouter();
   const [favorites, setFavorites] = useState<Set<string>>(new Set(['1', '2', '3'])); // Mock favorites
 
   const toggleFavorite = (productId: string) => {
@@ -57,7 +59,7 @@ export default function FavoritesScreen() {
               <View key={product.id} style={styles.productItem}>
                 <ProductCard
                   product={product}
-                  onPress={() => {}}
+                  onPress={() => (router as any).push(`/product/${product.id}`)}
                   onFavoritePress={() => toggleFavorite(product.id)}
                   isFavorite={favorites.has(product.id)}
                 />

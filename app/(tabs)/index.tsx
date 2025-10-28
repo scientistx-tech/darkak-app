@@ -44,6 +44,12 @@ export default function HomeScreen() {
     return pages;
   }, [featuredProducts]);
 
+  // Category slider
+  const categoryListRef = useRef<FlatList<any> | null>(null);
+  const [categoryIndex, setCategoryIndex] = useState(0);
+  const categoryItemWidth = 72 + Spacing.md; // matches CategoryCard width + right margin
+  const categoryCount = mockCategories.length;
+
   // Auto-play banners
   useEffect(() => {
     if (!mockBanners || mockBanners.length <= 1) return;
@@ -83,6 +89,26 @@ export default function HomeScreen() {
       // ignore
     }
   }, [hotPageIndex, hotPageWidth]);
+
+  // Auto-play categories
+  useEffect(() => {
+    if (!categoryCount || categoryCount <= 1) return;
+    const interval = setInterval(() => {
+      setCategoryIndex((prev) => (prev + 1) % categoryCount);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [categoryCount]);
+
+  // Scroll categories when index changes
+  useEffect(() => {
+    if (!categoryListRef.current) return;
+    const offset = categoryIndex * categoryItemWidth;
+    try {
+      categoryListRef.current.scrollToOffset({ offset, animated: true });
+    } catch (e) {
+      // ignore
+    }
+  }, [categoryIndex, categoryItemWidth]);
 
   const toggleFavorite = (productId: string) => {
     setFavorites(prev => {
@@ -134,6 +160,7 @@ export default function HomeScreen() {
             pagingEnabled
             decelerationRate="fast"
             snapToAlignment="center"
+            // account for item margin when snapping
             snapToInterval={bannerWidth + Spacing.md}
             contentContainerStyle={[styles.bannerList, { paddingHorizontal: Spacing.base }]}
             renderItem={({ item }) => (
@@ -145,6 +172,18 @@ export default function HomeScreen() {
               </View>
             )}
           />
+          {/* Pagination dots */}
+          <View style={styles.dotsContainer}>
+            {mockBanners.map((_, idx) => (
+              <View
+                key={`dot-${idx}`}
+                style={[
+                  styles.dot,
+                  { backgroundColor: idx === bannerIndex ? colors.primary : '#D6E1F2' },
+                ]}
+              />
+            ))}
+          </View>
         </View>
 
         {/* Hot Deals Section */}
@@ -173,7 +212,7 @@ export default function HomeScreen() {
                   <View key={product.id} style={{ width: '48%' }}>
                     <ProductCard
                       product={product}
-                      onPress={() => {}}
+                      onPress={() => (router as any).push(`/product/${product.id}`)}
                       onFavoritePress={() => toggleFavorite(product.id)}
                       isFavorite={favorites.has(product.id)}
                     />
@@ -184,8 +223,8 @@ export default function HomeScreen() {
           />
         </View>
 
-        {/* Categories Section */}
-        <View style={[styles.section, { paddingHorizontal: Spacing.base }]}> 
+  {/* Categories Section */}
+  <View style={[styles.section, { paddingHorizontal: Spacing.base, marginVertical: Spacing.md }]}> 
           <View style={styles.sectionHeader}>
             <Text style={[styles.sectionTitle, { color: colors.text }]}>
               Shop by Category
@@ -197,17 +236,27 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
           <FlatList
+            ref={(ref) => { categoryListRef.current = ref; }}
             horizontal
             data={mockCategories}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <CategoryCard
                 category={item}
-                onPress={() => {}}
+                onPress={() => (router as any).push(`/category/${item.id}`) }
               />
             )}
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.categoryList}
+            decelerationRate="fast"
+            snapToAlignment="start"
+            snapToInterval={categoryItemWidth}
+            // update index when user scrolls manually
+            onMomentumScrollEnd={(ev) => {
+              const x = ev.nativeEvent.contentOffset.x;
+              const idx = Math.round(x / categoryItemWidth);
+              setCategoryIndex(idx);
+            }}
           />
         </View>
 
@@ -263,7 +312,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: Spacing['2xl'],
+    // Increase bottom padding so floating tab bar does not overlap content
+    paddingBottom: Spacing['4xl'] * 2, // ~96
   },
   section: {
     marginBottom: Spacing.xl,
@@ -297,5 +347,17 @@ const styles = StyleSheet.create({
   productItem: {
     width: '48%',
     marginBottom: Spacing.md,
+  },
+  dotsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginHorizontal: 6,
   },
 });

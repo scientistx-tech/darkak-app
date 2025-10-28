@@ -11,8 +11,8 @@ export interface Product {
   discount?: number;
   rating: number;
   reviewCount: number;
-  image: string;
-  images?: string[];
+  image: string | number;
+  images?: Array<string | number>;
   description?: string;
   category: string;
   inStock: boolean;
@@ -25,7 +25,7 @@ export interface Product {
 export interface Category {
   id: string;
   name: string;
-  image: string;
+  image: string | number;
   productCount: number;
   slug: string;
   /** Optional background color (hex) used to tint category cards to match imagery */
@@ -36,7 +36,7 @@ export interface Banner {
   id: string;
   title: string;
   subtitle?: string;
-  image: string;
+  image: string | number;
   discount?: string;
   actionText?: string;
   backgroundColor?: string;

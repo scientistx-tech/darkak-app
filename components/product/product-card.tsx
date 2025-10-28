@@ -36,7 +36,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       {/* Image Container */}
       <View style={[styles.imageContainer, { backgroundColor: product.backgroundColor ?? colors.background }]}>
         <Image
-          source={{ uri: product.image }}
+          source={typeof product.image === 'number' ? product.image : { uri: product.image }}
           style={styles.image}
           resizeMode="contain"
         />

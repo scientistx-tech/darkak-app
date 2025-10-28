@@ -3,10 +3,12 @@ import { useColorScheme } from '@/hooks/use-color-scheme';
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import { Platform, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme() ?? 'light';
   const colors = Colors[colorScheme];
+  const insets = useSafeAreaInsets();
   // visual choices to match the provided design image
   const navBackground = colors.primaryDark ?? '#0A274C';
   const inactiveIconColor = 'rgba(255,255,255,0.85)';
@@ -22,8 +24,12 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: navBackground,
           borderTopColor: 'transparent',
-          height: Platform.OS === 'ios' ? 84 : 72,
-          paddingBottom: Platform.OS === 'ios' ? 20 : 12,
+          // use full borderRadius so corners are uniformly rounded
+          borderRadius: BorderRadius['2xl'],
+          // height includes safe-area bottom inset so content doesn't overlap
+          height: (Platform.OS === 'ios' ? 78 : 66) + (insets.bottom ?? 0),
+          // keep some extra padding so icons sit comfortably above the bar
+          paddingBottom: (insets.bottom ?? 0) + (Platform.OS === 'ios' ? 12 : 8),
           paddingTop: 8,
           elevation: 10,
           shadowColor: '#000',
@@ -32,9 +38,7 @@ export default function TabLayout() {
           position: 'absolute',
           left: 12,
           right: 12,
-          bottom: 12,
-          borderTopLeftRadius: BorderRadius['2xl'],
-          borderTopRightRadius: BorderRadius['2xl'],
+          bottom: (insets.bottom ?? 0) + 12,
           overflow: 'visible',
         },
         tabBarLabelStyle: {
@@ -111,16 +115,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 64,
-    height: 64,
-    borderRadius: 64 / 2,
+    width: 56,
+    height: 56,
+    borderRadius: 56 / 2,
   },
   tabIconActive: {
     backgroundColor: '#FFFFFF',
-    width: 64,
-    height: 64,
-    borderRadius: 64 / 2,
-    marginTop: -28,
+    width: 56,
+    height: 56,
+    borderRadius: 56 / 2,
+    // lift the active icon slightly above the bar so it's visually prominent
+    marginTop: -22,
     alignItems: 'center',
     justifyContent: 'center',
     ...Shadows.lg,
@@ -141,11 +146,11 @@ const styles = StyleSheet.create({
     ...Shadows.lg,
   },
   centerInactive: {
-    width: 64,
-    height: 64,
-    borderRadius: 64 / 2,
+    width: 56,
+    height: 56,
+    borderRadius: 56 / 2,
     backgroundColor: 'transparent',
-    marginTop: -28,
+    marginTop: -22,
     alignItems: 'center',
     justifyContent: 'center',
   },

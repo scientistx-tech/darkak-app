@@ -1,4 +1,4 @@
-import { Colors, Shadows, Spacing, Typography } from '@/constants/theme';
+import { BorderRadius, Colors, Shadows, Spacing, Typography } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import type { Category } from '@/types';
 import React from 'react';
@@ -15,56 +15,72 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({ category, onPress })
   const bg = category.backgroundColor ?? 'transparent';
   const nameColor = colors.text;
 
+  // Resolve image source robustly to support numeric requires, uri strings, and module objects
+  let imageSource: any = undefined;
+  if (typeof category.image === 'number') {
+    imageSource = category.image;
+  } else if (typeof category.image === 'string') {
+    imageSource = { uri: category.image };
+  } else if (category.image && typeof category.image === 'object') {
+    // handle ESM imports or objects like { default: 'url' } or { uri: '...' }
+    const imgObj: any = category.image as any;
+    if (imgObj.uri) imageSource = { uri: imgObj.uri };
+    else if (imgObj.default) imageSource = imgObj.default;
+  }
+
   return (
     <TouchableOpacity
-      style={styles.container}
       onPress={onPress}
-      activeOpacity={0.7}
+      activeOpacity={0.75}
+      style={styles.container}
     >
-      <View style={[styles.iconWrap, Shadows.sm]}>
-        <View style={[styles.iconCircle, { backgroundColor: '#FFFFFF' }]}>
-          <Image
-            source={{ uri: category.image }}
-            style={styles.iconImage}
-            resizeMode="contain"
-          />
+      <View style={[styles.outerCircle, { backgroundColor: bg }, Shadows.sm] }>
+        <View style={styles.innerCircle}>
+          {imageSource ? (
+            <Image
+              source={imageSource}
+              style={styles.icon}
+              resizeMode="contain"
+            />
+          ) : null}
         </View>
       </View>
-      <Text style={[styles.name, { color: nameColor }]} numberOfLines={1}>
-        {category.name}
-      </Text>
+      <Text numberOfLines={1} style={[styles.label, { color: nameColor }]}>{category.name}</Text>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    width: 84,
+    width: 72,
     alignItems: 'center',
     marginRight: Spacing.md,
   },
-  iconWrap: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
+  outerCircle: {
+    width: 64,
+    height: 64,
+    borderRadius: BorderRadius.full,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: Spacing.sm,
   },
-  iconCircle: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
+  innerCircle: {
+    width: 56,
+    height: 56,
+    borderRadius: BorderRadius.full,
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  iconImage: {
+  icon: {
     width: 36,
     height: 36,
   },
-  name: {
-    fontSize: Typography.fontSizes.xs,
-    fontWeight: Typography.fontWeights.medium,
+  label: {
+    fontSize: Typography.fontSizes.sm,
+    fontWeight: Typography.fontWeights.medium as any,
     textAlign: 'center',
   },
 });
+
+
