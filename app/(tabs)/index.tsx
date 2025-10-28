@@ -1,98 +1,301 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import { BannerCard } from '@/components/banner/banner-card';
+import { CategoryCard } from '@/components/category/category-card';
+import { ProductCard } from '@/components/product/product-card';
+import { SearchBar } from '@/components/search/search-bar';
+import { Colors, Spacing, Typography } from '@/constants/theme';
+import { featuredProducts, mockBanners, mockCategories } from '@/data/mock-data';
+import { useColorScheme } from '@/hooks/use-color-scheme';
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Dimensions,
+  FlatList,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+  const colorScheme = useColorScheme() ?? 'light';
+  const colors = Colors[colorScheme];
+  // Use a simple light gray background similar to the provided mock
+  const pageBackground = '#F4F7FB';
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const screenWidth = Dimensions.get('window').width;
+  const bannerWidth = screenWidth - Spacing.base * 2; // full-width minus horizontal padding
+  const flatListRef = useRef<FlatList<any> | null>(null);
+  const [bannerIndex, setBannerIndex] = useState(0);
+  // Hot deals paging (2 items per page)
+  const hotListRef = useRef<FlatList<any> | null>(null);
+  const [hotPageIndex, setHotPageIndex] = useState(0);
+  const hotPageWidth = bannerWidth; // use same page width as banner
+  const hotPages = useMemo(() => {
+    const pages: any[] = [];
+    for (let i = 0; i < featuredProducts.length; i += 2) {
+      pages.push(featuredProducts.slice(i, i + 2));
+    }
+    return pages;
+  }, [featuredProducts]);
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+  // Auto-play banners
+  useEffect(() => {
+    if (!mockBanners || mockBanners.length <= 1) return;
+    const interval = setInterval(() => {
+      setBannerIndex((prev) => (prev + 1) % mockBanners.length);
+    }, 3500);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Scroll FlatList when index changes
+  useEffect(() => {
+    if (!flatListRef.current) return;
+    const offset = bannerIndex * (bannerWidth + Spacing.md);
+    try {
+      flatListRef.current.scrollToOffset({ offset, animated: true });
+    } catch (e) {
+      // ignore scroll errors
+    }
+  }, [bannerIndex, bannerWidth]);
+
+  // Auto-play hot deals pages
+  useEffect(() => {
+    if (!hotPages || hotPages.length <= 1) return;
+    const interval = setInterval(() => {
+      setHotPageIndex((prev) => (prev + 1) % hotPages.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [hotPages]);
+
+  // Scroll hot deals when page index changes
+  useEffect(() => {
+    if (!hotListRef.current) return;
+    const offset = hotPageIndex * (hotPageWidth + Spacing.md);
+    try {
+      hotListRef.current.scrollToOffset({ offset, animated: true });
+    } catch (e) {
+      // ignore
+    }
+  }, [hotPageIndex, hotPageWidth]);
+
+  const toggleFavorite = (productId: string) => {
+    setFavorites(prev => {
+      const newFavorites = new Set(prev);
+      if (newFavorites.has(productId)) {
+        newFavorites.delete(productId);
+      } else {
+        newFavorites.add(productId);
+      }
+      return newFavorites;
+    });
+  };
+
+  return (
+    <SafeAreaView style={[styles.container, { backgroundColor: pageBackground }]}>
+      <StatusBar style="dark" />
+      
+ 
+
+      {/* Search Bar */}
+      <View style={[styles.searchSection, { paddingHorizontal: Spacing.base }]}>
+        <View style={{ flex: 1 }}>
+          <SearchBar
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            onFilterPress={() => {}}
+            placeholder="Search products..."
+          />
+        </View>
+        <TouchableOpacity style={styles.notificationButton}>
+          <Ionicons name="notifications-outline" size={22} color={colors.text} />
+          <View style={[styles.badge, { backgroundColor: colors.primary }]} />
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
+        {/* Banner Section */}
+        <View style={[styles.section, { paddingHorizontal: Spacing.base }]}> 
+          <FlatList
+            ref={(ref) => { flatListRef.current = ref; }}
+            horizontal
+            data={mockBanners}
+            keyExtractor={(item) => item.id}
+            showsHorizontalScrollIndicator={false}
+            pagingEnabled
+            decelerationRate="fast"
+            snapToAlignment="center"
+            snapToInterval={bannerWidth + Spacing.md}
+            contentContainerStyle={[styles.bannerList, { paddingHorizontal: Spacing.base }]}
+            renderItem={({ item }) => (
+              <View style={{ width: bannerWidth, marginRight: Spacing.md }}>
+                <BannerCard
+                  banner={item}
+                  onPress={() => {}}
+                />
+              </View>
+            )}
+          />
+        </View>
+
+        {/* Hot Deals Section */}
+        <View style={[styles.section, { paddingHorizontal: Spacing.base }]}> 
+          <View style={styles.sectionHeader}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>Hot Deals</Text>
+            <TouchableOpacity>
+              <Text style={[styles.seeAll, { color: colors.primary }]}>See All</Text>
+            </TouchableOpacity>
+          </View>
+
+          <FlatList
+            ref={(ref) => { hotListRef.current = ref; }}
+            horizontal
+            data={hotPages}
+            keyExtractor={(_, idx) => `hot-page-${idx}`}
+            showsHorizontalScrollIndicator={false}
+            pagingEnabled
+            decelerationRate="fast"
+            snapToAlignment="center"
+            snapToInterval={hotPageWidth + Spacing.md}
+            contentContainerStyle={[styles.bannerList, { paddingHorizontal: Spacing.base }]}
+            renderItem={({ item }) => (
+              <View style={{ width: hotPageWidth, flexDirection: 'row', justifyContent: 'space-between', marginRight: Spacing.md }}>
+                {item.map((product: any) => (
+                  <View key={product.id} style={{ width: '48%' }}>
+                    <ProductCard
+                      product={product}
+                      onPress={() => {}}
+                      onFavoritePress={() => toggleFavorite(product.id)}
+                      isFavorite={favorites.has(product.id)}
+                    />
+                  </View>
+                ))}
+              </View>
+            )}
+          />
+        </View>
+
+        {/* Categories Section */}
+        <View style={[styles.section, { paddingHorizontal: Spacing.base }]}> 
+          <View style={styles.sectionHeader}>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>
+              Shop by Category
+            </Text>
+            <TouchableOpacity>
+              <Text style={[styles.seeAll, { color: colors.primary }]}>
+                See All
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            horizontal
+            data={mockCategories}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <CategoryCard
+                category={item}
+                onPress={() => {}}
+              />
+            )}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.categoryList}
+          />
+        </View>
+
+       
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  container: {
+    flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: Spacing.base,
+    paddingVertical: Spacing.md,
+  },
+  greeting: {
+    fontSize: Typography.fontSizes.sm,
+    fontWeight: Typography.fontWeights.regular,
+  },
+  userName: {
+    fontSize: Typography.fontSizes.xl,
+    fontWeight: Typography.fontWeights.bold,
+    marginTop: 4,
+  },
+  notificationButton: {
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  badge: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  searchSection: {
+    paddingVertical: Spacing.md,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    justifyContent: 'space-between',
+    marginBottom: Spacing.sm,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  scrollView: {
+    flex: 1,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  scrollContent: {
+    paddingBottom: Spacing['2xl'],
+  },
+  section: {
+    marginBottom: Spacing.xl,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: Spacing.md,
+  },
+  sectionTitle: {
+    fontSize: Typography.fontSizes.lg,
+    fontWeight: Typography.fontWeights.bold,
+  },
+  seeAll: {
+    fontSize: Typography.fontSizes.sm,
+    fontWeight: Typography.fontWeights.semibold,
+  },
+  bannerList: {
+    paddingHorizontal: Spacing.base,
+  },
+  categoryList: {
+    paddingHorizontal: Spacing.base,
+  },
+  productGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginBottom: Spacing.md,
+  },
+  productItem: {
+    width: '48%',
+    marginBottom: Spacing.md,
   },
 });

@@ -1,5 +1,4 @@
 import { ProductCard } from '@/components/product/product-card';
-import { SearchBar } from '@/components/search/search-bar';
 import { Colors, Spacing, Typography } from '@/constants/theme';
 import { mockProducts } from '@/data/mock-data';
 import { useColorScheme } from '@/hooks/use-color-scheme';
@@ -10,14 +9,13 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  View
+  View,
 } from 'react-native';
 
-export default function ShopScreen() {
+export default function FavoritesScreen() {
   const colorScheme = useColorScheme() ?? 'light';
   const colors = Colors[colorScheme];
-  const [searchQuery, setSearchQuery] = useState('');
-  const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const [favorites, setFavorites] = useState<Set<string>>(new Set(['1', '2', '3'])); // Mock favorites
 
   const toggleFavorite = (productId: string) => {
     setFavorites(prev => {
@@ -31,13 +29,7 @@ export default function ShopScreen() {
     });
   };
 
-  const filteredProducts = searchQuery
-    ? mockProducts.filter(
-        (p) =>
-          p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.brand.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : mockProducts;
+  const favoriteProducts = mockProducts.filter(p => favorites.has(p.id));
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
@@ -46,46 +38,40 @@ export default function ShopScreen() {
       {/* Header */}
       <View style={styles.header}>
         <Text style={[styles.title, { color: colors.text }]}>
-          Shop
+          Favorites
         </Text>
         <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-          {filteredProducts.length} Products Available
+          {favoriteProducts.length} Products
         </Text>
       </View>
 
-      {/* Search Bar */}
-      <View style={styles.searchSection}>
-        <SearchBar
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          onFilterPress={() => {}}
-          placeholder="Search products..."
-        />
-      </View>
-
-      {/* Products Grid */}
+      {/* Favorites Grid */}
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        <View style={styles.productGrid}>
-          {filteredProducts.map((product) => (
-            <View key={product.id} style={styles.productItem}>
-              <ProductCard
-                product={product}
-                onPress={() => {}}
-                onFavoritePress={() => toggleFavorite(product.id)}
-                isFavorite={favorites.has(product.id)}
-              />
-            </View>
-          ))}
-        </View>
-
-        {filteredProducts.length === 0 && (
+        {favoriteProducts.length > 0 ? (
+          <View style={styles.productGrid}>
+            {favoriteProducts.map((product) => (
+              <View key={product.id} style={styles.productItem}>
+                <ProductCard
+                  product={product}
+                  onPress={() => {}}
+                  onFavoritePress={() => toggleFavorite(product.id)}
+                  isFavorite={favorites.has(product.id)}
+                />
+              </View>
+            ))}
+          </View>
+        ) : (
           <View style={styles.emptyState}>
+            <Text style={[styles.emptyIcon, { color: colors.textTertiary }]}>❤️</Text>
+            <Text style={[styles.emptyTitle, { color: colors.text }]}>
+              No Favorites Yet
+            </Text>
             <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
-              No products found
+              Start adding products to your favorites
             </Text>
           </View>
         )}
@@ -112,13 +98,11 @@ const styles = StyleSheet.create({
     fontSize: Typography.fontSizes.base,
     fontWeight: Typography.fontWeights.regular,
   },
-  searchSection: {
-    paddingVertical: Spacing.md,
-  },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
+    paddingTop: Spacing.md,
     paddingBottom: Spacing['2xl'],
   },
   productGrid: {
@@ -135,9 +119,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: Spacing['4xl'],
+    paddingHorizontal: Spacing.xl,
+  },
+  emptyIcon: {
+    fontSize: 64,
+    marginBottom: Spacing.lg,
+  },
+  emptyTitle: {
+    fontSize: Typography.fontSizes.xl,
+    fontWeight: Typography.fontWeights.bold,
+    marginBottom: Spacing.sm,
   },
   emptyText: {
-    fontSize: Typography.fontSizes.lg,
-    fontWeight: Typography.fontWeights.medium,
+    fontSize: Typography.fontSizes.base,
+    textAlign: 'center',
   },
 });
