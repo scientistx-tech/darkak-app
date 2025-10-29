@@ -13,12 +13,14 @@ export default function TabLayout() {
   const navBackground = colors.primaryDark ?? '#0A274C';
   const inactiveIconColor = 'rgba(255,255,255,0.85)';
 
+
+
   return (
-      <Tabs
+    <Tabs
       screenOptions={{
         // label colors
-  tabBarActiveTintColor: '#FFFFFF', // active label should be white on navy background
-  tabBarInactiveTintColor: inactiveIconColor,
+        tabBarActiveTintColor: '#FFFFFF', // active label should be white on navy background
+        tabBarInactiveTintColor: inactiveIconColor,
         headerShown: false,
         // main bar style - floating rounded navy bar
         tabBarStyle: {
@@ -53,9 +55,9 @@ export default function TabLayout() {
           title: 'Home',
           tabBarIcon: ({ color, size, focused }: { color?: string; size?: number; focused?: boolean }) => (
             <View style={styles.iconContainer}>
-                      <View style={[styles.tabIconBackground, focused ? styles.tabIconActive : undefined]}>
-                        <Ionicons name="home" size={22} color={focused ? colors.primary : inactiveIconColor} />
-                      </View>
+              <View style={[styles.tabIconBackground, focused ? styles.tabIconActive : undefined]}>
+                <Ionicons name="home" size={22} color={focused ? colors.primary : inactiveIconColor} />
+              </View>
             </View>
           ),
         }}
@@ -67,9 +69,9 @@ export default function TabLayout() {
           // central tab uses same active style as other tabs when focused
           tabBarIcon: ({ color, size, focused }: { color?: string; size?: number; focused?: boolean }) => (
             <View style={styles.iconContainer}>
-                <View style={[styles.centerButton, focused ? styles.tabIconActive : styles.centerInactive]}>
-                  <Ionicons name="grid" size={22} color={focused ? colors.primary : inactiveIconColor} />
-                </View>
+              <View style={[styles.centerButton, focused ? styles.tabIconActive : styles.centerInactive]}>
+                <Ionicons name="grid" size={22} color={focused ? colors.primary : inactiveIconColor} />
+              </View>
             </View>
           ),
         }}

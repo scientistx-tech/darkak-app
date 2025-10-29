@@ -5,14 +5,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import {
-    Dimensions,
-    Image,
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Dimensions,
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 export default function ProductScreen() {
@@ -26,8 +26,8 @@ export default function ProductScreen() {
   const formatPrice = (amount: number) => `${amount.toLocaleString('en-US', { minimumFractionDigits: 0 })} TK`;
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}> 
-  <StatusBar style="dark" />
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+      <StatusBar style="dark" />
 
       {/* Header */}
       <View style={styles.header}>
@@ -42,7 +42,7 @@ export default function ProductScreen() {
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.imageWrap}>
-          <View style={[styles.imageCard, { backgroundColor: product.backgroundColor ?? colors.surface }]}> 
+          <View style={[styles.imageCard, { backgroundColor: product.backgroundColor ?? colors.surface }]}>
             <Image
               source={typeof product.image === 'number' ? product.image : { uri: product.image }}
               style={styles.image}
@@ -57,7 +57,7 @@ export default function ProductScreen() {
           </View>
         </View>
 
-        <View style={styles.card}> 
+        <View style={styles.card}>
           <Text style={[styles.brand, { color: colors.textSecondary }]}>{product.brand}</Text>
           <Text style={[styles.name, { color: colors.text }]}>{product.name}</Text>
 
@@ -78,7 +78,7 @@ export default function ProductScreen() {
       </ScrollView>
 
       {/* Bottom action bar */}
-      <View style={[styles.bottomBar, { backgroundColor: colors.surface }]}> 
+      <View style={[styles.bottomBar, { backgroundColor: colors.surface }]}>
         <TouchableOpacity style={[styles.buyButton, { backgroundColor: colors.primary }]}>
           <Text style={[styles.buyText, { color: '#fff' }]}>BUY NOW</Text>
         </TouchableOpacity>

@@ -123,18 +123,16 @@ export default function HomeScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: pageBackground }]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: pageBackground, }]}>
       <StatusBar style="dark" />
-      
- 
-
+      <View className='h-40 bg-red-400' />
       {/* Search Bar */}
       <View style={[styles.searchSection, { paddingHorizontal: Spacing.base }]}>
         <View style={{ flex: 1 }}>
           <SearchBar
             value={searchQuery}
             onChangeText={setSearchQuery}
-            onFilterPress={() => {}}
+            onFilterPress={() => { }}
             placeholder="Search products..."
           />
         </View>
@@ -150,7 +148,7 @@ export default function HomeScreen() {
         contentContainerStyle={styles.scrollContent}
       >
         {/* Banner Section */}
-        <View style={[styles.section, { paddingHorizontal: Spacing.base }]}> 
+        <View style={[styles.section, { paddingHorizontal: Spacing.base }]}>
           <FlatList
             ref={(ref) => { flatListRef.current = ref; }}
             horizontal
@@ -167,7 +165,7 @@ export default function HomeScreen() {
               <View style={{ width: bannerWidth, marginRight: Spacing.md }}>
                 <BannerCard
                   banner={item}
-                  onPress={() => {}}
+                  onPress={() => { }}
                 />
               </View>
             )}
@@ -187,7 +185,7 @@ export default function HomeScreen() {
         </View>
 
         {/* Hot Deals Section */}
-        <View style={[styles.section, { paddingHorizontal: Spacing.base }]}> 
+        <View style={[styles.section, { paddingHorizontal: Spacing.base }]}>
           <View style={styles.sectionHeader}>
             <Text style={[styles.sectionTitle, { color: colors.text }]}>Hot Deals</Text>
             <TouchableOpacity>
@@ -223,8 +221,8 @@ export default function HomeScreen() {
           />
         </View>
 
-  {/* Categories Section */}
-  <View style={[styles.section, { paddingHorizontal: Spacing.base, marginVertical: Spacing.md }]}> 
+        {/* Categories Section */}
+        <View style={[styles.section, { paddingHorizontal: Spacing.base, marginVertical: Spacing.md }]}>
           <View style={styles.sectionHeader}>
             <Text style={[styles.sectionTitle, { color: colors.text }]}>
               Shop by Category
@@ -243,7 +241,7 @@ export default function HomeScreen() {
             renderItem={({ item }) => (
               <CategoryCard
                 category={item}
-                onPress={() => (router as any).push(`/category/${item.id}`) }
+                onPress={() => (router as any).push(`/category/${item.id}`)}
               />
             )}
             showsHorizontalScrollIndicator={false}
@@ -260,7 +258,7 @@ export default function HomeScreen() {
           />
         </View>
 
-       
+
       </ScrollView>
     </SafeAreaView>
   );
