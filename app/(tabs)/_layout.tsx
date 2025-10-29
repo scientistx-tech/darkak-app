@@ -26,6 +26,7 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: navBackground,
           borderTopColor: 'transparent',
+          display: "none",
           // use full borderRadius so corners are uniformly rounded
           borderRadius: BorderRadius['2xl'],
           // height includes safe-area bottom inset so content doesn't overlap
@@ -48,6 +49,7 @@ export default function TabLayout() {
           fontWeight: '600',
           marginTop: 6,
         },
+
       }}>
       <Tabs.Screen
         name="index"
