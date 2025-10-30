@@ -1,5 +1,8 @@
-import { ProductCard } from '@/components/product/product-card';
 import { SearchBar } from '@/components/search/search-bar';
+import { Chips } from '@/components/shop/Chips';
+import { Filters } from '@/components/shop/Filters';
+import { ProductGrid } from '@/components/shop/ProductGrid';
+import { Header } from '@/components/ui/Header';
 import { Colors, Spacing, Typography } from '@/constants/theme';
 import { mockProducts } from '@/data/mock-data';
 import { useColorScheme } from '@/hooks/use-color-scheme';
@@ -9,10 +12,8 @@ import { useState } from 'react';
 import {
   Platform,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 
@@ -47,37 +48,13 @@ export default function ShopScreen() {
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <StatusBar style="dark" />
       {/* Compact Header */}
-      <View style={styles.headerCompact}>
-        <Text style={[styles.titleCompact, { color: colors.text }]}>Phone</Text>
-        <Text style={[styles.subtitleCompact, { color: colors.textSecondary }]}>
-          {filteredProducts.length} Products
-        </Text>
-      </View>
+      <Header compact title="Phone" subtitle={`${filteredProducts.length} Products`} />
 
       {/* Chips / category filters (horizontal) */}
-      <View style={styles.chipsWrapper}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.chipsScroll}
-        >
-          {['2k', '5k', 'Apple', 'Samsung', 'Xiaomi', 'Google'].map((c) => (
-            <TouchableOpacity key={c} style={[styles.chip, { backgroundColor: colors.card }]}>
-              <Text style={[styles.chipText, { color: colors.text }]}>{c}</Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      </View>
+      <Chips />
 
       {/* Filter / Sort row */}
-      <View style={styles.filterRow}>
-        <TouchableOpacity style={[styles.filterButton, { backgroundColor: colors.card }]}> 
-          <Text style={[styles.filterText, { color: colors.text }]}>Filter</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.sortButton, { backgroundColor: colors.card }]}> 
-          <Text style={[styles.filterText, { color: colors.text }]}>Sort by</Text>
-        </TouchableOpacity>
-      </View>
+      <Filters onFilterPress={() => {}} onSortPress={() => {}} />
 
       {/* Search Bar */}
       <View style={styles.searchSection}>
@@ -90,32 +67,18 @@ export default function ShopScreen() {
       </View>
 
       {/* Products Grid */}
-      <ScrollView
-        style={styles.scrollView}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
-        <View style={styles.productGrid}>
-          {filteredProducts.map((product) => (
-            <View key={product.id} style={styles.productItem}>
-              <ProductCard
-                product={product}
-                onPress={() => (router as any).push(`/product/${product.id}`)}
-                onFavoritePress={() => toggleFavorite(product.id)}
-                isFavorite={favorites.has(product.id)}
-              />
-            </View>
-          ))}
-        </View>
+      <ProductGrid
+        products={filteredProducts}
+        favorites={favorites}
+        onToggleFavorite={toggleFavorite}
+        onProductPress={(id) => (router as any).push(`/product/${id}`)}
+      />
 
-        {filteredProducts.length === 0 && (
-          <View style={styles.emptyState}>
-            <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
-              No products found
-            </Text>
-          </View>
-        )}
-      </ScrollView>
+      {filteredProducts.length === 0 && (
+        <View style={styles.emptyState}>
+          <Text style={[styles.emptyText, { color: colors.textSecondary }]}>No products found</Text>
+        </View>
+      )}
     </SafeAreaView>
   );
 }

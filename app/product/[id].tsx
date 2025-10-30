@@ -1,4 +1,5 @@
 import Button from '@/components/ui/button';
+import { Header } from '@/components/ui/Header';
 import { Colors, Spacing, Typography } from '@/constants/theme';
 import { mockProducts } from '@/data/mock-data';
 import { useColorScheme } from '@/hooks/use-color-scheme';
@@ -12,7 +13,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
+
   View,
 } from 'react-native';
 
@@ -31,15 +32,13 @@ export default function ProductScreen() {
       <StatusBar style="dark" />
 
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.iconButton}>
-          <Ionicons name="chevron-back" size={22} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>Product</Text>
-        <TouchableOpacity style={styles.iconButton} onPress={() => { /* share / more */ }}>
-          <Ionicons name="git-compare-outline" size={20} color={colors.text} />
-        </TouchableOpacity>
-      </View>
+      <Header
+        showBack
+        onBack={() => router.back()}
+        title="Product"
+        rightIcon={<Ionicons name="git-compare-outline" size={20} color={colors.text} />}
+        onRightPress={() => { /* share / more */ }}
+      />
 
 
 

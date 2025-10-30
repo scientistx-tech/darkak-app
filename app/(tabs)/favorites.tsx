@@ -1,4 +1,5 @@
-import { ProductCard } from '@/components/product/product-card';
+import { ProductGrid } from '@/components/shop/ProductGrid';
+import { Header } from '@/components/ui/Header';
 import { Colors, Spacing, Typography } from '@/constants/theme';
 import { mockProducts } from '@/data/mock-data';
 import { useColorScheme } from '@/hooks/use-color-scheme';
@@ -7,7 +8,6 @@ import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import {
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -37,47 +37,23 @@ export default function FavoritesScreen() {
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <StatusBar style="dark" />
       
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={[styles.title, { color: colors.text }]}>
-          Favorites
-        </Text>
-        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-          {favoriteProducts.length} Products
-        </Text>
-      </View>
+      <Header compact title="Favorites" subtitle={`${favoriteProducts.length} Products`} />
 
       {/* Favorites Grid */}
-      <ScrollView
-        style={styles.scrollView}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-      >
-        {favoriteProducts.length > 0 ? (
-          <View style={styles.productGrid}>
-            {favoriteProducts.map((product) => (
-              <View key={product.id} style={styles.productItem}>
-                <ProductCard
-                  product={product}
-                  onPress={() => (router as any).push(`/product/${product.id}`)}
-                  onFavoritePress={() => toggleFavorite(product.id)}
-                  isFavorite={favorites.has(product.id)}
-                />
-              </View>
-            ))}
-          </View>
-        ) : (
-          <View style={styles.emptyState}>
-            <Text style={[styles.emptyIcon, { color: colors.textTertiary }]}>❤️</Text>
-            <Text style={[styles.emptyTitle, { color: colors.text }]}>
-              No Favorites Yet
-            </Text>
-            <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
-              Start adding products to your favorites
-            </Text>
-          </View>
-        )}
-      </ScrollView>
+      {favoriteProducts.length > 0 ? (
+        <ProductGrid
+          products={favoriteProducts}
+          favorites={favorites}
+          onToggleFavorite={toggleFavorite}
+          onProductPress={(id) => (router as any).push(`/product/${id}`)}
+        />
+      ) : (
+        <View style={styles.emptyState}>
+          <Text style={[styles.emptyIcon, { color: colors.textTertiary }]}>❤️</Text>
+          <Text style={[styles.emptyTitle, { color: colors.text }]}>No Favorites Yet</Text>
+          <Text style={[styles.emptyText, { color: colors.textSecondary }]}>Start adding products to your favorites</Text>
+        </View>
+      )}
     </SafeAreaView>
   );
 }

@@ -1,4 +1,5 @@
 import { ProductCard } from '@/components/product/product-card';
+import { Header } from '@/components/ui/Header';
 import { Colors, Spacing, Typography } from '@/constants/theme';
 import { mockCategories, mockProducts } from '@/data/mock-data';
 import { useColorScheme } from '@/hooks/use-color-scheme';
@@ -6,14 +7,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import {
-    Dimensions,
-    Image,
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Dimensions,
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+
+  View,
 } from 'react-native';
 
 export default function CategoryScreen() {
@@ -31,15 +32,13 @@ export default function CategoryScreen() {
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}> 
       <StatusBar style="dark" />
 
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.iconButton}>
-          <Ionicons name="chevron-back" size={22} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>Categories</Text>
-        <TouchableOpacity style={styles.iconButton} onPress={() => { /* search */ }}>
-          <Ionicons name="search" size={20} color={colors.text} />
-        </TouchableOpacity>
-      </View>
+      <Header
+        showBack
+        onBack={() => router.back()}
+        title="Categories"
+        rightIcon={<Ionicons name="search" size={20} color={colors.text} />}
+        onRightPress={() => { /* search */ }}
+      />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Hero / banner for category */}
