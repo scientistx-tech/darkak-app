@@ -125,7 +125,6 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: pageBackground, }]}>
       <StatusBar style="dark" />
-      <View className='h-40 bg-red-400' />
       {/* Search Bar */}
       <View style={[styles.searchSection, { paddingHorizontal: Spacing.base }]}>
         <View style={{ flex: 1 }}>

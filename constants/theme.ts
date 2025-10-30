@@ -6,19 +6,27 @@
 import { Platform } from 'react-native';
 
 // Primary brand color from the design
-const primaryBlue = '#4C7EFF';
-const darkBlue = '#1E3A8A';
-const lightBlue = '#E8F0FF';
+// Brand colors (customized)
+const primaryBlue = '#00153B';
+const primaryDarkBlue = '#00102C';
+const primaryLight = '#0B2A62';
+
+const secondary500 = '#003084';
+const secondary400 = '#5694FF';
+const secondary300 = '#BBD4FF';
+const secondary100 = '#E6EFFF';
+
+const backgroundWhite = '#FFFFFF';
 
 export const Colors = {
   light: {
     // Primary colors
     primary: primaryBlue,
-    primaryDark: darkBlue,
-    primaryLight: lightBlue,
+    primaryDark: primaryDarkBlue,
+    primaryLight: secondary400,
     
-    // Background colors
-    background: '#F8F9FA',
+  // Background colors
+  background: backgroundWhite,
     surface: '#FFFFFF',
     card: '#FFFFFF',
     
@@ -51,12 +59,19 @@ export const Colors = {
     // Rating
     ratingActive: '#FFC107',
     ratingInactive: '#E5E7EB',
+    // Secondary palette
+    secondary: {
+      500: secondary500,
+      400: secondary400,
+      300: secondary300,
+      100: secondary100,
+    },
   },
   dark: {
     // Primary colors
     primary: primaryBlue,
-    primaryDark: '#6B95FF',
-    primaryLight: '#2D3F66',
+    primaryDark: primaryDarkBlue,
+    primaryLight: primaryLight,
     
     // Background colors
     background: '#111827',
@@ -92,6 +107,13 @@ export const Colors = {
     // Rating
     ratingActive: '#FFC107',
     ratingInactive: '#4B5563',
+    // Secondary palette
+    secondary: {
+      500: secondary500,
+      400: secondary400,
+      300: secondary300,
+      100: secondary100,
+    },
   },
 };
 
