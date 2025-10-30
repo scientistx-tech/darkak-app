@@ -1,19 +1,19 @@
-import { SearchBar } from '@/components/search/search-bar';
-import { Chips } from '@/components/shop/Chips';
-import { Filters } from '@/components/shop/Filters';
 import { ProductGrid } from '@/components/shop/ProductGrid';
 import { Header } from '@/components/ui/Header';
 import { Colors, Spacing, Typography } from '@/constants/theme';
 import { mockProducts } from '@/data/mock-data';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import {
   Platform,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 
@@ -21,8 +21,9 @@ export default function ShopScreen() {
   const colorScheme = useColorScheme() ?? 'light';
   const colors = Colors[colorScheme];
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState('');
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
+  const tabs = ['ZTE', 'ASUS', 'Apple', 'SAMSUNG'];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
 
   const toggleFavorite = (productId: string) => {
     setFavorites(prev => {
@@ -36,13 +37,8 @@ export default function ShopScreen() {
     });
   };
 
-  const filteredProducts = searchQuery
-    ? mockProducts.filter(
-        (p) =>
-          p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.brand.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : mockProducts;
+  // For now show all products (search removed from this screen UI)
+  const filteredProducts = mockProducts;
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
@@ -50,21 +46,57 @@ export default function ShopScreen() {
       {/* Compact Header */}
       <Header compact title="Phone" subtitle={`${filteredProducts.length} Products`} />
 
-      {/* Chips / category filters (horizontal) */}
-      <Chips />
+      {/* Chips / category filters (horizontal) - redesigned to match screenshot */}
+      <View style={styles.chipsWrapper}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.chipsScroll}
+        >
+          {tabs.map((t) => {
+            const active = activeTab === t;
+            return (
+              <TouchableOpacity
+                key={t}
+                activeOpacity={0.85}
+                onPress={() => setActiveTab(t)}
+                style={[
+                  styles.chip,
+                  active
+                    ? { backgroundColor: "#BBD4FF",  borderWidth: 0 }
+                    : { backgroundColor: colors.background, borderColor: colors.primary, borderWidth: 1 },
+                ]}
+              >
+                <Text style={[styles.chipText, active ? { color: colors.primary } : { color: colors.primary }]}>{t}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+      </View>
 
-      {/* Filter / Sort row */}
-      <Filters onFilterPress={() => {}} onSortPress={() => {}} />
+      {/* Filter / Sort row - redesigned */}
+      <View style={styles.filterRow}>
+        <TouchableOpacity style={[styles.filterPill, { backgroundColor: "#BBD4FF"  }]} onPress={() => {}}>
+          <Ionicons name="filter" size={16} style={{ marginRight: 8 }} />
+          <Text style={[styles.filterText, ]}>Filter</Text>
+        </TouchableOpacity>
+
+        <Text style={[styles.sortLabel, { color: colors.text }]}>SORT BY</Text>
+
+        <TouchableOpacity style={[styles.sortPill, { backgroundColor: "#BBD4FF" }]} onPress={() => {}}>
+          <Text style={[styles.filterText]}>Best match</Text>
+        </TouchableOpacity>
+      </View>
 
       {/* Search Bar */}
-      <View style={styles.searchSection}>
+      {/* <View style={styles.searchSection}>
         <SearchBar
           value={searchQuery}
           onChangeText={setSearchQuery}
           onFilterPress={() => {}}
           placeholder="Search products..."
         />
-      </View>
+      </View> */}
 
       {/* Products Grid */}
       <ProductGrid
@@ -120,6 +152,7 @@ const styles = StyleSheet.create({
     width: '47%',
   },
   chipsWrapper: {
+    marginTop: Spacing.md,
     paddingVertical: Spacing.sm,
   },
   chipsScroll: {
@@ -155,6 +188,7 @@ const styles = StyleSheet.create({
   },
   filterRow: {
     flexDirection: 'row',
+    marginTop: Spacing.md,
     justifyContent: 'space-between',
     paddingHorizontal: Spacing.base,
     paddingBottom: Spacing.sm,
@@ -187,5 +221,27 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: Typography.fontSizes.lg,
     fontWeight: Typography.fontWeights.medium,
+  },
+  filterPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.md,
+    borderRadius: 999,
+    minWidth: 110,
+    justifyContent: 'center',
+  },
+  sortPill: {
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.lg,
+    borderRadius: 999,
+    minWidth: 120,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  sortLabel: {
+    fontSize: Typography.fontSizes.xs,
+    fontWeight: Typography.fontWeights.semibold as any,
+    letterSpacing: 1,
   },
 });

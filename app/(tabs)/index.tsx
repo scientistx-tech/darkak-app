@@ -60,7 +60,16 @@ export default function HomeScreen() {
           />
         </View>
         <TouchableOpacity style={styles.notificationButton}>
-          <Ionicons name="notifications-outline" size={22} color={colors.text} />
+          <View style={{
+            backgroundColor:"#BBD4FF",
+            width:29,
+            height:29,
+            justifyContent:'center',
+            alignItems:'center',
+            borderRadius: '100%',
+          }}>
+            <Ionicons name="notifications-outline" size={22} color={colors.text} />
+          </View>
           <View style={[styles.badge, { backgroundColor: colors.primary }]} />
         </TouchableOpacity>
       </View>
@@ -92,10 +101,8 @@ export default function HomeScreen() {
             <Text style={[styles.sectionTitle, { color: colors.text }]}>
               Shop by Category
             </Text>
-            <TouchableOpacity>
-              <Text style={[styles.seeAll, { color: colors.primary }]}>
-                See All
-              </Text>
+            <TouchableOpacity onPress={() => (router as any).push('/category')}>
+              <Text style={[styles.seeAll, { color: colors.primary }]}>See All</Text>
             </TouchableOpacity>
           </View>
           <CategoriesSection onCategoryPress={(id) => (router as any).push(`/category/${id}`)} />

@@ -1,3 +1,4 @@
+import { BannerCard } from '@/components/banner/banner-card';
 import { ProductCard } from '@/components/product/product-card';
 import { Header } from '@/components/ui/Header';
 import { Colors, Spacing, Typography } from '@/constants/theme';
@@ -8,7 +9,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import {
   Dimensions,
-  Image,
+
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -41,15 +42,19 @@ export default function CategoryScreen() {
       />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {/* Hero / banner for category */}
-        <View style={[styles.hero, { backgroundColor: category.backgroundColor ?? colors.primary }]}> 
-          <View style={styles.heroText}>
-            <Text style={[styles.heroSmall, { color: '#fff' }]}>SUMMER DEALS</Text>
-            <Text style={[styles.heroTitle, { color: '#fff' }]}>{category.name}</Text>
-            <Text style={[styles.heroSub, { color: '#fff' }]}>{category.productCount} items</Text>
-          </View>
-          <Image source={category.image as any} style={styles.heroImage} resizeMode="contain" />
-        </View>
+        {/* Hero / banner for category (reusable BannerCard) */}
+        <BannerCard
+          banner={{
+            id: `category-${category.id}`,
+            title: category.name,
+            subtitle: `${category.productCount} items`,
+            image: category.image as any,
+            backgroundColor: category.backgroundColor ?? colors.primary,
+            // actionText: 'Shop Now',
+          }}
+          compact
+          onPress={() => { /* noop or navigate if needed */ }}
+        />
 
         {/* Products grid */}
         <View style={styles.productsSection}>

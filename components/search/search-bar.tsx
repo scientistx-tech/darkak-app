@@ -35,11 +35,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       
       {onFilterPress && (
         <TouchableOpacity
-          style={[styles.filterButton, { backgroundColor: colors.primary }, Shadows.sm]}
+          style={[styles.filterButton, { backgroundColor: "#BBD4FF" }, Shadows.sm]}
           onPress={onFilterPress}
           activeOpacity={0.7}
         >
-          <Ionicons name="options-outline" size={20} color="#FFFFFF" />
+          <Ionicons name="options-outline" size={20} />
         </TouchableOpacity>
       )}
     </View>

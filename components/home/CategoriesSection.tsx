@@ -26,10 +26,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     paddingHorizontal: Spacing.base,
+    gap: Spacing.md,
     alignItems: 'flex-start',
+    // justifyContent: 'space-between',
   },
   item: {
-    width: 72,
+    width: 52,
     marginRight: Spacing.md,
     marginBottom: Spacing.md,
   },

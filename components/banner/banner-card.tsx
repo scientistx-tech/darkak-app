@@ -8,20 +8,23 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 interface BannerCardProps {
   banner: Banner;
   onPress?: () => void;
+  compact?: boolean;
 }
 
-export const BannerCard: React.FC<BannerCardProps> = ({ banner, onPress }) => {
+export const BannerCard: React.FC<BannerCardProps> = ({ banner, onPress, compact = false }) => {
   const colorScheme = useColorScheme() ?? 'light';
   const colors = Colors[colorScheme];
 
   const bg = banner.backgroundColor || colors.primary;
   const textColor = readableTextColor(bg);
 
+  const height = compact ? 140 : 180;
+
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.9}
-      style={[styles.container, { backgroundColor: bg }]}
+      style={[styles.container, { backgroundColor: bg, height }]}
     >
       <View style={styles.inner}>
         <View style={styles.left}>
@@ -38,7 +41,7 @@ export const BannerCard: React.FC<BannerCardProps> = ({ banner, onPress }) => {
           ) : null}
 
           {banner.actionText ? (
-            <View style={styles.actionWrap}>
+            <View style={styles.actionWrap} pointerEvents="box-none">
               <View style={[styles.actionButton, { backgroundColor: 'rgba(255,255,255,0.98)' }]}>
                 <Text style={[styles.actionText, { color: bg }]}>{banner.actionText}</Text>
               </View>
