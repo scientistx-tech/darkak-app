@@ -65,7 +65,6 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 16,
     overflow: 'hidden',
-    marginRight: 16,
     width: '100%',
     height: 180,
     // shadow for iOS
@@ -126,8 +125,10 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   image: {
-    width: 120,
-    height: 120,
+    width: '100%',
+    height: '100%',
+    maxWidth: 140,
+    maxHeight: 140,
   },
 });
 

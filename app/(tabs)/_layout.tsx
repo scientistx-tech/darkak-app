@@ -18,7 +18,7 @@ export default function TabLayout() {
           tabBarStyle: {
             paddingHorizontal: 8,
             paddingVertical: 15,
-            height: 100,
+            height: 110,
             backgroundColor: colors.primary,
             borderTopWidth: 0,
           },
@@ -32,19 +32,21 @@ export default function TabLayout() {
             tabBarActiveTintColor: '#FFFFFF',
             tabBarInactiveTintColor: '#FFFFFF',
             tabBarIcon: ({ color, size, focused }: {color?: string; size?: number; focused?: boolean}) => (
-                <View className="items-center justify-center relative">
+                <View className="items-center justify-center  relative">
                   {focused ? (
                     // Active floating circular background
                     <View
                       style={{
-                        width: 56,
+                        width: 66,
+                        height: 20,
                         paddingBottom: 26,
                         position: 'absolute',
-                        top: 0,
+                        top: 10,
                         bottom: 0,
                         borderBottomLeftRadius: 28,
                         borderBottomRightRadius: 28,
                         backgroundColor: "#FFFFFF",
+                        marginBottom:15,
                         justifyContent: 'center',
                         alignItems: 'center',
                         marginTop: -30,
@@ -87,14 +89,16 @@ export default function TabLayout() {
                     // Active floating circular background
                      <View
                       style={{
-                        width: 56,
+                        width: 66,
+                        height: 20,
                         paddingBottom: 26,
                         position: 'absolute',
-                        top: 0,
+                        top: 10,
                         bottom: 0,
                         borderBottomLeftRadius: 28,
                         borderBottomRightRadius: 28,
                         backgroundColor: "#FFFFFF",
+                        marginBottom:15,
                         justifyContent: 'center',
                         alignItems: 'center',
                         marginTop: -30,
@@ -136,15 +140,17 @@ export default function TabLayout() {
                   {focused ? (
                     // Active floating circular background
                    <View
-                      style={{
-                        width: 56,
+                     style={{
+                        width: 66,
+                        height: 20,
                         paddingBottom: 26,
                         position: 'absolute',
-                        top: 0,
+                        top: 10,
                         bottom: 0,
                         borderBottomLeftRadius: 28,
                         borderBottomRightRadius: 28,
                         backgroundColor: "#FFFFFF",
+                        marginBottom:15,
                         justifyContent: 'center',
                         alignItems: 'center',
                         marginTop: -30,
@@ -186,15 +192,17 @@ export default function TabLayout() {
                   {focused ? (
                     // Active floating circular background
                    <View
-                      style={{
-                        width: 56,
+                    style={{
+                        width: 66,
+                        height: 20,
                         paddingBottom: 26,
                         position: 'absolute',
-                        top: 0,
+                        top: 10,
                         bottom: 0,
                         borderBottomLeftRadius: 28,
                         borderBottomRightRadius: 28,
                         backgroundColor: "#FFFFFF",
+                        marginBottom:15,
                         justifyContent: 'center',
                         alignItems: 'center',
                         marginTop: -30,
@@ -238,14 +246,16 @@ export default function TabLayout() {
                     // Active floating circular background
                    <View
                       style={{
-                        width: 56,
+                        width: 66,
+                        height: 20,
                         paddingBottom: 26,
                         position: 'absolute',
-                        top: 0,
+                        top: 10,
                         bottom: 0,
                         borderBottomLeftRadius: 28,
                         borderBottomRightRadius: 28,
                         backgroundColor: "#FFFFFF",
+                        marginBottom:15,
                         justifyContent: 'center',
                         alignItems: 'center',
                         marginTop: -30,
