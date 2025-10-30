@@ -1,7 +1,7 @@
 import { BannerSection } from '@/components/home/BannerSection';
 import { CategoriesSection } from '@/components/home/CategoriesSection';
 import { HotDealsSection } from '@/components/home/HotDealsSection';
-import { SearchBar } from '@/components/search/search-bar';
+import { SearchBar } from '@/components/search/SearchBarNative';
 import { Colors, Spacing, Typography } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { Ionicons } from '@expo/vector-icons';
@@ -50,7 +50,7 @@ export default function HomeScreen() {
     <SafeAreaView style={[styles.container, { backgroundColor: pageBackground, }]}>
       <StatusBar style="dark" />
       {/* Search Bar */}
-      <View style={[styles.searchSection, { paddingHorizontal: Spacing.base }]}>
+      <View style={[styles.searchSection, { paddingHorizontal: Spacing.base, paddingTop: 60 }]}>
         <View style={{ flex: 1 }}>
           <SearchBar
             value={searchQuery}

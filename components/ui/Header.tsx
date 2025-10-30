@@ -27,7 +27,7 @@ export const Header: React.FC<HeaderProps> = ({
   const colors = Colors[colorScheme];
 
   return (
-    <View style={[styles.container, compact ? styles.compact : undefined]}>
+    <View style={[styles.container, { paddingTop: 40 }, compact ? styles.compact : undefined]}>
       <View style={styles.side}>
         {showBack ? (
           <TouchableOpacity onPress={onBack} style={styles.iconButton}>
