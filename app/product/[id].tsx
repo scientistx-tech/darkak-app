@@ -36,7 +36,7 @@ export default function ProductScreen() {
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: colors.text }]}>Product</Text>
         <TouchableOpacity style={styles.iconButton} onPress={() => { /* share / more */ }}>
-          <Ionicons name="share-social-outline" size={20} color={colors.text} />
+          <Ionicons name="git-compare-outline" size={20} color={colors.text} />
         </TouchableOpacity>
       </View>
 
@@ -106,9 +106,13 @@ const styles = StyleSheet.create({
   iconButton: { width: 40, height: 40, justifyContent: 'center', alignItems: 'center' },
   headerTitle: { fontSize: Typography.fontSizes.lg, fontWeight: Typography.fontWeights.semibold },
   scrollContent: { paddingBottom: Spacing['4xl'], paddingHorizontal: Spacing.base },
-  imageWrap: { alignItems: 'center', marginTop: Spacing.md },
+  imageWrap: { 
+    alignItems: 'center', 
+     width: '100%',
+    marginTop: Spacing.md,
+   },
   imageCard: {
-    width: imageSize,
+    width: '100%',
     height: imageSize,
     borderRadius: 16,
     justifyContent: 'center',
