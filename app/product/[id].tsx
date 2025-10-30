@@ -1,7 +1,8 @@
+import Button from '@/components/ui/button';
 import { Colors, Spacing, Typography } from '@/constants/theme';
 import { mockProducts } from '@/data/mock-data';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { Ionicons } from '@expo/vector-icons';
+import { Entypo, FontAwesome, Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import {
@@ -40,6 +41,8 @@ export default function ProductScreen() {
         </TouchableOpacity>
       </View>
 
+
+
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.imageWrap}>
           <View style={[styles.imageCard, { backgroundColor: product.backgroundColor ?? colors.surface }]}>
@@ -54,6 +57,40 @@ export default function ProductScreen() {
             <View style={[styles.dot, { backgroundColor: colors.primary }]} />
             <View style={[styles.dot, { backgroundColor: '#D6E1F2' }]} />
             <View style={[styles.dot, { backgroundColor: '#D6E1F2' }]} />
+          </View>
+        </View>
+
+        <View style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          width: '100%',
+          marginTop: Spacing.md,
+        }}>
+          <Button
+            variant="outline"
+            title="12GB/128GB"
+            icon={<FontAwesome name="angle-down" size={18} color="#FFFFFF" />}
+            onPress={() => console.log('pressed')}
+            style={{ flex: 1, marginRight: Spacing.sm }}
+          />
+          <Button
+            variant="outline"
+            title="BLACK"
+            icon={<FontAwesome name="angle-down" size={18} color="#FFFFFF" />}
+            onPress={() => console.log('pressed')}
+            style={{ paddingHorizontal: 18, flex: 1, marginLeft: Spacing.sm }}
+          />
+          <View style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: "#5694FF",
+            width: 36,
+            height: 36,
+            borderRadius: 28,
+            marginLeft: Spacing.sm,
+          }}>
+            <Entypo name="heart" size={22} color='#FFFFFF' />
           </View>
         </View>
 
@@ -79,13 +116,20 @@ export default function ProductScreen() {
 
       {/* Bottom action bar */}
       <View style={[styles.bottomBar, { backgroundColor: colors.surface }]}>
-        <TouchableOpacity style={[styles.buyButton, { backgroundColor: colors.primary }]}>
-          <Text style={[styles.buyText, { color: '#fff' }]}>BUY NOW</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={[styles.cartButton, { borderColor: colors.primary }]}>
-          <Text style={[styles.cartText, { color: colors.primary }]}>ADD TO CART</Text>
-        </TouchableOpacity>
+        <Button
+          variant="filled"
+          title="BUY NOW"
+          onPress={() => {}}
+          style={styles.buyButton}
+          textStyle={styles.buyText}
+        />
+        <Button
+          variant="outline"
+          title="ADD TO CART"
+          onPress={() => {}}
+          style={styles.cartButton}
+          textStyle={styles.cartText}
+        />
       </View>
     </SafeAreaView>
   );
@@ -106,11 +150,11 @@ const styles = StyleSheet.create({
   iconButton: { width: 40, height: 40, justifyContent: 'center', alignItems: 'center' },
   headerTitle: { fontSize: Typography.fontSizes.lg, fontWeight: Typography.fontWeights.semibold },
   scrollContent: { paddingBottom: Spacing['4xl'], paddingHorizontal: Spacing.base },
-  imageWrap: { 
-    alignItems: 'center', 
-     width: '100%',
+  imageWrap: {
+    alignItems: 'center',
+    width: '100%',
     marginTop: Spacing.md,
-   },
+  },
   imageCard: {
     width: '100%',
     height: imageSize,
@@ -145,7 +189,7 @@ const styles = StyleSheet.create({
   buyButton: {
     flex: 1,
     paddingVertical: Spacing.md,
-    borderRadius: 12,
+      borderRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -154,10 +198,11 @@ const styles = StyleSheet.create({
     marginLeft: Spacing.sm,
     paddingVertical: Spacing.md,
     paddingHorizontal: Spacing.lg,
-    borderRadius: 12,
+    borderRadius: 50,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  cartText: { fontWeight: Typography.fontWeights.semibold },
+  cartText: { fontWeight: Typography.fontWeights.semibold 
+  },
 });
