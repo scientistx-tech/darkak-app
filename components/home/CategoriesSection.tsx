@@ -25,14 +25,13 @@ const styles = StyleSheet.create({
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingHorizontal: Spacing.base,
-    gap: Spacing.md,
+    paddingHorizontal: 5,
+    gap: 25,
     alignItems: 'flex-start',
     // justifyContent: 'space-between',
   },
   item: {
     width: 52,
-    marginRight: Spacing.md,
     marginBottom: Spacing.md,
   },
 });

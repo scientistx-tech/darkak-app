@@ -89,7 +89,7 @@ export default function HomeScreen() {
         </View>
 
         {/* Categories Section */}
-        <View style={[styles.section, { paddingHorizontal: Spacing.base, marginVertical: Spacing.md }]}>
+        <View style={[styles.section, { paddingHorizontal: 5, marginVertical: Spacing.md }]}>
           <View style={styles.sectionHeader}>
             <Text style={[styles.sectionTitle, { color: colors.text }]}>
               Shop by Category
@@ -165,6 +165,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: Spacing.md,
+    paddingHorizontal: 5
   },
   sectionTitle: {
     fontSize: Typography.fontSizes.lg,
