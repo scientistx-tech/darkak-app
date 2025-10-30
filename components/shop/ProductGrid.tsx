@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     paddingHorizontal: Spacing.base,
+    marginTop:15,
     gap: Spacing.md,
   },
   item: { width: '47%' },

@@ -61,7 +61,7 @@ export function HotDealsSection({ favorites, onToggleFavorite }: HotDealsSection
         snapToInterval={bannerWidth + Spacing.md}
         contentContainerStyle={styles.list}
         renderItem={({ item }) => (
-          <View style={{ width: bannerWidth, flexDirection: 'row', justifyContent: 'space-between', marginRight: Spacing.md }}>
+          <View style={{ width: bannerWidth, flexDirection: 'row', justifyContent: 'space-between'}}>
             {item.map((product: any) => (
               <View key={product.id} style={{ width: '48%' }}>
                 <ProductCard

@@ -25,14 +25,7 @@ export default function HomeScreen() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
-  // Banner/hot-deals logic moved into their own components to keep this page file clear
-
-  // Category slider
-  // Categories layout (render as flexible grid/list instead of a slider)
-
-  // Banner and hot deal auto-play/scroll handled by BannerSection and HotDealsSection
-
-  // Note: categories are rendered as a flex-wrapping list below — no slider behavior
+ 
 
   const toggleFavorite = (productId: string) => {
     setFavorites(prev => {
@@ -80,12 +73,12 @@ export default function HomeScreen() {
         contentContainerStyle={styles.scrollContent}
       >
         {/* Banner Section */}
-        <View style={[styles.section, { paddingHorizontal: Spacing.base }]}>
+        <View style={[styles.section, { paddingHorizontal: 5 }]}>
           <BannerSection />
         </View>
 
         {/* Hot Deals Section */}
-        <View style={[styles.section, { paddingHorizontal: Spacing.base }]}>
+        <View style={[styles.section, { paddingHorizontal: 5  }]}>
           <View style={styles.sectionHeader}>
             <Text style={[styles.sectionTitle, { color: colors.text }]}>Hot Deals</Text>
             <TouchableOpacity>
@@ -165,6 +158,7 @@ const styles = StyleSheet.create({
   },
   section: {
     marginBottom: Spacing.xl,
+    width:"100%"
   },
   sectionHeader: {
     flexDirection: 'row',

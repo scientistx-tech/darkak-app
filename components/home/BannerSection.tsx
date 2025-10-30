@@ -45,7 +45,7 @@ export function BannerSection() {
         snapToInterval={bannerWidth + Spacing.md}
         contentContainerStyle={styles.bannerList}
         renderItem={({ item }) => (
-          <View style={{ width: bannerWidth, marginRight: Spacing.md }}>
+          <View style={{ width: bannerWidth, marginRight: Spacing.sm }}>
             <BannerCard banner={item} onPress={() => {}} />
           </View>
         )}
