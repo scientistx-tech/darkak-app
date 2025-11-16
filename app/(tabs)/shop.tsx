@@ -9,13 +9,16 @@ import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import {
   Platform,
-  SafeAreaView,
+ 
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { SafeAreaView } from "react-native-safe-area-context";
+
+
 
 export default function ShopScreen() {
   const colorScheme = useColorScheme() ?? 'light';

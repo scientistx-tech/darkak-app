@@ -39,7 +39,7 @@ export interface Banner {
   image: string | number;
   discount?: string;
   actionText?: string;
-  backgroundColor?: string;
+  backgroundColor?: string | string[]
 }
 
 export interface CartItem {

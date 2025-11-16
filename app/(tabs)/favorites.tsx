@@ -7,11 +7,13 @@ import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import {
-  SafeAreaView,
+ 
   StyleSheet,
   Text,
   View,
 } from 'react-native';
+import { SafeAreaView } from "react-native-safe-area-context";
+
 
 export default function FavoritesScreen() {
   const colorScheme = useColorScheme() ?? 'light';

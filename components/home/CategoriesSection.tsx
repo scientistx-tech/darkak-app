@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     gap: 25,
     alignItems: 'flex-start',
-    // justifyContent: 'space-between',
+    //justifyContent: 'space-between',
   },
   item: {
     width: 52,

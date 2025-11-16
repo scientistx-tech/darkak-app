@@ -1,34 +1,40 @@
-import { BannerSection } from '@/components/home/BannerSection';
-import { CategoriesSection } from '@/components/home/CategoriesSection';
-import { HotDealsSection } from '@/components/home/HotDealsSection';
-import { SearchBar } from '@/components/search/SearchBarNative';
-import { Colors, Spacing, Typography } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
-import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
+import { BannerCard } from "@/components/banner/banner-card";
+import { BannerSection } from "@/components/home/BannerSection";
+import { CategoriesSection } from "@/components/home/CategoriesSection";
+import FooterQuestionSection from "@/components/home/FooterQuestionSection";
+import FooterUpperSection from "@/components/home/FooterUpperSection";
+import { HotDealsSection } from "@/components/home/HotDealsSection";
+import HomePage from "@/components/home/ProductCaroselSection";
+import ProductSlider from "@/components/productCarosel/ProductCaosel";
+import ProductCaosel from "@/components/productCarosel/ProductCaosel";
+import { SearchBar } from "@/components/search/SearchBarNative";
+import { Colors, Spacing, Typography } from "@/constants/theme";
+import { bannerData1, bannerData2 } from "@/data/mock-data";
+import { useColorScheme } from "@/hooks/use-color-scheme";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { useState } from "react";
 import {
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-} from 'react-native';
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
-  const colorScheme = useColorScheme() ?? 'light';
+  const colorScheme = useColorScheme() ?? "light";
   const colors = Colors[colorScheme];
   // Use a simple light gray background similar to the provided mock
-  const pageBackground = '#F4F7FB';
+  const pageBackground = "#F4F7FB";
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
- 
 
   const toggleFavorite = (productId: string) => {
-    setFavorites(prev => {
+    setFavorites((prev) => {
       const newFavorites = new Set(prev);
       if (newFavorites.has(productId)) {
         newFavorites.delete(productId);
@@ -40,28 +46,41 @@ export default function HomeScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: pageBackground, }]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: pageBackground }]}
+    >
       <StatusBar style="dark" />
       {/* Search Bar */}
-      <View style={[styles.searchSection, { paddingHorizontal: Spacing.base, paddingTop: 60 }]}>
+      <View
+        style={[
+          styles.searchSection,
+          { paddingHorizontal: Spacing.base, paddingTop: 60 },
+        ]}
+      >
         <View style={{ flex: 1 }}>
           <SearchBar
             value={searchQuery}
             onChangeText={setSearchQuery}
-            onFilterPress={() => { }}
+            onFilterPress={() => {}}
             placeholder="Search products..."
           />
         </View>
         <TouchableOpacity style={styles.notificationButton}>
-          <View style={{
-            backgroundColor:"#BBD4FF",
-            width:29,
-            height:29,
-            justifyContent:'center',
-            alignItems:'center',
-            borderRadius: '100%',
-          }}>
-            <Ionicons name="notifications-outline" size={22} color={colors.text} />
+          <View
+            style={{
+              backgroundColor: "#BBD4FF",
+              width: 29,
+              height: 29,
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: "100%",
+            }}
+          >
+            <Ionicons
+              name="notifications-outline"
+              size={22}
+              color={colors.text}
+            />
           </View>
           <View style={[styles.badge, { backgroundColor: colors.primary }]} />
         </TouchableOpacity>
@@ -78,7 +97,7 @@ export default function HomeScreen() {
         </View>
 
         {/* Hot Deals Section */}
-        <View style={[styles.section, { paddingHorizontal: 5  }]}>
+        {/* <View style={[styles.section, { paddingHorizontal: 5  }]}>
           <View style={styles.sectionHeader}>
             <Text style={[styles.sectionTitle, { color: colors.text }]}>Hot Deals</Text>
             <TouchableOpacity>
@@ -86,21 +105,65 @@ export default function HomeScreen() {
             </TouchableOpacity>
           </View>
           <HotDealsSection favorites={favorites} onToggleFavorite={toggleFavorite} />
-        </View>
+        </View> */}
 
         {/* Categories Section */}
-        <View style={[styles.section, { paddingHorizontal: 5, marginVertical: Spacing.md }]}>
+        <View
+          style={[
+            styles.section,
+            { paddingHorizontal: 5, marginVertical: Spacing.md },
+          ]}
+        >
           <View style={styles.sectionHeader}>
             <Text style={[styles.sectionTitle, { color: colors.text }]}>
               Shop by Category
             </Text>
-            <TouchableOpacity onPress={() => (router as any).push('/category')}>
-              <Text style={[styles.seeAll, { color: colors.primary }]}>See All</Text>
+            <TouchableOpacity onPress={() => (router as any).push("/category")}>
+              <Text style={[styles.seeAll, { color: colors.primary }]}>
+                See All
+              </Text>
             </TouchableOpacity>
           </View>
-          <CategoriesSection onCategoryPress={(id) => (router as any).push(`/category/${id}`)} />
+          <CategoriesSection
+            onCategoryPress={(id) => (router as any).push(`/category/${id}`)}
+          />
+        </View>
+        {/* <ProductCaosel/> */}
+        <HomePage />
+
+        {/* <BannerSection /> */}
+        <View style={[styles.section, { paddingHorizontal: 5 }]}>
+          <BannerCard banner={bannerData1} />
+        </View>
+        <View style={[styles.section, { paddingHorizontal: 5 }]}>
+          <BannerCard banner={bannerData2} />
         </View>
 
+        <HomePage />
+
+        <View style={[styles.section, { paddingHorizontal: 5 }]}>
+          <BannerCard banner={bannerData1} />
+        </View>
+        <View style={[styles.section, { paddingHorizontal: 5 }]}>
+          <BannerCard banner={bannerData2} />
+        </View>
+        <HomePage />
+        <View style={[styles.section, { paddingHorizontal: 5 }]}>
+          <BannerCard banner={bannerData1} />
+        </View>
+        <View style={[styles.section, { paddingHorizontal: 5 }]}>
+          <BannerCard banner={bannerData2} />
+        </View>
+
+         <HomePage />
+
+          <HomePage />
+
+          <FooterUpperSection/>
+  
+
+          <FooterQuestionSection/>
+      
 
       </ScrollView>
     </SafeAreaView>
@@ -112,9 +175,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: Spacing.base,
     paddingVertical: Spacing.md,
   },
@@ -130,12 +193,12 @@ const styles = StyleSheet.create({
   notificationButton: {
     width: 44,
     height: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'relative',
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
   },
   badge: {
-    position: 'absolute',
+    position: "absolute",
     top: 10,
     right: 10,
     width: 8,
@@ -144,9 +207,9 @@ const styles = StyleSheet.create({
   },
   searchSection: {
     paddingVertical: Spacing.md,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginBottom: Spacing.sm,
   },
   scrollView: {
@@ -154,18 +217,18 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     // Increase bottom padding so floating tab bar does not overlap content
-    paddingBottom: Spacing['4xl'] * 2, // ~96
+    paddingBottom: Spacing["4xl"] * 2, // ~96
   },
   section: {
     marginBottom: Spacing.xl,
-    width:"100%"
+    width: "100%",
   },
   sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: Spacing.md,
-    paddingHorizontal: 5
+    paddingHorizontal: 5,
   },
   sectionTitle: {
     fontSize: Typography.fontSizes.lg,
@@ -182,24 +245,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.base,
   },
   categoryGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "flex-start",
   },
   productGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
     marginBottom: Spacing.md,
   },
   productItem: {
-    width: '48%',
+    width: "48%",
     marginBottom: Spacing.md,
   },
   dotsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     marginTop: 8,
   },
   dot: {

@@ -55,20 +55,23 @@ const styles = StyleSheet.create({
     width: 72,
     alignItems: 'center',
     marginRight: Spacing.md,
+    paddingHorizontal:10,
+    left:10
   },
   outerCircle: {
     width: 64,
     height: 64,
-    borderRadius: BorderRadius.full,
+   //borderRadius: BorderRadius.full,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: Spacing.sm,
+    paddingHorizontal:10
   },
   innerCircle: {
     width: 56,
     height: 56,
-    borderRadius: BorderRadius.full,
-    backgroundColor: '#FFFFFF',
+    //borderRadius: BorderRadius.full,
+    //backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
   },

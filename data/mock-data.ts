@@ -5,10 +5,11 @@ export const mockBanners: Banner[] = [
     id: '1',
     title: 'GET 5% OFF',
     subtitle: 'On your first order',
-    discount: 'Limited Time Offer',
+    discount: 'Limited',
     image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9',
     actionText: 'SHOP NOW',
-    backgroundColor: '#4C7EFF',
+    //backgroundColor: '#4C7EFF',
+    backgroundColor: ['#00153B', '#032B70DB']
   },
   {
     id: '2',
@@ -16,7 +17,8 @@ export const mockBanners: Banner[] = [
     subtitle: 'Latest smartphones',
     image: 'https://images.unsplash.com/photo-1585060544812-6b45742d762f',
     actionText: 'Explore',
-    backgroundColor: '#FF6B6B',
+    //backgroundColor: '#FF6B6B',
+    backgroundColor: ['#323232', '#7C7C7C']
   },
     {
     id: '3',
@@ -25,16 +27,10 @@ export const mockBanners: Banner[] = [
     discount: 'Limited Time Offer',
     image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9',
     actionText: 'SHOP NOW',
-    backgroundColor: '#4C7EFF',
+    //backgroundColor: '#4C7EFF',
+    backgroundColor: ['#5694FF', '#5694FFE5']
   },
-  {
-    id: '4',
-    title: 'New Arrivals',
-    subtitle: 'Latest smartphones',
-    image: 'https://images.unsplash.com/photo-1585060544812-6b45742d762f',
-    actionText: 'Explore',
-    backgroundColor: '#FF6B6B',
-  },
+  
 ];
 
 export const mockCategories: Category[] = [
@@ -44,7 +40,8 @@ export const mockCategories: Category[] = [
     image: require('../assets/category/c1.png'),
     productCount: 125,
     slug: 'samsung',
-    backgroundColor: '#E8F3FF',
+   
+    //backgroundColor: '#E8F3FF',
   },
   {
     id: '2',
@@ -78,46 +75,7 @@ export const mockCategories: Category[] = [
     slug: 'oneplus',
     backgroundColor: '#F9F9FF',
   },
-  {
-    id: '6',
-    name: 'HEADPHONES',
-    image: require('../assets/category/c1.png'),
-    productCount: 74,
-    slug: 'headphones',
-    backgroundColor: '#FFF8E8',
-  },
-  {
-    id: '7',
-    name: 'CAMERAS',
-    image: require('../assets/category/c2.png'),
-    productCount: 32,
-    slug: 'cameras',
-    backgroundColor: '#FFF0F6',
-  },
-  {
-    id: '8',
-    name: 'ACCESSORIES',
-    image: require('../assets/category/c3.png'),
-    productCount: 210,
-    slug: 'accessories',
-    backgroundColor: '#F0FFF7',
-  },
-  {
-    id: '9',
-    name: 'GAMING',
-    image: require('../assets/category/c4.png'),
-    productCount: 58,
-    slug: 'gaming',
-    backgroundColor: '#F2F6FF',
-  },
-  {
-    id: '10',
-    name: 'SMARTWATCH',
-    image: require('../assets/category/c5.png'),
-    productCount: 43,
-    slug: 'smartwatch',
-    backgroundColor: '#F9FBFF',
-  },
+ 
 ];
 
 export const mockProducts: Product[] = [
@@ -241,6 +199,100 @@ export const mockProducts: Product[] = [
     backgroundColor: '#F7FBFF',
   },
 ];
+
+export const bannerData1 = {
+  title: "Special Offer",
+  subtitle: "Up to 40% off",
+  discount: "40%",
+  actionText: "Shop Now",
+  image: "https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/99486859-0ff3-46b4-949b-2d16af2ad421/custom-nike-dunk-high-by-you-shoes.png",
+  backgroundColor: ["#4c669f", "#3b5998"], 
+   id: "1",
+};
+export const bannerData2 = {
+  title: "Special Offer",
+  subtitle: "Up to 40% off",
+  discount: "40%",
+  actionText: "Shop Now",
+  image: "https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/99486859-0ff3-46b4-949b-2d16af2ad421/custom-nike-dunk-high-by-you-shoes.png",
+  backgroundColor: ["#4c669f", "#3b5998"], 
+   id: "1",
+};
+
+
+export const footerData = {
+  initialWelcomeText:
+    "Looking for the best online shopping experience in Bangladesh? Darkak is your smart shopping companion—the most trusted multivendor e-commerce platform that is dedicated to serving you with all your essentials in life with faster, great value & good quality. Be it electronics, clothes or essentials—shop safely from the top 10 online shopping sites in Bangladesh.",
+
+  fullExpandedText:
+    "Explore our best selling options\n" +
+    "✅ School bags for kid's girls and boys—fun and durable\n\n" +
+    "✅ Travel backpacks, laptop bags, crossbody bags – perfect for smart commuting\n\n" +
+    "✅ Affordable prices, trendy looks—making daily shopping in BD easier and more stylish\n\n" +
+    "Elegant Watches & Jewelry for Him & Her\n" +
+    "Redefine your style with watches that speak of class and confidence.\n\n" +
+    "✅ Browse the latest men’s watch price in BD to get great value within your budget\n\n" +
+    "✅ Pick timeless pieces from our women watch BD collection\n\n" +
+    "✅ Explore women’s jewelry sets designed by women with either a modern or a classic approach, which are beautiful as gifts or to be worn by yourself\n\n" +
+    "Shop Smarter with Home & Consumer Electronics\n" +
+    "Stay ahead with quality home appliances products and kitchen appliances that make life efficient:\n\n" +
+    "✅ Such electricals as rice cookers, kitchen blenders and irons\n\n" +
+    "✅ Confident, inexpensive devices of clever living\n\n" +
+    "✅ Handpicked electronics to make a first-home or smart upgrade\n\n" +
+    "Enjoy a seamless experience with BD shopping made smarter by Darkak Mart.\n\n" +
+    "World-Class Health & Beauty Products at Your Fingertips\n" +
+    "Start your self-care journey today. We’ve handpicked the world best health and beauty products trusted by thousands:\n\n" +
+    "✅ Herbals skincare packs, body lotions, face products\n\n" +
+    "✅ Hygiene and grooming key items\n\n" +
+    "✅ Everything you need for inner wellness and outer glow\n\n" +
+    "With smart shopping BD, glow up effortlessly—right from home.\n\n" +
+    "Fun, Educational Toys & Games for Kids\n" +
+    "Shop educational toys that boost learning while keeping it fun:\n\n" +
+    "✅ STEM toys, puzzles, and learning boards\n\n" +
+    "✅ Motor skill–enhancing building blocks\n\n" +
+    "✅ Intelligently marketed to the intelligent Bangladeshi parents\n\n" +
+    "Perfect for birthdays, gifting, or daily learning through play.\n\n" +
+    "Boost Work & Study with Smart Computer Accessories\n" +
+    "Elevate your workflow with practical tech accessories:\n\n" +
+    "✅ Laptop stands, portable keyboards\n\n" +
+    "✅ Ergonomics: Mouse and gadget basics\n\n" +
+    "✅ Ideal for students, freelancers, and professionals\n\n" +
+    "At Darkak Mart, we blend functionality with affordability for your digital life.\n\n" +
+    "Why Darkak Mart is Among the Best Ecommerce Websites in Bangladesh\n" +
+    "Darkak isn’t just another BD online shop list entry—we’re a top contender for a reason:\n\n" +
+    "✅ Super rapid delivery in Bangladesh.\n\n" +
+    "✅ 7-day return and refund system.\n\n" +
+    "✅ 100% authentic products\n\n" +
+    "✅ Discounted prices & offers & flash deals\n\n" +
+    "✅ Friendly customer support, always ready to help.\n\n" +
+    "Start Your Daily Smart Shopping with Darkak\n" +
+    "Thousands of people are already having a better way to shop. From fashion to electronics, Darkak Mart is the best online shop in BD for trust, convenience, and real value."
+};
+
+
+export const faqData = [
+    {
+      question: 'What is Darkak Mart?',
+      answer: 'Darkak Mart is Bangladesh’s trusted online store for smart shopping, offering a wide range of products including electronics, clothes, and daily essentials from trusted multivendors.',
+    },
+    {
+      question: 'Why should I shop at Darkak Mart?',
+      answer: 'Darkak Mart provides a seamless and smart shopping experience with rapid delivery, a 7-day return and refund system, 100% authentic products, discounted prices, flash deals, and friendly customer support.',
+    },
+    {
+      question: 'Is Darkak Mart reliable for online shopping in Bangladesh?',
+      answer: 'Yes, Darkak Mart is a highly trusted e-commerce platform in Bangladesh, dedicated to providing authentic products and a secure shopping environment with reliable services.',
+    },
+    {
+      question: 'What is Darkak’s refund and return policy?',
+      answer: 'Darkak Mart offers a hassle-free 7-day return and refund policy for most products, ensuring customer satisfaction. Please check the specific product details for any exceptions.',
+    },
+    {
+      question: 'How do I contact Darkak for support or inquiries?',
+      answer: 'You can easily contact Darkak Mart’s customer support through their website, app, or dedicated helpline. Our friendly team is always ready to assist you with any questions or issues.',
+    },
+  ];
+
 
 // Filter featured products for home page
 export const featuredProducts = mockProducts.filter(p => p.isFeatured);
