@@ -1,10 +1,14 @@
 import { BannerCard } from "@/components/banner/banner-card";
+import FeaturesSection from "@/components/featureIteam/FeatureIteam";
 import { BannerSection } from "@/components/home/BannerSection";
 import { CategoriesSection } from "@/components/home/CategoriesSection";
 import FooterQuestionSection from "@/components/home/FooterQuestionSection";
 import FooterUpperSection from "@/components/home/FooterUpperSection";
 import { HotDealsSection } from "@/components/home/HotDealsSection";
+import InfoCardsSection from "@/components/home/InfoCardsSection";
 import HomePage from "@/components/home/ProductCaroselSection";
+import MobileFooter from "@/components/mobileFooter/MobileFooter";
+import NewsletterSubscribeCard from "@/components/newsletterSubscribeCard/NewsletterSubscribeCard";
 import ProductSlider from "@/components/productCarosel/ProductCaosel";
 import ProductCaosel from "@/components/productCarosel/ProductCaosel";
 import { SearchBar } from "@/components/search/SearchBarNative";
@@ -89,7 +93,11 @@ export default function HomeScreen() {
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={{ padding: 0, margin: 0 }}
+
+        //contentContainerStyle={styles.scrollContent,padding:0 }
+        //contentContainerStyle={[styles.scrollContent, { padding: 0 }]}
+        
       >
         {/* Banner Section */}
         <View style={[styles.section, { paddingHorizontal: 5 }]}>
@@ -155,16 +163,27 @@ export default function HomeScreen() {
           <BannerCard banner={bannerData2} />
         </View>
 
-         <HomePage />
+        <HomePage />
 
-          <HomePage />
+        <HomePage />
 
-          <FooterUpperSection/>
-  
+        <FooterUpperSection />
 
-          <FooterQuestionSection/>
-      
+        <FooterQuestionSection />
 
+        <SafeAreaView style={styles.Featcontainer}>
+          <FeaturesSection />
+        </SafeAreaView>
+
+        <SafeAreaView style={styles.Featcontainer}>
+          <InfoCardsSection />
+        </SafeAreaView>
+        <SafeAreaView style={styles.Featcontainer}>
+          <NewsletterSubscribeCard />
+        </SafeAreaView>
+         <SafeAreaView style={styles.Featcontainer}>
+          <MobileFooter />
+        </SafeAreaView>
       </ScrollView>
     </SafeAreaView>
   );
@@ -217,7 +236,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     // Increase bottom padding so floating tab bar does not overlap content
-    paddingBottom: Spacing["4xl"] * 2, // ~96
+    //paddingBottom: Spacing["4xl"] * 2, // ~96
   },
   section: {
     marginBottom: Spacing.xl,
@@ -270,5 +289,9 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
     marginHorizontal: 6,
+  },
+  Featcontainer: {
+    flex: 1,
+    backgroundColor: "#F8F9FA",
   },
 });

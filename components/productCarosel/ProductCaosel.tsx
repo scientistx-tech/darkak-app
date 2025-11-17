@@ -61,7 +61,6 @@ const ProductCaosel: React.FC<ProductCardProps> = ({
 
   return (
     <View style={styles.card}>
-      
       <View style={styles.imageSliderContainer}>
         <ScrollView
           ref={scrollRef}

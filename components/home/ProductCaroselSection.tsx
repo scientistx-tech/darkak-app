@@ -108,7 +108,7 @@ const HomePage: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-     
+
       <FlatList
         data={PRODUCTS_DATA}
         renderItem={renderProductCard}
