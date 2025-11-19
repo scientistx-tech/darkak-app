@@ -114,7 +114,7 @@ export default function TabLayout() {
                         
                       }}  >
 
-                      <Entypo name="shop" size={22}  color='#FFFFFF' />
+                      <Entypo name="shop" size={20}  color='#FFFFFF' />
                       </View>
                     </View>
                   ) : (
