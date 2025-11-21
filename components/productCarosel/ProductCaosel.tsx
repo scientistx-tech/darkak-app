@@ -1,21 +1,29 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions, ScrollView, Animated } from 'react-native';
-//import Icon from 'react-native-vector-icons/MaterialIcons';
-import { MaterialIcons } from '@expo/vector-icons';
+import React, { useState, useRef, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+  ScrollView,
+} from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
-
-const { width } = Dimensions.get('window');
-
-// Adjust card width for two items per row, considering margin
-const CARD_MARGIN = 8; // Margin on each side of the card
-export const CARD_WIDTH = (width / 2) - (CARD_MARGIN * 2);
+const { width } = Dimensions.get("window");
+const CARD_MARGIN = 8;
+export const CARD_WIDTH = width / 2 - CARD_MARGIN * 2;
 
 interface ProductCardProps {
   productName: string;
   originalPrice: number;
   discountedPrice: number;
   discountPercentage: number;
-  images: string[]; // Array of image URLs
+  images: string[];
+  stock: number; // <-- stock as number
+  onPressBuy: () => void;
+  onPressAddToCart: () => void;
   onPressPreOrder: () => void;
   onPressFavorite: () => void;
   onPressView: () => void;
@@ -28,6 +36,9 @@ const ProductCaosel: React.FC<ProductCardProps> = ({
   discountedPrice,
   discountPercentage,
   images,
+  stock,
+  onPressBuy,
+  onPressAddToCart,
   onPressPreOrder,
   onPressFavorite,
   onPressView,
@@ -35,191 +46,250 @@ const ProductCaosel: React.FC<ProductCardProps> = ({
 }) => {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const scrollRef = useRef<ScrollView>(null);
+  const router = useRouter();
 
-  // Auto-scroll logic for the image slider
-  React.useEffect(() => {
-    if (images.length === 0) return; // Prevent errors if no images
+  // Auto Image Slider
+  useEffect(() => {
+    if (images.length === 0) return;
 
     const interval = setInterval(() => {
-      setActiveImageIndex((prevIndex) => {
-        const nextIndex = (prevIndex + 1) % images.length;
-        // Scroll to the next image's position. Use CARD_WIDTH for calculation.
-        scrollRef.current?.scrollTo({ x: nextIndex * CARD_WIDTH, animated: true });
-        return nextIndex;
+      setActiveImageIndex((prev) => {
+        const next = (prev + 1) % images.length;
+        scrollRef.current?.scrollTo({ x: next * CARD_WIDTH, animated: true });
+        return next;
       });
-    }, 4000); // Change image every 4 seconds
+    }, 3000);
 
     return () => clearInterval(interval);
-  }, [images.length]); // Re-run effect if number of images changes
+  }, [images.length]);
 
-  // Handle manual scrolling to update pagination dots
-  const handleScroll = (event: any) => {
-    const contentOffsetX = event.nativeEvent.contentOffset.x;
-    const currentIndex = Math.round(contentOffsetX / CARD_WIDTH);
-    setActiveImageIndex(currentIndex);
+  const onScroll = (e: any) => {
+    const x = e.nativeEvent.contentOffset.x;
+    const index = Math.round(x / CARD_WIDTH);
+    setActiveImageIndex(index);
   };
+  const handleOnPressCard = ()=>{
+    router.push('/product')
+  }
 
   return (
-    <View style={styles.card}>
+    <TouchableOpacity onPress={() => handleOnPressCard()} style={styles.card}>
+      {/* IMAGE SLIDER */}
       <View style={styles.imageSliderContainer}>
         <ScrollView
           ref={scrollRef}
           horizontal
           pagingEnabled
           showsHorizontalScrollIndicator={false}
-          onScroll={handleScroll}
-          scrollEventThrottle={16} // Optimize scroll event updates
+          onScroll={onScroll}
+          scrollEventThrottle={16}
         >
-          {images.map((imageUri, index) => (
-            <Image key={index} source={{ uri: imageUri }} style={[styles.productImage, { width: CARD_WIDTH }]} />
+          {images.map((img, i) => (
+            <Image
+              key={i}
+              source={{ uri: img }}
+              style={[styles.productImage, { width: CARD_WIDTH }]}
+            />
           ))}
         </ScrollView>
-        {images.length > 1 && ( // Only show pagination if more than one image
-          <View style={styles.pagination}>
-            {images.map((_, index) => (
-              <View
-                key={index}
-                style={[styles.paginationDot, activeImageIndex === index && styles.paginationDotActive]}
-              />
-            ))}
-          </View>
-        )}
+
+        {/* PAGINATION */}
+        <View style={styles.pagination}>
+          {images.map((_, i) => (
+            <View
+              key={i}
+              style={[styles.dot, activeImageIndex === i && styles.dotActive]}
+            />
+          ))}
+        </View>
+
+        {/* DISCOUNT BADGE */}
         <View style={styles.discountBadge}>
           <Text style={styles.discountText}>{discountPercentage}% OFF</Text>
         </View>
+
+        {/* ACTION BUTTONS */}
         <View style={styles.actionButtons}>
-          <TouchableOpacity style={styles.actionButton} onPress={onPressFavorite}>
-            <MaterialIcons name="favorite-border" size={24} color="#333" />
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={onPressFavorite}
+          >
+            <MaterialIcons name="favorite-border" size={24} color="#003366" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.actionButton} onPress={onPressView}>
-            <MaterialIcons name="visibility" size={24} color="#333" />
+            <MaterialIcons name="visibility" size={24} color="#003366" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.actionButton} onPress={onPressCompare}>
-            <MaterialIcons name="compare-arrows" size={24} color="#333" />
+          <TouchableOpacity
+            style={styles.actionButton}
+            onPress={onPressCompare}
+          >
+            <MaterialIcons name="compare-arrows" size={24} color="#003366" />
           </TouchableOpacity>
         </View>
       </View>
 
+      {/* DETAILS */}
       <View style={styles.detailsContainer}>
         <View style={styles.priceContainer}>
           <Text style={styles.originalPrice}>{originalPrice} BDT</Text>
           <Text style={styles.discountedPrice}>{discountedPrice} BDT</Text>
         </View>
+
         <Text style={styles.productName} numberOfLines={2}>
           {productName}
         </Text>
-        <TouchableOpacity style={styles.preOrderButton} onPress={onPressPreOrder}>
-          <Text style={styles.preOrderButtonText}>Pre Order</Text>
-        </TouchableOpacity>
+
+        {/* STOCK LOGIC */}
+        {stock >= 1 ? (
+          <View style={styles.buyRow}>
+            <TouchableOpacity style={styles.buyButton} onPress={onPressBuy}>
+              <Text style={styles.buyButtonText}>BUY NOW</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.cartButton}
+              onPress={onPressAddToCart}
+            >
+              <MaterialIcons name="shopping-cart" size={22} color="#003366" />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <TouchableOpacity
+            style={styles.preOrderButton}
+            onPress={onPressPreOrder}
+          >
+            <Text style={styles.preOrderButtonText}>Pre Order</Text>
+          </TouchableOpacity>
+        )}
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 10,
-    margin: CARD_MARGIN, // Use defined margin
-    overflow: 'hidden',
-    width: CARD_WIDTH, // Use the calculated card width
+    margin: CARD_MARGIN,
+    width: CARD_WIDTH,
+    overflow: "hidden",
     elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
   },
   imageSliderContainer: {
-    width: '100%',
-    height: 180, // Fixed height for the image slider (adjusted for two cards per row)
-    position: 'relative',
+    width: "100%",
+    height: 180,
+    backgroundColor: "#fff",
+    position: "relative",
   },
   productImage: {
-    // width is set inline in renderItem
-    height: '100%',
-    resizeMode: 'cover',
+    height: "85%",
+    resizeMode: "cover",
   },
-  discountBadge: {
-    position: 'absolute',
-    top: 10,
-    left: 0,
-    backgroundColor: '#003366', // Dark blue
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderTopRightRadius: 5,
-    borderBottomRightRadius: 5,
-  },
-  discountText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 12, // Slightly smaller font for two cards
-  },
-  actionButtons: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  actionButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    borderRadius: 20,
-    padding: 5,
-    marginBottom: 5,
-  },
+
   pagination: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 10,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignSelf: "center",
   },
-  paginationDot: {
-    width: 6, // Smaller dots
+  dot: {
+    width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    backgroundColor: "rgba(0,0,0,0.2)",
     marginHorizontal: 3,
   },
-  paginationDotActive: {
-    backgroundColor: '#003366', // Dark blue for active dot
+  dotActive: {
+    width: 24,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: "#003366",
+    marginHorizontal: 3,
   },
-  detailsContainer: {
-    padding: 10, // Reduced padding
+
+  discountBadge: {
+    position: "absolute",
+    top: 10,
+    left: 0,
+    backgroundColor: "#003366",
+    paddingVertical: 4,
+    paddingHorizontal: 10,
+    borderTopRightRadius: 6,
+    borderBottomRightRadius: 6,
   },
-  priceContainer: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
+  discountText: { color: "#fff", fontWeight: "bold", fontSize: 12 },
+
+  actionButtons: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+  },
+  actionButton: {
+    backgroundColor: "rgba(255,255,255,0.85)",
+    padding: 5,
+    borderRadius: 20,
     marginBottom: 5,
   },
+
+  detailsContainer: { padding: 10 },
+  priceContainer: {
+    flexDirection: "row",
+    alignItems: "baseline",
+  },
   originalPrice: {
-    textDecorationLine: 'line-through',
-    color: '#999',
-    fontSize: 12, // Smaller font
-    marginRight: 8,
+    textDecorationLine: "line-through",
+    color: "#999",
+    fontSize: 12,
+    marginRight: 6,
   },
   discountedPrice: {
-    color: '#003366', // Dark blue
-    fontSize: 16, // Smaller font
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#003366",
   },
   productName: {
-    fontSize: 14, // Smaller font
-    color: '#333',
-    marginBottom: 10,
-    minHeight: 36, // Ensure consistent height for 2 lines
+    fontSize: 14,
+    color: "#333",
+    marginTop: 6,
+    minHeight: 38,
   },
-  preOrderButton: {
-    backgroundColor: '#003366', // Dark blue
-    paddingVertical: 10, // Reduced padding
+
+  buyRow: {
+    flexDirection: "row",
+    marginTop: 10,
+    justifyContent: "space-between",
+  },
+  buyButton: {
+    flex: 1,
+    backgroundColor: "#003366",
+    paddingVertical: 10,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
+    marginRight: 8,
+  },
+  buyButtonText: { color: "#fff", fontSize: 14, fontWeight: "bold" },
+
+  cartButton: {
+    width: 48,
+    height: 48,
+    borderWidth: 2,
+    borderColor: "#003366",
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  preOrderButton: {
+    backgroundColor: "#003366",
+    paddingVertical: 10,
+    borderRadius: 8,
+    marginTop: 10,
+    alignItems: "center",
   },
   preOrderButtonText: {
-    color: '#fff',
-    fontSize: 14, // Smaller font
-    fontWeight: 'bold',
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 14,
   },
 });
 

@@ -19,6 +19,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
+import { AntDesign } from "@expo/vector-icons";
 import {
   ScrollView,
   StyleSheet,
@@ -137,6 +138,16 @@ export default function HomeScreen() {
           />
         </View>
         {/* <ProductCaosel/> */}
+        <View style={[styles.section, { paddingHorizontal: 5 }]}>
+          <BannerCard banner={bannerData1} />
+        </View>
+        <View style={[styles.section, { paddingHorizontal: 5 }]}>
+          <BannerCard banner={bannerData2} />
+        </View>
+        <View style={styles.iconContainer}>
+          <Text style = {styles.featProduct}>FEATURE PRODUCTS</Text>
+          <AntDesign name="arrow-right" size={24} color="black" />
+        </View>
         <HomePage />
 
         {/* <BannerSection /> */}
@@ -146,7 +157,11 @@ export default function HomeScreen() {
         <View style={[styles.section, { paddingHorizontal: 5 }]}>
           <BannerCard banner={bannerData2} />
         </View>
-
+        {/* 2nd */}
+          <View style={styles.iconContainer}>
+          <Text style = {styles.featProduct}>MOST VISITED</Text>
+          <AntDesign name="arrow-right" size={24} color="black" />
+        </View>
         <HomePage />
 
         <View style={[styles.section, { paddingHorizontal: 5 }]}>
@@ -155,6 +170,11 @@ export default function HomeScreen() {
         <View style={[styles.section, { paddingHorizontal: 5 }]}>
           <BannerCard banner={bannerData2} />
         </View>
+        {/* 3rd */}
+        <View style={styles.iconContainer}>
+          <Text style = {styles.featProduct}>BEST SELLING PRODUCTS</Text>
+          <AntDesign name="arrow-right" size={24} color="black" />
+        </View>
         <HomePage />
         <View style={[styles.section, { paddingHorizontal: 5 }]}>
           <BannerCard banner={bannerData1} />
@@ -162,9 +182,17 @@ export default function HomeScreen() {
         <View style={[styles.section, { paddingHorizontal: 5 }]}>
           <BannerCard banner={bannerData2} />
         </View>
+        {/* 4th */}
+        <View style={styles.iconContainer}>
+          <Text style = {styles.featProduct}>NEW ARRIVAL</Text>
+          <AntDesign name="arrow-right" size={24} color="black" />
+        </View>
 
         <HomePage />
-
+          <View style={styles.iconContainer}>
+          <Text style = {styles.featProduct}>TODAYS DEAL</Text>
+          <AntDesign name="arrow-right" size={24} color="black" />
+        </View>
         <HomePage />
 
         <FooterUpperSection />
@@ -294,4 +322,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F8F9FA",
   },
+  featProduct:{
+    color:'black',
+    fontSize:20,
+    fontWeight:'500'
+  },
+  iconContainer:{
+    flexDirection:'row',
+    alignItems:'center',
+    justifyContent:'space-between',
+    paddingHorizontal:10
+  }
+
 });

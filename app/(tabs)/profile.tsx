@@ -1,8 +1,9 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesome, Entypo, MaterialIcons } from "@expo/vector-icons";
 
 const Profile = () => {
+  const [isvisible,satIsvisible] = useState(false);
   return (
     <View style={styles.container}>
       <Text style={styles.welcomeText}>Welcome Back</Text>
