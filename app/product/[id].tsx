@@ -1,213 +1,4 @@
-// import Button from '@/components/ui/button';
-// import { Header } from '@/components/ui/Header';
-// import { Colors, Spacing, Typography } from '@/constants/theme';
-// import { mockProducts } from '@/data/mock-data';
-// import { useColorScheme } from '@/hooks/use-color-scheme';
-// import { Entypo, FontAwesome, Ionicons } from '@expo/vector-icons';
-// import { useLocalSearchParams, useRouter } from 'expo-router';
-// import { StatusBar } from 'expo-status-bar';
-// import {
-//   Dimensions,
-//   Image,
-//   ScrollView,
-//   StyleSheet,
-//   Text,
-
-//   View,
-// } from 'react-native';
-// import { SafeAreaView } from "react-native-safe-area-context";
-
-
-// export default function ProductScreen() {
-//   const { id } = useLocalSearchParams() as { id?: string };
-//   const router = useRouter();
-//   const colorScheme = useColorScheme() ?? 'light';
-//   const colors = Colors[colorScheme];
-
-//   const product = mockProducts.find((p) => p.id === id) ?? mockProducts[0];
-
-//   const formatPrice = (amount: number) => `${amount.toLocaleString('en-US', { minimumFractionDigits: 0 })} TK`;
-
-//   return (
-//     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-//       <StatusBar style="dark" />
-
-//       {/* Header */}
-//       <Header
-//         showBack
-//         onBack={() => router.back()}
-//         title="Product"
-//         rightIcon={<Ionicons name="git-compare-outline" size={20} color={colors.text} />}
-//         onRightPress={() => { /* share / more */ }}
-//       />
-
-
-
-//       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-//         <View style={styles.imageWrap}>
-//           <View style={[styles.imageCard, { backgroundColor: product.backgroundColor ?? colors.surface }]}>
-//             <Image
-//               source={typeof product.image === 'number' ? product.image : { uri: product.image }}
-//               style={styles.image}
-//               resizeMode="contain"
-//             />
-//           </View>
-//           {/* small pagination dots mock */}
-//           <View style={styles.dotsRow}>
-//             <View style={[styles.dot, { backgroundColor: colors.primary }]} />
-//             <View style={[styles.dot, { backgroundColor: '#D6E1F2' }]} />
-//             <View style={[styles.dot, { backgroundColor: '#D6E1F2' }]} />
-//           </View>
-//         </View>
-
-//         <View style={{
-//           flexDirection: 'row',
-//           justifyContent: 'space-between',
-//           alignItems: 'center',
-//           width: '100%',
-//           marginTop: Spacing.md,
-//         }}>
-//           <Button
-//             variant="outline"
-//             title="12GB/128GB"
-//             icon={<FontAwesome name="angle-down" size={18} color="#FFFFFF" />}
-//             onPress={() => console.log('pressed')}
-//             style={{ flex: 1, marginRight: Spacing.sm }}
-//           />
-//           <Button
-//             variant="outline"
-//             title="BLACK"
-//             icon={<FontAwesome name="angle-down" size={18} color="#FFFFFF" />}
-//             onPress={() => console.log('pressed')}
-//             style={{ paddingHorizontal: 18, flex: 1, marginLeft: Spacing.sm }}
-//           />
-//           <View style={{
-//             justifyContent: 'center',
-//             alignItems: 'center',
-//             backgroundColor: "#5694FF",
-//             width: 36,
-//             height: 36,
-//             borderRadius: 28,
-//             marginLeft: Spacing.sm,
-//           }}>
-//             <Entypo name="heart" size={22} color='#FFFFFF' />
-//           </View>
-//         </View>
-
-//         <View style={styles.card}>
-//           <Text style={[styles.brand, { color: colors.textSecondary }]}>{product.brand}</Text>
-//           <Text style={[styles.name, { color: colors.text }]}>{product.name}</Text>
-
-//           <View style={styles.rowBetween}>
-//             <View style={styles.ratingRow}>
-//               <Ionicons name="star" size={16} color={colors.ratingActive} />
-//               <Text style={[styles.ratingText, { color: colors.text }]}>{product.rating.toFixed(1)}</Text>
-//               <Text style={[styles.reviewCount, { color: colors.textTertiary }]}>({product.reviewCount})</Text>
-//             </View>
-//             <Text style={[styles.price, { color: colors.primary }]}>{formatPrice(product.price)}</Text>
-//           </View>
-
-//           <Text style={[styles.sectionTitle, { color: colors.text }]}>Description</Text>
-//           <Text style={[styles.description, { color: colors.textSecondary }]}>{product.description}</Text>
-
-//           <View style={{ height: 120 }} />
-//         </View>
-//       </ScrollView>
-
-//       {/* Bottom action bar */}
-//       <View style={[styles.bottomBar, { backgroundColor: colors.surface }]}>
-//         <Button
-//           variant="filled"
-//           title="BUY NOW"
-//           onPress={() => {}}
-//           style={styles.buyButton}
-//           textStyle={styles.buyText}
-//         />
-//         <Button
-//           variant="outline"
-//           title="ADD TO CART"
-//           onPress={() => {}}
-//           style={styles.cartButton}
-//           textStyle={styles.cartText}
-//         />
-//       </View>
-//     </SafeAreaView>
-//   );
-// }
-
-// const screenWidth = Dimensions.get('window').width;
-// const imageSize = screenWidth * 0.7;
-
-// const styles = StyleSheet.create({
-//   container: { flex: 1 },
-//   header: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     justifyContent: 'space-between',
-//     paddingHorizontal: Spacing.base,
-//     paddingVertical: Spacing.sm,
-//   },
-//   iconButton: { width: 40, height: 40, justifyContent: 'center', alignItems: 'center' },
-//   headerTitle: { fontSize: Typography.fontSizes.lg, fontWeight: Typography.fontWeights.semibold },
-//   scrollContent: { paddingBottom: Spacing['4xl'], paddingHorizontal: Spacing.base },
-//   imageWrap: {
-//     alignItems: 'center',
-//     width: '100%',
-//     marginTop: Spacing.md,
-//   },
-//   imageCard: {
-//     width: '100%',
-//     height: imageSize,
-//     borderRadius: 16,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     padding: Spacing.md,
-//   },
-//   image: { width: '100%', height: '100%' },
-//   dotsRow: { flexDirection: 'row', marginTop: Spacing.sm },
-//   dot: { width: 8, height: 8, borderRadius: 4, marginHorizontal: 6 },
-//   card: { marginTop: Spacing.md, paddingHorizontal: 0 },
-//   brand: { fontSize: Typography.fontSizes.xs, textTransform: 'uppercase', marginBottom: 6 },
-//   name: { fontSize: Typography.fontSizes['2xl'], fontWeight: Typography.fontWeights.bold, marginBottom: Spacing.sm },
-//   rowBetween: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: Spacing.md },
-//   ratingRow: { flexDirection: 'row', alignItems: 'center' },
-//   ratingText: { marginLeft: 6, fontSize: Typography.fontSizes.sm },
-//   reviewCount: { marginLeft: 6, fontSize: Typography.fontSizes.xs },
-//   price: { fontSize: Typography.fontSizes['2xl'], fontWeight: Typography.fontWeights.bold },
-//   sectionTitle: { marginTop: Spacing.md, marginBottom: Spacing.xs, fontSize: Typography.fontSizes.sm, fontWeight: Typography.fontWeights.semibold },
-//   description: { fontSize: Typography.fontSizes.base, lineHeight: 20 },
-//   bottomBar: {
-//     position: 'absolute',
-//     left: 0,
-//     right: 0,
-//     bottom: 0,
-//     flexDirection: 'row',
-//     padding: Spacing.md,
-//     gap: Spacing.sm,
-//     alignItems: 'center',
-//   },
-//   buyButton: {
-//     flex: 1,
-//     paddingVertical: Spacing.md,
-//       borderRadius: 50,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   buyText: { fontWeight: Typography.fontWeights.bold },
-//   cartButton: {
-//     marginLeft: Spacing.sm,
-//     paddingVertical: Spacing.md,
-//     paddingHorizontal: Spacing.lg,
-//     borderRadius: 50,
-//     borderWidth: 1,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   cartText: { fontWeight: Typography.fontWeights.semibold 
-//   },
-// });
-
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -217,26 +8,42 @@ import {
   TouchableOpacity,
   Dimensions,
   Alert,
+  FlatList,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
-import { PRODUCTS_DATA } from "@/data/mock-data";
+import { FontAwesome6 } from "@expo/vector-icons";
+import { deliveryData, PRODUCTS_DATA } from "@/data/mock-data";
+import QuantitySelector from "@/components/button/quantityButton/QuantityButton";
+import DeliveryDetails from "@/components/deliveryDetails/DeliveryDetails";
+import ProductCaosel from "@/components/productCarosel/ProductCaosel";
+import AnimatedProductDetailsTabs from "@/components/animatedProductDetailsTabs/AnimatedProductDetailsTabs";
+import FooterUpperSection from "@/components/home/FooterUpperSection";
+import NewsletterSubscribeCard from "@/components/newsletterSubscribeCard/NewsletterSubscribeCard";
+import MobileFooter from "@/components/mobileFooter/MobileFooter";
 
 const { width } = Dimensions.get("window");
+const ITEM_WIDTH = width * 0.8; // Product item width
 
 const ProductDetails = () => {
   const { id } = useLocalSearchParams();
+  console.log('iii::' , id)
   const router = useRouter();
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [currentProductIndex, setCurrentProductIndex] = useState(0);
 
-  // প্রোডাক্ট ডাটা খুঁজে বের করুন
-  const product = PRODUCTS_DATA.find(item => item.id === id);
+  const horizontalScrollRef = useRef<ScrollView>(null);
+
+  const product = PRODUCTS_DATA.find((item) => item.id === id);
 
   if (!product) {
     return (
       <View style={styles.container}>
         <Text style={styles.errorText}>Product not found</Text>
-        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => router.back()}
+        >
           <Text style={styles.backButtonText}>Go Back</Text>
         </TouchableOpacity>
       </View>
@@ -251,11 +58,45 @@ const ProductDetails = () => {
     Alert.alert("Buy Now", `Proceeding to buy ${product.productName}`);
   };
 
+  // Filter out current product from related products
+  const relatedProducts = PRODUCTS_DATA.filter((item) => item.id !== id);
+
+  const scrollToIndex = (index: number) => {
+    if (horizontalScrollRef.current) {
+      horizontalScrollRef.current.scrollTo({
+        x: index * ITEM_WIDTH,
+        animated: true,
+      });
+      setCurrentProductIndex(index);
+    }
+  };
+
+  const handleLeftArrowPress = () => {
+    if (currentProductIndex > 0) {
+      scrollToIndex(currentProductIndex - 1);
+    }
+  };
+
+  const handleRightArrowPress = () => {
+    if (currentProductIndex < relatedProducts.length - 1) {
+      scrollToIndex(currentProductIndex + 1);
+    }
+  };
+
+  const handleScroll = (event: any) => {
+    const contentOffsetX = event.nativeEvent.contentOffset.x;
+    const newIndex = Math.round(contentOffsetX / ITEM_WIDTH);
+    setCurrentProductIndex(newIndex);
+  };
+
   return (
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={styles.backButton}
+        >
           <MaterialIcons name="arrow-back" size={24} color="#003366" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Product Details</Text>
@@ -272,16 +113,18 @@ const ProductDetails = () => {
             style={styles.mainImage}
             resizeMode="contain"
           />
-          
+
           {/* Discount Badge */}
           <View style={styles.discountBadge}>
-            <Text style={styles.discountText}>{product.discountPercentage}% OFF</Text>
+            <Text style={styles.discountText}>
+              {product.discountPercentage}% OFF
+            </Text>
           </View>
         </View>
 
         {/* Thumbnail Images */}
-        <ScrollView 
-          horizontal 
+        <ScrollView
+          horizontal
           showsHorizontalScrollIndicator={false}
           style={styles.thumbnailContainer}
           contentContainerStyle={styles.thumbnailContent}
@@ -292,7 +135,7 @@ const ProductDetails = () => {
               onPress={() => setSelectedImageIndex(index)}
               style={[
                 styles.thumbnail,
-                selectedImageIndex === index && styles.thumbnailActive
+                selectedImageIndex === index && styles.thumbnailActive,
               ]}
             >
               <Image
@@ -308,8 +151,12 @@ const ProductDetails = () => {
         <View style={styles.detailsContainer}>
           {/* Price */}
           <View style={styles.priceContainer}>
-            <Text style={styles.discountedPrice}>{product.discountedPrice} BDT</Text>
-            <Text style={styles.originalPrice}>{product.originalPrice} BDT</Text>
+            <Text style={styles.discountedPrice}>
+              {product.discountedPrice} BDT
+            </Text>
+            <Text style={styles.originalPrice}>
+              {product.originalPrice} BDT
+            </Text>
           </View>
 
           {/* Product Name */}
@@ -317,11 +164,13 @@ const ProductDetails = () => {
 
           {/* Stock Status */}
           <View style={styles.stockContainer}>
-            <Text style={[
-              styles.stockText,
-              product.stock > 0 ? styles.inStock : styles.outOfStock
-            ]}>
-              {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
+            <Text
+              style={[
+                styles.stockText,
+                product.stock > 0 ? styles.inStock : styles.outOfStock,
+              ]}
+            >
+              {product.stock > 0 ? `${product.stock} in stock` : "Out of stock"}
             </Text>
           </View>
 
@@ -329,27 +178,139 @@ const ProductDetails = () => {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Product Description</Text>
             <Text style={styles.description}>
-              This is a premium quality product with excellent features. 
-              Designed for comfort and durability, it offers great value for money.
+              This is a premium quality product with excellent features.
+              Designed for comfort and durability, it offers great value for
+              money.
             </Text>
           </View>
+          <View style={styles.codeContainer}>
+            <Text style={styles.pwtxt}>Product Code: MA394031</Text>
+            <Text style={styles.pwtxt}>Warranty Type: darkak (7)</Text>
+          </View>
+          <View style={styles.quantityBtn}>
+            <QuantitySelector
+              initial={1}
+              onChange={(value) => {}}
+              disAble={false}
+            />
+          </View>
+          <View style={styles.descriptionContainer}>
+            <Text style={styles.descriptionText}>
+              আমাদের এই সুপার প্রিমিয়াম ব্যাগটি ব্যবহারে আপনার লুক হবে আরও
+              স্টাইলিশ, ট্রেন্ডি, আকর্ষণীয় এবং আপনার ব্যক্তিত্ব দারুণভাবে
+              ফুটিয়ে তুলবে। প্রতিটি ব্যাগ চমৎকার ডিজাইন ও টপ কোয়ালিটি উপকরণের
+              সমন্বয়ে তৈরি, যা ব্যবহারের সময় আপনার আত্মবিশ্বাস আরও বাড়িয়ে
+              তুলবে। অফিস, ভ্রমণ বা দৈনন্দিন ব্যবহারে—সব ক্ষেত্রেই এটি একদম
+              পারফেক্ট চয়েস। আজই কিনে নিন DarkakMart থেকে!
+            </Text>
+          </View>
+          <View>
+            <DeliveryDetails data={deliveryData} />
+          </View>
 
-          {/* Features */}
-          {/* <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Key Features</Text>
-            <View style={styles.featureItem}>
-              <MaterialIcons name="check-circle" size={16} color="#28a745" />
-              <Text style={styles.featureText}>High quality materials</Text>
+          {/* Related Products Section */}
+          <View style={styles.relatedProductsContainer}>
+            <View style={styles.relatedView}>
+              <Text style={styles.related}>RELATED PRODUCTS</Text>
+              <View style={styles.mainbtn}>
+                <TouchableOpacity
+                  style={[
+                    styles.arrowButton,
+                    currentProductIndex === 0 && styles.arrowButtonDisabled,
+                  ]}
+                  onPress={handleLeftArrowPress}
+                  disabled={currentProductIndex === 0}
+                >
+                  <FontAwesome6
+                    name="arrow-left-long"
+                    size={20}
+                    color={currentProductIndex === 0 ? "#ccc" : "#003366"}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    styles.arrowButton,
+                    currentProductIndex === relatedProducts.length - 1 &&
+                      styles.arrowButtonDisabled,
+                  ]}
+                  onPress={handleRightArrowPress}
+                  disabled={currentProductIndex === relatedProducts.length - 1}
+                >
+                  <FontAwesome6
+                    name="arrow-right-long"
+                    size={20}
+                    color={
+                      currentProductIndex === relatedProducts.length - 1
+                        ? "#ccc"
+                        : "#003366"
+                    }
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
-            <View style={styles.featureItem}>
-              <MaterialIcons name="check-circle" size={16} color="#28a745" />
-              <Text style={styles.featureText}>Premium finish</Text>
+
+            {/* Horizontal ScrollView for Products */}
+            <ScrollView
+              ref={horizontalScrollRef}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              pagingEnabled
+              onScroll={handleScroll}
+              scrollEventThrottle={16}
+              // contentContainerStyle={styles.horizontalScrollContent}
+              snapToInterval={ITEM_WIDTH}
+              decelerationRate="fast"
+            >
+              {relatedProducts.map((item) => (
+                <View key={item.id} style={styles.productItem}>
+                  <ProductCaosel
+                    id={item.id}
+                    productName={item.productName}
+                    originalPrice={item.originalPrice}
+                    discountedPrice={item.discountedPrice}
+                    discountPercentage={item.discountPercentage}
+                    images={item.images}
+                    stock={item.stock}
+                    onPressBuy={() => Alert.alert("Buying:", item.productName)}
+                    onPressAddToCart={() =>
+                      Alert.alert("Added to Cart:", item.productName)
+                    }
+                    onPressPreOrder={() =>
+                      Alert.alert("Pre-ordering:", item.productName)
+                    }
+                    onPressFavorite={() =>
+                      Alert.alert("Favorite:", item.productName)
+                    }
+                    onPressView={() =>
+                      Alert.alert("Viewing:", item.productName)
+                    }
+                    onPressCompare={() =>
+                      Alert.alert("Comparing:", item.productName)
+                    }
+                  />
+                </View>
+              ))}
+            </ScrollView>
+            <View style={styles.scrollIndicator}>
+              {relatedProducts.map((_, index) => (
+                <View
+                  key={index}
+                  style={[
+                    styles.indicatorDot,
+                    index === currentProductIndex && styles.indicatorDotActive,
+                  ]}
+                />
+              ))}
             </View>
-            <View style={styles.featureItem}>
-              <MaterialIcons name="check-circle" size={16} color="#28a745" />
-              <Text style={styles.featureText}>Warranty included</Text>
+            <AnimatedProductDetailsTabs />
+            <View style={{marginTop:20}}>
+              <NewsletterSubscribeCard />
             </View>
-          </View> */}
+           
+          </View>
+        </View>
+        <View style={{marginTop:10}}>
+          <MobileFooter />
         </View>
       </ScrollView>
 
@@ -359,7 +320,7 @@ const ProductDetails = () => {
           <MaterialIcons name="shopping-cart" size={20} color="#003366" />
           <Text style={styles.cartButtonText}>Add to Cart</Text>
         </TouchableOpacity>
-        
+
         <TouchableOpacity style={styles.buyButton} onPress={handleBuyNow}>
           <Text style={styles.buyButtonText}>Buy Now</Text>
         </TouchableOpacity>
@@ -551,6 +512,98 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#003366",
     fontWeight: "bold",
+  },
+  codeContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 20,
+  },
+  pwtxt: {
+    fontSize: 15,
+    fontWeight: "400",
+  },
+  quantityBtn: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  descriptionContainer: {
+    backgroundColor: "#ffffff",
+    padding: 12,
+    borderRadius: 10,
+    marginVertical: 10,
+    marginHorizontal: 8,
+    borderWidth: 1,
+    borderColor: "#e5e5e5",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 3,
+    elevation: 2,
+  },
+  descriptionText: {
+    fontSize: 15,
+    lineHeight: 24,
+    color: "#333333",
+    textAlign: "justify",
+    fontWeight: "400",
+  },
+  related: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#003366",
+  },
+  relatedView: {
+    padding: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  arrowButton: {
+    height: 40,
+    width: 40,
+    borderWidth: 1,
+    borderColor: "#003366",
+    borderRadius: 25,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#fff",
+  },
+  arrowButtonDisabled: {
+    borderColor: "#ccc",
+    backgroundColor: "#f8f8f8",
+  },
+  mainbtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 10,
+  },
+  relatedProductsContainer: {
+    marginTop: 20,
+  },
+  horizontalScrollContent: {
+    paddingHorizontal: 10,
+  },
+  productItem: {
+    marginHorizontal: 2,
+  },
+  scrollIndicator: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 15,
+    gap: 8,
+  },
+  indicatorDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: "#ccc",
+  },
+  indicatorDotActive: {
+    backgroundColor: "#003366",
+    width: 20,
   },
 });
 

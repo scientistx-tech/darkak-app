@@ -5,9 +5,13 @@ import ProductDetails from './[id]'
 const index = () => {
   return (
     <ScrollView>
-      <ProductDetails/>
-    <View>
       
+    <View>
+      <ProductDetails/>
+      <View>
+        <Text>Product Code: MA394031</Text>
+        <Text>Warranty Type: darkak (7)</Text>
+      </View>
     </View>
     </ScrollView>
   )

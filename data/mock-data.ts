@@ -1,3 +1,4 @@
+import { DeliveryDetailItem } from '@/components/deliveryDetails/DeliveryDetails';
 import type { Banner, Category, Product } from '@/types';
 
 export const mockBanners: Banner[] = [
@@ -380,6 +381,53 @@ export const faqData = [
     ],
   },
 ];
+
+//delivary data
+
+export const deliveryData: DeliveryDetailItem[] = [
+    {
+      id: '1',
+      title: 'Estimated Delivery in Dhaka',
+      description: 'Arrives in 3-5 business days',
+      icon: 'time-outline',
+    },
+    {
+      id: '2',
+      title: 'Delivery Charge in Dhaka',
+      description: 'Charge ৳80',
+      icon: 'cash-outline',
+      isHighlighted: true,
+      highlightColor: '#e74c3c',
+    },
+    {
+      id: '3',
+      title: 'Estimated Delivery Outside Dhaka',
+      description: 'Arrives in 3-5 business days',
+      icon: 'time-outline',
+    },
+    {
+      id: '4',
+      title: 'Delivery Charge Outside Dhaka',
+      description: 'Charge ৳120',
+      icon: 'cash-outline',
+      isHighlighted: true,
+      highlightColor: '#e74c3c',
+    },
+    {
+      id: '5',
+      title: 'Return Policy',
+      description: 'Free returns within 7 days',
+      icon: 'refresh-circle-outline',
+      isHighlighted: true,
+      highlightColor: '#27ae60',
+    },
+    {
+      id: '6',
+      title: 'Secure Delivery',
+      description: 'Handled by trusted courier partners',
+      icon: 'shield-checkmark-outline',
+    },
+  ];
 
 
 // Filter featured products for home page
