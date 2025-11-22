@@ -207,23 +207,351 @@
 //   },
 // });
 
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  Dimensions,
+  Alert,
+} from "react-native";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { MaterialIcons } from "@expo/vector-icons";
+import { PRODUCTS_DATA } from "@/data/mock-data";
 
-const id = () => {
+const { width } = Dimensions.get("window");
+
+const ProductDetails = () => {
+  const { id } = useLocalSearchParams();
+  const router = useRouter();
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
+  // প্রোডাক্ট ডাটা খুঁজে বের করুন
+  const product = PRODUCTS_DATA.find(item => item.id === id);
+
+  if (!product) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.errorText}>Product not found</Text>
+        <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+          <Text style={styles.backButtonText}>Go Back</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  const handleAddToCart = () => {
+    Alert.alert("Success", `${product.productName} added to cart!`);
+  };
+
+  const handleBuyNow = () => {
+    Alert.alert("Buy Now", `Proceeding to buy ${product.productName}`);
+  };
+
   return (
     <View style={styles.container}>
-      <Text>[id]</Text>
-    </View>
-  )
-}
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+          <MaterialIcons name="arrow-back" size={24} color="#003366" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Product Details</Text>
+        <TouchableOpacity style={styles.favoriteButton}>
+          <MaterialIcons name="favorite-border" size={24} color="#003366" />
+        </TouchableOpacity>
+      </View>
 
-export default id
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Main Image */}
+        <View style={styles.mainImageContainer}>
+          <Image
+            source={{ uri: product.images[selectedImageIndex] }}
+            style={styles.mainImage}
+            resizeMode="contain"
+          />
+          
+          {/* Discount Badge */}
+          <View style={styles.discountBadge}>
+            <Text style={styles.discountText}>{product.discountPercentage}% OFF</Text>
+          </View>
+        </View>
+
+        {/* Thumbnail Images */}
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false}
+          style={styles.thumbnailContainer}
+          contentContainerStyle={styles.thumbnailContent}
+        >
+          {product.images.map((image, index) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() => setSelectedImageIndex(index)}
+              style={[
+                styles.thumbnail,
+                selectedImageIndex === index && styles.thumbnailActive
+              ]}
+            >
+              <Image
+                source={{ uri: image }}
+                style={styles.thumbnailImage}
+                resizeMode="cover"
+              />
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+
+        {/* Product Details */}
+        <View style={styles.detailsContainer}>
+          {/* Price */}
+          <View style={styles.priceContainer}>
+            <Text style={styles.discountedPrice}>{product.discountedPrice} BDT</Text>
+            <Text style={styles.originalPrice}>{product.originalPrice} BDT</Text>
+          </View>
+
+          {/* Product Name */}
+          <Text style={styles.productName}>{product.productName}</Text>
+
+          {/* Stock Status */}
+          <View style={styles.stockContainer}>
+            <Text style={[
+              styles.stockText,
+              product.stock > 0 ? styles.inStock : styles.outOfStock
+            ]}>
+              {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
+            </Text>
+          </View>
+
+          {/* Description */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Product Description</Text>
+            <Text style={styles.description}>
+              This is a premium quality product with excellent features. 
+              Designed for comfort and durability, it offers great value for money.
+            </Text>
+          </View>
+
+          {/* Features */}
+          {/* <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Key Features</Text>
+            <View style={styles.featureItem}>
+              <MaterialIcons name="check-circle" size={16} color="#28a745" />
+              <Text style={styles.featureText}>High quality materials</Text>
+            </View>
+            <View style={styles.featureItem}>
+              <MaterialIcons name="check-circle" size={16} color="#28a745" />
+              <Text style={styles.featureText}>Premium finish</Text>
+            </View>
+            <View style={styles.featureItem}>
+              <MaterialIcons name="check-circle" size={16} color="#28a745" />
+              <Text style={styles.featureText}>Warranty included</Text>
+            </View>
+          </View> */}
+        </View>
+      </ScrollView>
+
+      {/* Action Buttons */}
+      <View style={styles.actionContainer}>
+        <TouchableOpacity style={styles.cartButton} onPress={handleAddToCart}>
+          <MaterialIcons name="shopping-cart" size={20} color="#003366" />
+          <Text style={styles.cartButtonText}>Add to Cart</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity style={styles.buyButton} onPress={handleBuyNow}>
+          <Text style={styles.buyButtonText}>Buy Now</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-  container:{
-    alignItems:'center',
-    justifyContent:'center',
-    marginTop:100,
-  }
-})
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "#f0f0f0",
+  },
+  backButton: {
+    padding: 8,
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#003366",
+  },
+  favoriteButton: {
+    padding: 8,
+  },
+  mainImageContainer: {
+    width: width,
+    height: width,
+    backgroundColor: "#f8f8f8",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+  },
+  mainImage: {
+    width: "80%",
+    height: "80%",
+  },
+  discountBadge: {
+    position: "absolute",
+    top: 16,
+    left: 0,
+    backgroundColor: "#003366",
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderTopRightRadius: 8,
+    borderBottomRightRadius: 8,
+  },
+  discountText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 14,
+  },
+  thumbnailContainer: {
+    paddingVertical: 16,
+    backgroundColor: "#f8f8f8",
+  },
+  thumbnailContent: {
+    paddingHorizontal: 16,
+  },
+  thumbnail: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+    marginRight: 12,
+    borderWidth: 2,
+    borderColor: "transparent",
+  },
+  thumbnailActive: {
+    borderColor: "#003366",
+  },
+  thumbnailImage: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 6,
+  },
+  detailsContainer: {
+    padding: 16,
+  },
+  priceContainer: {
+    flexDirection: "row",
+    alignItems: "baseline",
+    marginBottom: 8,
+  },
+  discountedPrice: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#003366",
+    marginRight: 12,
+  },
+  originalPrice: {
+    fontSize: 16,
+    textDecorationLine: "line-through",
+    color: "#999",
+  },
+  productName: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#333",
+    marginBottom: 12,
+  },
+  stockContainer: {
+    marginBottom: 20,
+  },
+  stockText: {
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  inStock: {
+    color: "#28a745",
+  },
+  outOfStock: {
+    color: "#dc3545",
+  },
+  section: {
+    marginBottom: 24,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: 12,
+  },
+  description: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: "#666",
+  },
+  featureItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  featureText: {
+    fontSize: 14,
+    color: "#333",
+    marginLeft: 8,
+  },
+  actionContainer: {
+    flexDirection: "row",
+    padding: 16,
+    borderTopWidth: 1,
+    borderTopColor: "#f0f0f0",
+    backgroundColor: "#fff",
+  },
+  cartButton: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 16,
+    borderWidth: 2,
+    borderColor: "#003366",
+    borderRadius: 8,
+    marginRight: 12,
+  },
+  cartButtonText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#003366",
+    marginLeft: 8,
+  },
+  buyButton: {
+    flex: 1,
+    backgroundColor: "#003366",
+    paddingVertical: 16,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  buyButtonText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#fff",
+  },
+  errorText: {
+    fontSize: 18,
+    color: "#666",
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  backButtonText: {
+    fontSize: 16,
+    color: "#003366",
+    fontWeight: "bold",
+  },
+});
+
+export default ProductDetails;

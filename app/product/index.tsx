@@ -1,11 +1,15 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import ProductDetails from './[id]'
 
 const index = () => {
   return (
+    <ScrollView>
+      <ProductDetails/>
     <View>
-      <Text>index</Text>
+      
     </View>
+    </ScrollView>
   )
 }
 
