@@ -78,7 +78,7 @@ const Cart = () => {
           <SearchBar
             value={searchQuery}
             onChangeText={setSearchQuery}
-            onFilterPress={handleFilterPress} // Filter button এ click handler যোগ করুন
+            onFilterPress={handleFilterPress} 
             placeholder="Search products..."
           />
         </View>

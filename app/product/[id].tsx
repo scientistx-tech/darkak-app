@@ -9,6 +9,7 @@ import {
   Dimensions,
   Alert,
   FlatList,
+ 
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -21,6 +22,7 @@ import AnimatedProductDetailsTabs from "@/components/animatedProductDetailsTabs/
 import FooterUpperSection from "@/components/home/FooterUpperSection";
 import NewsletterSubscribeCard from "@/components/newsletterSubscribeCard/NewsletterSubscribeCard";
 import MobileFooter from "@/components/mobileFooter/MobileFooter";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const { width } = Dimensions.get("window");
 const ITEM_WIDTH = width * 0.8; // Product item width
@@ -38,7 +40,7 @@ const ProductDetails = () => {
 
   if (!product) {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Text style={styles.errorText}>Product not found</Text>
         <TouchableOpacity
           style={styles.backButton}
@@ -46,7 +48,7 @@ const ProductDetails = () => {
         >
           <Text style={styles.backButtonText}>Go Back</Text>
         </TouchableOpacity>
-      </View>
+      </SafeAreaView>
     );
   }
 
@@ -54,8 +56,16 @@ const ProductDetails = () => {
     Alert.alert("Success", `${product.productName} added to cart!`);
   };
 
-  const handleBuyNow = () => {
-    Alert.alert("Buy Now", `Proceeding to buy ${product.productName}`);
+   const handleBuyNow = () => {
+    if (product) {
+      router.push({
+        pathname: "/oder",
+        params: { 
+          productId: product.id,
+          //quantity: quantity
+        }
+      });
+    }
   };
 
   // Filter out current product from related products
@@ -90,7 +100,7 @@ const ProductDetails = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -100,9 +110,9 @@ const ProductDetails = () => {
           <MaterialIcons name="arrow-back" size={24} color="#003366" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Product Details</Text>
-        <TouchableOpacity style={styles.favoriteButton}>
+        {/* <TouchableOpacity style={styles.favoriteButton}>
           <MaterialIcons name="favorite-border" size={24} color="#003366" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -325,7 +335,7 @@ const ProductDetails = () => {
           <Text style={styles.buyButtonText}>Buy Now</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -337,11 +347,12 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    //justifyContent: "space-between",
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: "#f0f0f0",
+    gap:80
   },
   backButton: {
     padding: 8,

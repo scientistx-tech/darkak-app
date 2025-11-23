@@ -1,10 +1,25 @@
-
 import React from "react";
 import { StyleSheet, FlatList, Alert } from "react-native";
 import ProductCaosel from "../productCarosel/ProductCaosel";
 import { PRODUCTS_DATA } from "@/data/mock-data";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 const HomePage = () => {
+  const { id } = useLocalSearchParams();
+  const router = useRouter();
+
+  const handleBuyNow = (productId: string) => {
+    const product = PRODUCTS_DATA.find((item) => item.id === productId);
+    if (product) {
+      router.push({
+        pathname: "/oder",
+        params: { 
+          productId: product.id,
+        }
+      });
+    }
+  };
+
   return (
     <FlatList
       data={PRODUCTS_DATA}
@@ -19,7 +34,7 @@ const HomePage = () => {
           discountPercentage={item.discountPercentage}
           images={item.images}
           stock={item.stock}
-          onPressBuy={() => Alert.alert("Buying:", item.productName)}
+          onPressBuy={() => handleBuyNow(item.id)}
           onPressAddToCart={() =>
             Alert.alert("Added to Cart:", item.productName)
           }

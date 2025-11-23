@@ -1,4 +1,3 @@
-// FilterModal.tsx
 import { 
   StyleSheet, 
   Text, 
@@ -8,7 +7,14 @@ import {
   ScrollView,
   SafeAreaView 
 } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
+import { CATEGORIES_DATA, BRANDS_DATA } from '@/data/mock-data';
+import PriceRangeSelector from './categorySelector/PriceRange';
+import CategorySelector from './categorySelector/CategorySelector';
+import BrandSelector from './categorySelector/BrandSelector';
+import AvailabilitySelector from './categorySelector/AvailabilitySelector';
+import WarrantySelector from './categorySelector/WarrantySelector';
+import RegionSelector from './categorySelector/RegionSelector';
 
 interface FilterModalProps {
   visible: boolean;
@@ -16,6 +22,39 @@ interface FilterModalProps {
 }
 
 const FilterModal: React.FC<FilterModalProps> = ({ visible, onClose }) => {
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  const [selectedAvailability, setSelectedAvailability] = useState<string[]>([]);
+  const [selectedWarranty, setSelectedWarranty] = useState<string[]>([]);
+  const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
+  const [priceRange, setPriceRange] = useState({ min: 0, max: 10000 });
+  
+  const categories = CATEGORIES_DATA;
+  const brands = BRANDS_DATA;
+
+  const handlePriceRangeChange = (minPrice: number, maxPrice: number) => {
+    setPriceRange({ min: minPrice, max: maxPrice });
+  };
+
+  const handleReset = () => {
+    setSelectedCategories([]);
+    setSelectedBrands([]);
+    setSelectedAvailability([]);
+    setSelectedWarranty([]);
+    setSelectedRegions([]);
+    setPriceRange({ min: 0, max: 10000 });
+  };
+
+  const handleApply = () => {
+    console.log('Selected categories:', selectedCategories);
+    console.log('Selected brands:', selectedBrands);
+    console.log('Selected availability:', selectedAvailability);
+    console.log('Selected warranty:', selectedWarranty);
+    console.log('Selected regions:', selectedRegions);
+    console.log('Price range:', priceRange);
+    onClose();
+  };
+
   return (
     <Modal
       visible={visible}
@@ -23,7 +62,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ visible, onClose }) => {
       transparent={true}
       onRequestClose={onClose}
     >
-      <View style={styles.modalContainer}>
+      <SafeAreaView style={styles.modalContainer}>
         <View style={styles.modalContent}>
           {/* Header */}
           <View style={styles.modalHeader}>
@@ -34,24 +73,67 @@ const FilterModal: React.FC<FilterModalProps> = ({ visible, onClose }) => {
           </View>
 
           {/* Filter Content */}
-          <ScrollView style={styles.filterContent}>
-            <Text style={styles.sectionTitle}>Price Range</Text>
-            {/* Add your filter options here */}
-            <Text style={styles.sectionTitle}>Categories</Text>
-            {/* Add your filter options here */}
-            <Text style={styles.sectionTitle}>Brand</Text>
-            {/* Add your filter options here */}
+          <ScrollView style={styles.filterContent} showsVerticalScrollIndicator={false}>
+            {/* Price Range Section */}
+            <PriceRangeSelector onPriceRangeChange={handlePriceRangeChange} />
+            
+            {/* Categories Section */}
+            <CategorySelector
+              categories={categories}
+              selectedCategories={selectedCategories}
+              onCategorySelect={setSelectedCategories}
+              maxSelections={5}
+            />
+            
+            {/* Brand Section */}
+            <BrandSelector
+              brands={brands}
+              selectedBrands={selectedBrands}
+              onBrandSelect={setSelectedBrands}
+              maxSelections={10}
+            />
+
+            {/* Availability Section */}
+            <AvailabilitySelector
+              selectedAvailability={selectedAvailability}
+              onAvailabilitySelect={setSelectedAvailability}
+            />
+
+            {/* Warranty Section */}
+            <WarrantySelector
+              selectedWarranty={selectedWarranty}
+              onWarrantySelect={setSelectedWarranty}
+            />
+
+            {/* Region Section */}
+            <RegionSelector
+              selectedRegions={selectedRegions}
+              onRegionSelect={setSelectedRegions}
+            />
           </ScrollView>
 
-         
+          {/* Footer */}
+          <View style={styles.modalFooter}>
+            <TouchableOpacity 
+              style={styles.resetButton}
+              onPress={handleReset}
+            >
+              <Text style={styles.resetText}>Reset</Text>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.applyButton}
+              onPress={handleApply}
+            >
+              <Text style={styles.applyText}>Apply</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      </SafeAreaView>
     </Modal>
   )
 }
 
-export default FilterModal
-
+// আপনার existing styles একই থাকবে
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
@@ -87,13 +169,7 @@ const styles = StyleSheet.create({
   },
   filterContent: {
     flex: 1,
-    padding: 20,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 15,
-    marginTop: 20,
+    padding: 16,
   },
   modalFooter: {
     flexDirection: 'row',
@@ -127,4 +203,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '500',
   },
-})
+});
+
+export default FilterModal;

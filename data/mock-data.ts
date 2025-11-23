@@ -429,6 +429,141 @@ export const deliveryData: DeliveryDetailItem[] = [
     },
   ];
 
+  // src/data/mock-data/categories.ts
+
+export const CATEGORIES_DATA = [
+  {
+    id: 'women',
+    name: 'Women',
+    children: [
+      {
+        id: 'bags-accessories',
+        name: 'Bags & Accessories',
+        children: [
+          { id: 'luxury-handbags', name: 'Luxury Handbags' },
+          { id: 'party-bags', name: 'Party Bags' },
+          { id: 'wallets-clutches', name: 'Wallets & Clutches' },
+          { id: 'sling-crossbody', name: 'Sling & Crossbody Bags' },
+          { id: 'backpacks', name: 'Backpacks' },
+        ]
+      },
+      {
+        id: 'watches-jewelry',
+        name: 'Watches & Jewelry',
+        children: [
+          { id: 'women-luxury-watches', name: 'Women Luxury Watches' },
+          { id: 'women-casual-watches', name: "Women's Casual Watches" },
+        ]
+      }
+    ]
+  },
+
+  {
+    id: 'men',
+    name: 'Men',
+    children: [
+      { id: 'men-watch', name: 'Men Watch' }
+    ]
+  },
+
+  {
+    id: 'consumer-electronics',
+    name: 'Consumer Electronics',
+    children: [
+      { id: 'electronics', name: 'Electronicsss' },
+      {
+        id: 'speaker-headphones',
+        name: 'Speaker & Headphones',
+        children: [{ id: 'audio-sound', name: 'Audio & Sound' }]
+      },
+      {
+        id: 'wellness-relaxation',
+        name: 'Wellness & Relaxation',
+        children: [{ id: 'kids-learning', name: 'Kids & Learning' }]
+      },
+      { id: 'everyday-essentials', name: 'Everyday Essentials' }
+    ]
+  },
+
+  {
+    id: 'home-kitchen',
+    name: 'Home & Kitchen',
+    children: [
+      { id: 'appliances', name: 'Appliances' }
+    ]
+  },
+
+  {
+    id: 'beauty-health',
+    name: 'Beauty & Health',
+    children: [
+      {
+        id: 'hair-product',
+        name: 'Hair Product',
+        children: [
+          { id: 'hair-cutler', name: 'Hair Cutler' }
+        ]
+      }
+    ]
+  },
+
+  { id: 'toys-games', name: 'Toys & Games' },
+
+  { id: 'jewelry-watches-accessories', name: 'Jewelry, Watches & Accessories' },
+
+  {
+    id: 'computer-office-education',
+    name: 'Computer Office & Education',
+    children: [
+      {
+        id: 'kids-zone',
+        name: 'Kids Zone',
+        children: [
+          {
+            id: 'school-bags',
+            name: 'School Bags',
+            children: [
+              { id: 'boys-school-bags', name: "Boys' School Bags" },
+              { id: 'girls-school-bags', name: "Girls' School Bags" }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+];
+
+export const BRANDS_DATA = [
+  { id: 'all', name: 'All' },
+  { id: 'darkak', name: 'Darkak' },
+  { id: 'chanel', name: 'Chanel' },
+  { id: 'fendi', name: 'Fendi' },
+  { id: 'miss-alita', name: 'Miss Alita' },
+  { id: 'dior', name: 'Dior' },
+  { id: 'ashini', name: 'Ashini' },
+  { id: 'd-and-g', name: 'D and G' },
+  { id: 'amille', name: 'Amille' },
+  { id: 'feifan-quingchun-fashion', name: 'Feifan Quingchun Fashion' },
+  { id: 'hublot', name: 'Hublot' },
+  { id: 'calvin-klein', name: 'Calvin Klein' },
+  { id: 'bulgari', name: 'Bulgari' },
+  { id: 'omega', name: 'Omega' },
+  { id: 'g-shock', name: 'G-Shock' },
+  { id: 'longines', name: 'LONGINES' },
+  { id: 'montblanc', name: 'Montblanc' },
+  { id: 'swarovski', name: 'Swarovski' },
+  { id: 'michael-kors', name: 'Michael Kors' },
+  { id: 'rado', name: 'Rado' },
+  { id: 'meccanico-emporio-armani', name: 'Meccanico Emporio Armani' },
+  { id: 'carrera', name: 'Carrera' },
+  { id: 'gucci', name: 'Gucci' },
+  { id: 'ysl', name: 'YSL' },
+  { id: 'jbl', name: 'JBL' },
+  { id: 'boss', name: 'Boss' },
+  { id: 'tag-heuer', name: 'Tag Heuer' },
+];
+
+
 
 // Filter featured products for home page
 export const featuredProducts = mockProducts.filter(p => p.isFeatured);
