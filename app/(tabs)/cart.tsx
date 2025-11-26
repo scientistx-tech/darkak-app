@@ -1,7 +1,7 @@
 import QuantityCard from "@/components/button/quantityButton/QuantityCard";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useRouter } from "expo-router";
+import { useState } from "react";
 import {
   Alert,
   Image,
@@ -13,47 +13,45 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-// Type definition add kori
-interface CartItem {
-  id: string;
-  productName: string;
-  price: number;
-  image: string;
-  quantity: number;
-}
+// Mock cart data based on your screenshot
+const CART_ITEMS = [
+  {
+    id: "1",
+    productName: "Chic Brown Quilted Design Shoulder Bag",
+    price: 1960,
+    image:
+      "https://tse4.mm.bing.net/th/id/OIP.5scyD0bTOKXAplB4yjbs6wHaEA?pid=Api&P=0&h=220",
+    quantity: 1,
+  },
+  {
+    id: "2",
+    productName: "Designer Patterned Tote Bag with Brown Accent",
+    price: 1960,
+    image:
+      "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/6c16f0171396113.646f4f9b52e9d.png",
+    quantity: 1,
+  },
+  {
+    id: "3",
+    productName: "Chic Brown Quilted Design Shoulder Bag",
+    price: 1960,
+    image:
+      "https://tse4.mm.bing.net/th/id/OIP.5scyD0bTOKXAplB4yjbs6wHaEA?pid=Api&P=0&h=220",
+    quantity: 1,
+  },
+  {
+    id: "4",
+    productName: "Designer Patterned Tote Bag with Brown Accent",
+    price: 1960,
+    image:
+      "https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/6c16f0171396113.646f4f9b52e9d.png",
+    quantity: 1,
+  },
+];
 
 const Cart = () => {
   const router = useRouter();
-  const params = useLocalSearchParams();
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-
-  // Product details theke data receive korbo - FIXED
-  useEffect(() => {
-    if (params.newProduct) {
-      try {
-        const newProduct = JSON.parse(params.newProduct as string);
-
-        setCartItems((prevItems) => {
-          // Check if product already exists in cart
-          const existingItemIndex = prevItems.findIndex(
-            (item) => item.id === newProduct.id
-          );
-
-          if (existingItemIndex > -1) {
-            // If exists, increase quantity
-            const updatedItems = [...prevItems];
-            updatedItems[existingItemIndex].quantity += 1;
-            return updatedItems;
-          } else {
-            // If new, add with quantity 1
-            return [...prevItems, { ...newProduct, quantity: 1 }];
-          }
-        });
-      } catch (error) {
-        console.error("Error parsing product:", error);
-      }
-    }
-  }, [params.newProduct]);
+  const [cartItems, setCartItems] = useState(CART_ITEMS);
 
   const updateQuantity = (productId: string, quantity: number) => {
     if (quantity <= 0) {
@@ -141,6 +139,11 @@ const Cart = () => {
           <View style={styles.cartItemsContainer}>
             {cartItems.map((item) => (
               <View key={item.id} style={styles.cartItem}>
+                {/* Checkbox */}
+                <TouchableOpacity style={styles.checkbox}>
+                  <View style={styles.checkboxInner} />
+                </TouchableOpacity>
+
                 {/* Product Image */}
                 <Image
                   source={{ uri: item.image }}
@@ -167,9 +170,6 @@ const Cart = () => {
                 {/* Price */}
                 <View style={styles.priceSection}>
                   <Text style={styles.price}>{item.price} TK</Text>
-                  <Text style={styles.itemTotal}>
-                    Total: {item.price * item.quantity} TK
-                  </Text>
                   <TouchableOpacity
                     style={styles.removeButton}
                     onPress={() => removeFromCart(item.id)}
@@ -223,10 +223,7 @@ const Cart = () => {
               style={styles.checkoutBtn}
               onPress={handleCheckout}
             >
-              <Text style={styles.checkoutBtnText}>
-                Checkout ({cartItems.length}{" "}
-                {cartItems.length === 1 ? "item" : "items"})
-              </Text>
+              <Text style={styles.checkoutBtnText}>Checkout</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -300,6 +297,23 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#e5e5e5",
   },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderWidth: 2,
+    borderColor: "#003366",
+    borderRadius: 4,
+    marginRight: 12,
+    marginTop: 4,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  checkboxInner: {
+    width: 12,
+    height: 12,
+    backgroundColor: "#003366",
+    borderRadius: 2,
+  },
   productImage: {
     width: 60,
     height: 60,
@@ -329,17 +343,12 @@ const styles = StyleSheet.create({
   priceSection: {
     alignItems: "flex-end",
     justifyContent: "space-between",
-    minHeight: 60,
+    height: 60,
   },
   price: {
     fontSize: 16,
     fontWeight: "bold",
     color: "#003366",
-  },
-  itemTotal: {
-    fontSize: 12,
-    color: "#666",
-    marginBottom: 4,
   },
   removeButton: {
     padding: 4,
