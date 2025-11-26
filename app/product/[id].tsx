@@ -1,27 +1,23 @@
-import React, { useState, useRef } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-  Dimensions,
-  Alert,
-  FlatList,
- 
-} from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { MaterialIcons } from "@expo/vector-icons";
-import { FontAwesome6 } from "@expo/vector-icons";
-import { deliveryData, PRODUCTS_DATA } from "@/data/mock-data";
+import AnimatedProductDetailsTabs from "@/components/animatedProductDetailsTabs/AnimatedProductDetailsTabs";
 import QuantitySelector from "@/components/button/quantityButton/QuantityButton";
 import DeliveryDetails from "@/components/deliveryDetails/DeliveryDetails";
-import ProductCaosel from "@/components/productCarosel/ProductCaosel";
-import AnimatedProductDetailsTabs from "@/components/animatedProductDetailsTabs/AnimatedProductDetailsTabs";
-import FooterUpperSection from "@/components/home/FooterUpperSection";
-import NewsletterSubscribeCard from "@/components/newsletterSubscribeCard/NewsletterSubscribeCard";
 import MobileFooter from "@/components/mobileFooter/MobileFooter";
+import NewsletterSubscribeCard from "@/components/newsletterSubscribeCard/NewsletterSubscribeCard";
+import ProductCaosel from "@/components/productCarosel/ProductCaosel";
+import { deliveryData, PRODUCTS_DATA } from "@/data/mock-data";
+import { FontAwesome6, MaterialIcons } from "@expo/vector-icons";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useRef, useState } from "react";
+import {
+  Alert,
+  Dimensions,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const { width } = Dimensions.get("window");
@@ -29,7 +25,7 @@ const ITEM_WIDTH = width * 0.8; // Product item width
 
 const ProductDetails = () => {
   const { id } = useLocalSearchParams();
-  console.log('iii::' , id)
+  console.log("iii::", id);
   const router = useRouter();
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [currentProductIndex, setCurrentProductIndex] = useState(0);
@@ -52,18 +48,35 @@ const ProductDetails = () => {
     );
   }
 
+  //
   const handleAddToCart = () => {
+    // Shudhu product er basic info pathabo
+    const productInfo = {
+      id: product.id,
+      productName: product.productName,
+      price: product.discountedPrice,
+      image: product.images[0],
+      quantity: 1,
+    };
+
+    router.push({
+      pathname: "/cart",
+      params: {
+        newProduct: JSON.stringify(productInfo), // quantity charao shudhu product info
+      },
+    });
+
     Alert.alert("Success", `${product.productName} added to cart!`);
   };
 
-   const handleBuyNow = () => {
+  const handleBuyNow = () => {
     if (product) {
       router.push({
         pathname: "/oder",
-        params: { 
+        params: {
           productId: product.id,
           //quantity: quantity
-        }
+        },
       });
     }
   };
@@ -313,13 +326,12 @@ const ProductDetails = () => {
               ))}
             </View>
             <AnimatedProductDetailsTabs />
-            <View style={{marginTop:20}}>
+            <View style={{ marginTop: 20 }}>
               <NewsletterSubscribeCard />
             </View>
-           
           </View>
         </View>
-        <View style={{marginTop:10}}>
+        <View style={{ marginTop: 10 }}>
           <MobileFooter />
         </View>
       </ScrollView>
@@ -352,7 +364,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: "#f0f0f0",
-    gap:80
+    gap: 80,
   },
   backButton: {
     padding: 8,
