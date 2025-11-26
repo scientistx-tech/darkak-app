@@ -1,219 +1,158 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { StyleSheet, Text, View, ScrollView } from "react-native";
 import React, { useState } from "react";
-import { FontAwesome, Entypo, MaterialIcons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
+import CustomButtonRow from "@/components/profileComponent/AllProfileSectionComponent";
+import ProfileCard from "@/components/profileComponent/ProfileCar";
+import EditProfileComponent from "@/components/profileComponent/EditProfileComponent";
+import MyReviewComponent from "@/components/profileComponent/MyReviewComponent";
+import TrackOrderComponent from "@/components/profileComponent/TrackOrderComponent";
+import NotificationComponent from "@/components/profileComponent/NotificationComponen";
+import OrderHistoryComponent from "@/components/profileComponent/HistoryOrder";
+import ReturnRefundComponent from "@/components/profileComponent/ReturnRefundComponent"; // Import করুন
+import HeaderComponent from "@/components/headerComponent/HeaderComponent";
 
-const Profile = () => {
-  const [isvisible,satIsvisible] = useState(false);
+const localProfileData = {
+  name: "Shakib Al Hasan",
+  email: "shakib@example.com",
+  phone: "+880123456789",
+  dob: "1995-03-24",
+  gender: "Male",
+  maritalStatus: "Single",
+  address: "Dhaka, Bangladesh",
+  avatarUrl: "https://i.pravatar.cc/150?img=12",
+};
+
+// Active component types - returnRefund add করুন
+type ActiveComponent = 'personalInfo' | 'editProfile' | 'notification' | 'orderHistory' | 'myReview' | 'trackOrder' | 'returnRefund';
+
+const ProfileScreen = () => {
+  const [activeComponent, setActiveComponent] = useState<ActiveComponent>('personalInfo');
+
+  const handleEditAvatar = () => {
+    console.log("Edit avatar clicked");
+  };
+
+  // Component selection function - returnRefund case add করুন
+  const renderActiveComponent = () => {
+    switch (activeComponent) {
+      case 'personalInfo':
+        return <ProfileCard data={localProfileData} onEditAvatar={handleEditAvatar} />;
+      
+      case 'editProfile':
+        return (
+          <EditProfileComponent 
+            onBack={() => setActiveComponent('personalInfo')}
+            initialData={localProfileData}
+          />
+        );
+      
+      case 'notification':
+        return <NotificationComponent onBack={() => setActiveComponent('personalInfo')} />;
+      
+      case 'orderHistory':
+        return <OrderHistoryComponent onBack={() => setActiveComponent('personalInfo')} />;
+      
+      case 'myReview':
+        return <MyReviewComponent onBack={() => setActiveComponent('personalInfo')} />;
+      
+      case 'trackOrder':
+        return <TrackOrderComponent onBack={() => setActiveComponent('personalInfo')} />;
+      
+      case 'returnRefund': // New case add করুন
+        return <ReturnRefundComponent onBack={() => setActiveComponent('personalInfo')} />;
+      
+      default:
+        return <ProfileCard data={localProfileData} onEditAvatar={handleEditAvatar} />;
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.welcomeText}>Welcome Back</Text>
-      <Text style={styles.loginHint}>Login using your social account or email</Text>
+    <SafeAreaView style={{ flex: 1 }}>
+      <HeaderComponent/>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingVertical: 10 }}
+      >
+        {/* Menu Buttons */}
+        <View style={{ paddingHorizontal: 10 }}>
+          <CustomButtonRow
+            title="Personal Information"
+            iconName="person"
+            iconLib="ion"
+            onPress={() => setActiveComponent('personalInfo')}
+            isActive={activeComponent === 'personalInfo'}
+          />
 
-      {/* Google Login */}
-      <TouchableOpacity style={[styles.socialButton, styles.googleButton]}>
-        <FontAwesome name="google" size={20} color="#fff" style={{ marginRight: 10 }} />
-        <Text style={styles.socialButtonText}>LOGIN WITH GOOGLE</Text>
-      </TouchableOpacity>
+          <CustomButtonRow
+            title="Edit Profile"
+            iconName="pencil"
+            iconLib="entypo"
+            onPress={() => setActiveComponent('editProfile')}
+            isActive={activeComponent === 'editProfile'}
+          />
 
-      {/* Facebook Login */}
-      <TouchableOpacity style={[styles.socialButton, styles.facebookButton]}>
-        <FontAwesome name="facebook" size={20} color="#fff" style={{ marginRight: 10 }} />
-        <Text style={styles.socialButtonText}>LOGIN WITH FACEBOOK</Text>
-      </TouchableOpacity>
+          <CustomButtonRow
+            title="Notification"
+            iconName="notifications-outline"
+            iconLib="ion"
+            onPress={() => setActiveComponent('notification')}
+            isActive={activeComponent === 'notification'}
+          />
 
-      {/* Phone Login */}
-      <TouchableOpacity style={[styles.socialButton, styles.phoneButton]}>
-        <FontAwesome name="phone" size={20} color="#fff" style={{ marginRight: 10 }} />
-        <Text style={styles.socialButtonText}>LOGIN WITH PHONE</Text>
-      </TouchableOpacity>
+          <CustomButtonRow
+            title="Order History"
+            iconName="clipboard-text"
+            iconLib="material"
+            onPress={() => setActiveComponent('orderHistory')}
+            isActive={activeComponent === 'orderHistory'}
+          />
 
-      {/* OR Line */}
-      <View style={styles.orContainer}>
-        <View style={styles.line} />
-        <Text style={styles.orText}>OR</Text>
-        <View style={styles.line} />
-      </View>
+          <CustomButtonRow
+            title="My Review"
+            iconName="star-outline"
+            iconLib="ion"
+            onPress={() => setActiveComponent('myReview')}
+            isActive={activeComponent === 'myReview'}
+          />
 
-      {/* Email Input */}
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
+          <CustomButtonRow
+            title="Track Order"
+            iconName="location-outline"
+            iconLib="ion"
+            onPress={() => setActiveComponent('trackOrder')}
+            isActive={activeComponent === 'trackOrder'}
+          />
 
-      {/* Password Input */}
-      <View style={styles.passwordContainer}>
-        <TextInput
-          style={styles.passwordInput}
-          placeholder="Enter Password"
-          secureTextEntry
-        />
-        <TouchableOpacity style={styles.eyeIconContainer}>
-          <Entypo name="eye" size={20} color="#666" />
-        </TouchableOpacity>
-      </View>
+          {/* Return & Refund Button - Updated */}
+          <CustomButtonRow
+            title="Return & Refund"
+            iconName="refresh-ccw"
+            iconLib="feather"
+            onPress={() => setActiveComponent('returnRefund')} // setActiveComponent call করুন
+            isActive={activeComponent === 'returnRefund'}
+          />
 
-      {/* Forgot Password */}
-      <TouchableOpacity style={styles.forgotPasswordButton}>
-        <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-      </TouchableOpacity>
+          <CustomButtonRow
+            title="Customer Care"
+            iconName="message-circle"
+            iconLib="feather"
+            onPress={() => console.log("Customer Care Pressed")}
+          />
+        </View>
 
-      {/* Login Button */}
-      <TouchableOpacity style={styles.loginButton}>
-        <Text style={styles.loginButtonText}>Login</Text>
-      </TouchableOpacity>
-
-      {/* OR Line */}
-      <View style={styles.orContainer}>
-        <View style={styles.line} />
-        <Text style={styles.orText}>OR</Text>
-        <View style={styles.line} />
-      </View>
-
-      {/* Register */}
-      <Text style={styles.registerHint}>
-        Dont have an account? <Text style={styles.registerNowText}>Register Now</Text>
-      </Text>
-
-      {/* Guest Login */}
-      <TouchableOpacity>
-        <Text style={styles.guestLoginText}>Continue as a Guest</Text>
-      </TouchableOpacity>
-
-      {/* Moderator Login */}
-      <TouchableOpacity>
-        <Text style={styles.moderatorLoginText}>Moderator Login</Text>
-      </TouchableOpacity>
-    </View>
+        {/* Active Component Display */}
+        <View style={styles.componentContainer}>
+          {renderActiveComponent()}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
-export default Profile;
+export default ProfileScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    paddingTop: 50,
-    paddingHorizontal: 20,
-  },
-  welcomeText: {
-    fontSize: 28,
-    fontWeight: "bold",
-    marginBottom: 10,
-    color: "#333",
-  },
-  loginHint: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 30,
-  },
-  socialButton: {
-    flexDirection: "row",
-    width: "100%",
-    height: 50,
-    borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 15,
-  },
-  googleButton: {
-    backgroundColor: "#ea4335",
-  },
-  facebookButton: {
-    backgroundColor: "#4267b2",
-  },
-  phoneButton: {
-    backgroundColor: "#34a853",
-  },
-  socialButtonText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  orContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: "100%",
-    marginVertical: 20,
-  },
-  line: {
-    flex: 1,
-    height: 1,
-    backgroundColor: "#ccc",
-  },
-  orText: {
-    marginHorizontal: 10,
-    color: "#666",
-  },
-  input: {
-    width: "100%",
-    height: 50,
-    borderColor: "#ddd",
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    marginBottom: 15,
-    fontSize: 16,
-  },
-  passwordContainer: {
-    flexDirection: "row",
-    width: "100%",
-    height: 50,
-    borderColor: "#ddd",
-    borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 15,
-    alignItems: "center",
-  },
-  passwordInput: {
-    flex: 1,
-    paddingHorizontal: 15,
-    fontSize: 16,
-  },
-  eyeIconContainer: {
-    padding: 10,
-  },
-  forgotPasswordButton: {
-    alignSelf: "flex-end",
-    marginBottom: 20,
-  },
-  forgotPasswordText: {
-    color: "#d9534f",
-    fontSize: 14,
-  },
-  loginButton: {
-    width: "100%",
-    height: 50,
-    backgroundColor: "#0d47a1",
-    borderRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  loginButtonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  registerHint: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 10,
-  },
-  registerNowText: {
-    color: "#0d47a1",
-    fontWeight: "bold",
-  },
-  guestLoginText: {
-    color: "#0d47a1",
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  moderatorLoginText: {
-    color: "#0d47a1",
-    fontSize: 16,
+  componentContainer: {
+    marginTop: 20,
   },
 });

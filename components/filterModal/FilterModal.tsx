@@ -133,7 +133,6 @@ const FilterModal: React.FC<FilterModalProps> = ({ visible, onClose }) => {
   )
 }
 
-// আপনার existing styles একই থাকবে
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
