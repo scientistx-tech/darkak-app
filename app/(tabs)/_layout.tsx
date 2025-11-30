@@ -1,760 +1,253 @@
-// import { Colors } from '@/constants/theme';
-// import { useColorScheme } from '@/hooks/use-color-scheme';
-// import { Entypo } from '@expo/vector-icons';
-// import { Tabs } from 'expo-router';
-// import { View } from 'react-native';
+import { useEffect, useReducer, useRef } from 'react'
+import {
+  LayoutChangeEvent,
+  Platform,
+  Pressable,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native'
+// navigation
+import { BottomTabBarProps, BottomTabNavigationOptions, createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+// svg
+import Svg, { Path } from 'react-native-svg'
+// reanimated
+import { Ionicons } from '@expo/vector-icons'
+import Animated, { useAnimatedStyle, useDerivedValue, withTiming } from 'react-native-reanimated'
+import HomeScreen from '.'
+import CartScreen from './cart'
+import FavoriteScreen from './favorites'
+import ProfileScreen from './profile'
+import Cart from './shop'
 
-// export default function TabLayout() {
-//   const colorScheme = useColorScheme() ?? 'light';
-//   const colors = Colors[colorScheme];
+const Tab = createBottomTabNavigator()
 
-//   return (
-//     <Tabs
-//       initialRouteName="index"
-//       screenOptions={{
-//         headerShown: false,
-//         tabBarShowLabel: true,
-//         tabBarStyle: {
-//           paddingHorizontal: 8,
-//           paddingVertical: 15,
-//           height: 110,
-//           backgroundColor: colors.primary,
-//           borderTopWidth: 0,
-//         },
-//         tabBarActiveTintColor: '#FFFFFF',
-//         tabBarInactiveTintColor: '#FFFFFF',
-//       }}
-//     >
-//       <Tabs.Screen
-//         name="index"
-//         options={{
-//           title: 'HOME',
-//           tabBarIcon: ({ focused }) => (
-//             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-//               {focused ? (
-//                 <View
-//                   style={{
-//                     width: 66,
-//                     height: 20,
-//                     paddingBottom: 26,
-//                     position: 'absolute',
-//                     top: 10,
-//                     bottom: 0,
-//                     borderBottomLeftRadius: 28,
-//                     borderBottomRightRadius: 28,
-//                     backgroundColor: "#FFFFFF",
-//                     marginBottom: 15,
-//                     justifyContent: 'center',
-//                     alignItems: 'center',
-//                     marginTop: -30,
-//                     shadowOpacity: 0.18,
-//                     shadowOffset: { width: 0, height: 6 },
-//                     shadowRadius: 10,
-//                     elevation: 6,
-//                   }}
-//                 >
-//                   <View 
-//                     style={{
-//                       justifyContent: 'center', 
-//                       alignItems: 'center', 
-//                       backgroundColor: "#5694FF",
-//                       width: 36,
-//                       height: 36,
-//                       borderRadius: 28,
-//                     }}
-//                   >
-//                     <Entypo name="home" size={22} color="#FFFFFF" />
-//                   </View>
-//                 </View>
-//               ) : (
-//                 <View style={{ width: 40, height: 40, justifyContent: 'center', alignItems: 'center' }}>
-//                   <Entypo name="home" size={22} color="#FFFFFF" />
-//                 </View>
-//               )}
-//             </View>
-//           ),
-//         }}
-//       />
-      
-//       <Tabs.Screen
-//         name="shop"
-//         options={{
-//           title: 'SHOP',
-//           tabBarIcon: ({ focused }) => (
-//             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-//               {focused ? (
-//                 <View
-//                   style={{
-//                     width: 66,
-//                     height: 20,
-//                     paddingBottom: 26,
-//                     position: 'absolute',
-//                     top: 10,
-//                     bottom: 0,
-//                     borderBottomLeftRadius: 28,
-//                     borderBottomRightRadius: 28,
-//                     backgroundColor: "#FFFFFF",
-//                     marginBottom: 15,
-//                     justifyContent: 'center',
-//                     alignItems: 'center',
-//                     marginTop: -30,
-//                     shadowOpacity: 0.18,
-//                     shadowOffset: { width: 0, height: 6 },
-//                     shadowRadius: 10,
-//                     elevation: 6,
-//                   }}
-//                 >
-//                   <View 
-//                     style={{
-//                       justifyContent: 'center', 
-//                       alignItems: 'center', 
-//                       backgroundColor: "#5694FF",
-//                       width: 36,
-//                       height: 36,
-//                       borderRadius: 28,
-//                     }}
-//                   >
-//                     <Entypo name="shop" size={20} color="#FFFFFF" />
-//                   </View>
-//                 </View>
-//               ) : (
-//                 <View style={{ width: 40, height: 40, justifyContent: 'center', alignItems: 'center' }}>
-//                   <Entypo name="shop" size={22} color="#FFFFFF" />
-//                 </View>
-//               )}
-//             </View>
-//           ),
-//         }}
-//       />
-      
-//       <Tabs.Screen
-//         name="cart"
-//         options={{
-//           title: 'CART',
-//           tabBarIcon: ({ focused }) => (
-//             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-//               {focused ? (
-//                 <View
-//                   style={{
-//                     width: 66,
-//                     height: 20,
-//                     paddingBottom: 26,
-//                     position: 'absolute',
-//                     top: 10,
-//                     bottom: 0,
-//                     borderBottomLeftRadius: 28,
-//                     borderBottomRightRadius: 28,
-//                     backgroundColor: "#FFFFFF",
-//                     marginBottom: 15,
-//                     justifyContent: 'center',
-//                     alignItems: 'center',
-//                     marginTop: -30,
-//                     shadowOpacity: 0.18,
-//                     shadowOffset: { width: 0, height: 6 },
-//                     shadowRadius: 10,
-//                     elevation: 6,
-//                   }}
-//                 >
-//                   <View 
-//                     style={{
-//                       justifyContent: 'center', 
-//                       alignItems: 'center', 
-//                       backgroundColor: "#5694FF",
-//                       width: 36,
-//                       height: 36,
-//                       borderRadius: 28,
-//                     }}
-//                   >
-//                     <Entypo name="shopping-cart" size={22} color="#FFFFFF" />
-//                   </View>
-//                 </View>
-//               ) : (
-//                 <View style={{ width: 40, height: 40, justifyContent: 'center', alignItems: 'center' }}>
-//                   <Entypo name="shopping-cart" size={22} color="#FFFFFF" />
-//                 </View>
-//               )}
-//             </View>
-//           ),
-//         }}
-//       />
-      
-//       <Tabs.Screen
-//         name="favorites"
-//         options={{
-//           title: 'FAVORITES',
-//           tabBarIcon: ({ focused }) => (
-//             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-//               {focused ? (
-//                 <View
-//                   style={{
-//                     width: 66,
-//                     height: 20,
-//                     paddingBottom: 26,
-//                     position: 'absolute',
-//                     top: 10,
-//                     bottom: 0,
-//                     borderBottomLeftRadius: 28,
-//                     borderBottomRightRadius: 28,
-//                     backgroundColor: "#FFFFFF",
-//                     marginBottom: 15,
-//                     justifyContent: 'center',
-//                     alignItems: 'center',
-//                     marginTop: -30,
-//                     shadowOpacity: 0.18,
-//                     shadowOffset: { width: 0, height: 6 },
-//                     shadowRadius: 10,
-//                     elevation: 6,
-//                   }}
-//                 >
-//                   <View 
-//                     style={{
-//                       justifyContent: 'center', 
-//                       alignItems: 'center', 
-//                       backgroundColor: "#5694FF",
-//                       width: 36,
-//                       height: 36,
-//                       borderRadius: 28,
-//                     }}
-//                   >
-//                     <Entypo name="heart" size={22} color="#FFFFFF" />
-//                   </View>
-//                 </View>
-//               ) : (
-//                 <View style={{ width: 40, height: 40, justifyContent: 'center', alignItems: 'center' }}>
-//                   <Entypo name="heart" size={22} color="#FFFFFF" />
-//                 </View>
-//               )}
-//             </View>
-//           ),
-//         }}
-//       />
-      
-//       <Tabs.Screen
-//         name="profile"
-//         options={{
-//           title: 'PROFILE',
-//           tabBarIcon: ({ focused }) => (
-//             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-//               {focused ? (
-//                 <View
-//                   style={{
-//                     width: 66,
-//                     height: 20,
-//                     paddingBottom: 26,
-//                     position: 'absolute',
-//                     top: 10,
-//                     bottom: 0,
-//                     borderBottomLeftRadius: 28,
-//                     borderBottomRightRadius: 28,
-//                     backgroundColor: "#FFFFFF",
-//                     marginBottom: 15,
-//                     justifyContent: 'center',
-//                     alignItems: 'center',
-//                     marginTop: -30,
-//                     shadowOpacity: 0.18,
-//                     shadowOffset: { width: 0, height: 6 },
-//                     shadowRadius: 10,
-//                     elevation: 6,
-//                   }}
-//                 >
-//                   <View 
-//                     style={{
-//                       justifyContent: 'center', 
-//                       alignItems: 'center', 
-//                       backgroundColor: "#5694FF",
-//                       width: 36,
-//                       height: 36,
-//                       borderRadius: 28,
-//                     }}
-//                   >
-//                     <Entypo name="user" size={22} color="#FFFFFF" />
-//                   </View>
-//                 </View>
-//               ) : (
-//                 <View style={{ width: 40, height: 40, justifyContent: 'center', alignItems: 'center' }}>
-//                   <Entypo name="user" size={22} color="#FFFFFF" />
-//                 </View>
-//               )}
-//             </View>
-//           ),
-//         }}
-//       />
-//     </Tabs>
-//   );
-// }
+const AnimatedSvg = Animated.createAnimatedComponent(Svg)
 
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
-import { Entypo } from '@expo/vector-icons';
-import { Tabs } from 'expo-router';
-import { View, Text } from 'react-native';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme() ?? 'light';
-  const colors = Colors[colorScheme];
+  return (
+    <>
+      <StatusBar barStyle="light-content" />
 
-  // ব্যাজের জন্য ডেটা - আপনি চাইলে এগুলোকে state বা context থেকে নিতে পারেন
-  const badgeData = {
-    cart: 3,
-    favorites: 8,
-  };
-
-  const Badge = ({ count }) => {
-    if (!count || count <= 0) return null;
-    
-    return (
-      <View
-        style={{
-          position: 'absolute',
-          top: -5,
-          right: -5,
-          backgroundColor: '#FF3B30',
-          borderRadius: 10,
-          minWidth: 18,
-          height: 18,
-          justifyContent: 'center',
-          alignItems: 'center',
-          borderWidth: 1.5,
-          borderColor: colors.primary,
+      <Tab.Navigator
+        tabBar={(props: any) => <AnimatedTabBar {...props} />}
+        screenOptions={{
+          headerShown: false
         }}
       >
-        <Text
-          style={{
-            color: 'white',
-            fontSize: 10,
-            fontWeight: 'bold',
-          }}
-        >
-          {count > 99 ? '99+' : count}
-        </Text>
-      </View>
-    );
-  };
+        <Tab.Screen
+          name="Home"
+          options={{
+            // @ts-ignore
+            tabBarIcon: ({ ref }) => <Ionicons name="home-outline" size={24} color="white" />,
 
-  return (
-    <Tabs
-      initialRouteName="index"
-      screenOptions={{
-        headerShown: false,
-        tabBarShowLabel: true,
-        tabBarStyle: {
-          paddingHorizontal: 8,
-          paddingVertical: 15,
-          height: 110,
-          backgroundColor: colors.primary,
-          borderTopWidth: 0,
-        },
-        tabBarActiveTintColor: '#FFFFFF',
-        tabBarInactiveTintColor: '#FFFFFF',
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'HOME',
-          tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-              {focused ? (
-                <View
-                  style={{
-                    width: 66,
-                    height: 20,
-                    paddingBottom: 26,
-                    position: 'absolute',
-                    top: 10,
-                    bottom: 0,
-                    borderBottomLeftRadius: 28,
-                    borderBottomRightRadius: 28,
-                    backgroundColor: "#FFFFFF",
-                    marginBottom: 15,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginTop: -30,
-                    shadowOpacity: 0.18,
-                    shadowOffset: { width: 0, height: 6 },
-                    shadowRadius: 10,
-                    elevation: 6,
-                  }}
-                >
-                  <View 
-                    style={{
-                      justifyContent: 'center', 
-                      alignItems: 'center', 
-                      backgroundColor: "#5694FF",
-                      width: 36,
-                      height: 36,
-                      borderRadius: 28,
-                    }}
-                  >
-                    <Entypo name="home" size={22} color="#FFFFFF" />
-                  </View>
-                </View>
-              ) : (
-                <View style={{ width: 40, height: 40, justifyContent: 'center', alignItems: 'center' }}>
-                  <Entypo name="home" size={22} color="#FFFFFF" />
-                </View>
-              )}
-            </View>
-          ),
-        }}
-      />
-      
-      <Tabs.Screen
-        name="shop"
-        options={{
-          title: 'SHOP',
-          tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-              {focused ? (
-                <View
-                  style={{
-                    width: 66,
-                    height: 20,
-                    paddingBottom: 26,
-                    position: 'absolute',
-                    top: 10,
-                    bottom: 0,
-                    borderBottomLeftRadius: 28,
-                    borderBottomRightRadius: 28,
-                    backgroundColor: "#FFFFFF",
-                    marginBottom: 15,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginTop: -30,
-                    shadowOpacity: 0.18,
-                    shadowOffset: { width: 0, height: 6 },
-                    shadowRadius: 10,
-                    elevation: 6,
-                  }}
-                >
-                  <View 
-                    style={{
-                      justifyContent: 'center', 
-                      alignItems: 'center', 
-                      backgroundColor: "#5694FF",
-                      width: 36,
-                      height: 36,
-                      borderRadius: 28,
-                    }}
-                  >
-                    <Entypo name="shop" size={20} color="#FFFFFF" />
-                  </View>
-                </View>
-              ) : (
-                <View style={{ width: 40, height: 40, justifyContent: 'center', alignItems: 'center' }}>
-                  <Entypo name="shop" size={22} color="#FFFFFF" />
-                </View>
-              )}
-            </View>
-          ),
-        }}
-      />
-      
-      <Tabs.Screen
-        name="cart"
-        options={{
-          title: 'CART',
-          tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-              {focused ? (
-                <View
-                  style={{
-                    width: 66,
-                    height: 20,
-                    paddingBottom: 26,
-                    position: 'absolute',
-                    top: 10,
-                    bottom: 0,
-                    borderBottomLeftRadius: 28,
-                    borderBottomRightRadius: 28,
-                    backgroundColor: "#FFFFFF",
-                    marginBottom: 15,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginTop: -30,
-                    shadowOpacity: 0.18,
-                    shadowOffset: { width: 0, height: 6 },
-                    shadowRadius: 10,
-                    elevation: 6,
-                  }}
-                >
-                  <View 
-                    style={{
-                      position: 'relative',
-                      justifyContent: 'center', 
-                      alignItems: 'center', 
-                      backgroundColor: "#5694FF",
-                      width: 36,
-                      height: 36,
-                      borderRadius: 28,
-                    }}
-                  >
-                    <Entypo name="shopping-cart" size={22} color="#FFFFFF" />
-                    <Badge count={badgeData.cart} />
-                  </View>
-                </View>
-              ) : (
-                <View style={{ position: 'relative', width: 40, height: 40, justifyContent: 'center', alignItems: 'center' }}>
-                  <Entypo name="shopping-cart" size={22} color="#FFFFFF" />
-                  <Badge count={badgeData.cart} />
-                </View>
-              )}
-            </View>
-          ),
-        }}
-      />
-      
-      <Tabs.Screen
-        name="favorites"
-        options={{
-          title: 'FAVORITES',
-          tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-              {focused ? (
-                <View
-                  style={{
-                    width: 66,
-                    height: 20,
-                    paddingBottom: 26,
-                    position: 'absolute',
-                    top: 10,
-                    bottom: 0,
-                    borderBottomLeftRadius: 28,
-                    borderBottomRightRadius: 28,
-                    backgroundColor: "#FFFFFF",
-                    marginBottom: 15,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginTop: -30,
-                    shadowOpacity: 0.18,
-                    shadowOffset: { width: 0, height: 6 },
-                    shadowRadius: 10,
-                    elevation: 6,
-                  }}
-                >
-                  <View 
-                    style={{
-                      position: 'relative',
-                      justifyContent: 'center', 
-                      alignItems: 'center', 
-                      backgroundColor: "#5694FF",
-                      width: 36,
-                      height: 36,
-                      borderRadius: 28,
-                    }}
-                  >
-                    <Entypo name="heart" size={22} color="#FFFFFF" />
-                    <Badge count={badgeData.favorites} />
-                  </View>
-                </View>
-              ) : (
-                <View style={{ position: 'relative', width: 40, height: 40, justifyContent: 'center', alignItems: 'center' }}>
-                  <Entypo name="heart" size={22} color="#FFFFFF" />
-                  <Badge count={badgeData.favorites} />
-                </View>
-              )}
-            </View>
-          ),
-        }}
-      />
-      
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: 'PROFILE',
-          tabBarIcon: ({ focused }) => (
-            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-              {focused ? (
-                <View
-                  style={{
-                    width: 66,
-                    height: 20,
-                    paddingBottom: 26,
-                    position: 'absolute',
-                    top: 10,
-                    bottom: 0,
-                    borderBottomLeftRadius: 28,
-                    borderBottomRightRadius: 28,
-                    backgroundColor: "#FFFFFF",
-                    marginBottom: 15,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginTop: -30,
-                    shadowOpacity: 0.18,
-                    shadowOffset: { width: 0, height: 6 },
-                    shadowRadius: 10,
-                    elevation: 6,
-                  }}
-                >
-                  <View 
-                    style={{
-                      justifyContent: 'center', 
-                      alignItems: 'center', 
-                      backgroundColor: "#5694FF",
-                      width: 36,
-                      height: 36,
-                      borderRadius: 28,
-                    }}
-                  >
-                    <Entypo name="user" size={22} color="#FFFFFF" />
-                  </View>
-                </View>
-              ) : (
-                <View style={{ width: 40, height: 40, justifyContent: 'center', alignItems: 'center' }}>
-                  <Entypo name="user" size={22} color="#FFFFFF" />
-                </View>
-              )}
-            </View>
-          ),
-        }}
-      />
-    </Tabs>
-  );
+          }}
+          component={HomeScreen}
+        />
+        <Tab.Screen
+          name="Shop"
+          options={{
+            // @ts-ignore
+            tabBarIcon: ({ ref }) => <Ionicons name="bag-outline" size={24} color="white" />,
+          }}
+          component={Cart}
+        />
+        <Tab.Screen
+          name="Cart"
+          options={{
+            // @ts-ignore
+            tabBarIcon: ({ ref }) => <Ionicons name="cart-outline" size={24} color="white" />,
+          }}
+          component={CartScreen}
+        />
+
+        <Tab.Screen
+          name="Favorite"
+          options={{
+            // @ts-ignore
+            tabBarIcon: ({ ref }) => <Ionicons name="heart-outline" size={24} color="white" />,
+          }}
+          component={FavoriteScreen}
+        />
+        <Tab.Screen
+          name="Profile"
+          options={{
+            // @ts-ignore
+            tabBarIcon: ({ ref }) => <Ionicons name="person-outline" size={24} color="white" />,
+          }}
+          component={ProfileScreen}
+        />
+      </Tab.Navigator>
+
+    </>
+  )
 }
 
 
+// ------------------------------------------------------------------
 
-// import React from 'react';
-// import {
-//   Alert,
-//   Animated,
-//   StyleSheet,
-//   TouchableOpacity,
-//   View,
-// } from 'react-native';
-// import { CurvedBottomBarExpo } from 'react-native-curved-bottom-bar';
-// import Ionicons from '@expo/vector-icons/Ionicons';
-// import { NavigationContainer } from '@react-navigation/native';
-// import HomeScreen from '.';
-// import FavoriteScreen from './favorites';
+const AnimatedTabBar = ({ state: { index: activeIndex, routes }, navigation, descriptors }: BottomTabBarProps) => {
+  const { bottom } = useSafeAreaInsets()
+  const bottomPadding = bottom > 0 ? bottom : (Platform.OS === 'android' ? 10 : 20);
+  // get information about the components position on the screen -----
 
+  const reducer = (state: any, action: { x: number, index: number }) => {
+    // Add the new value to the state
+    return [...state, { x: action.x, index: action.index }]
+  }
 
-// export default function  TabLayout() {
-//   const _renderIcon = (routeName, selectedTab) => {
-//     let icon = '';
+  const [layout, dispatch] = useReducer(reducer, [])
+  //console.log(layout)
 
-//     switch (routeName) {
-//       case 'title1':
-//         icon = 'ios-home-outline';
-//         break;
-//       case 'title2':
-//         icon = 'settings-outline';
-//         break;
-//     }
+  const handleLayout = (event: LayoutChangeEvent, index: number) => {
+    dispatch({ x: event.nativeEvent.layout.x, index })
+  }
 
-//     return (
-//       <Ionicons
-//         name={icon}
-//         size={25}
-//         color={routeName === selectedTab ? 'black' : 'gray'}
-//       />
-//     );
-//   };
-//   const renderTabBar = ({ routeName, selectedTab, navigate }) => {
-//     return (
-//       <TouchableOpacity
-//         onPress={() => navigate(routeName)}
-//         style={styles.tabbarItem}
-//       >
-//         {_renderIcon(routeName, selectedTab)}
-//       </TouchableOpacity>
-//     );
-//   };
+  // animations ------------------------------------------------------
 
-//   return (
- 
-//       <CurvedBottomBarExpo.Navigator
-//         type="DOWN"
-//         style={styles.bottomBar}
-//         shadowStyle={styles.shawdow}
-//         height={55}
-//         circleWidth={50}
-//         bgColor="white"
-//         initialRouteName="title1"
-//         borderTopLeftRight
-//         renderCircle={({ selectedTab, navigate }) => (
-//           <Animated.View style={styles.btnCircleUp}>
-//             <TouchableOpacity
-//               style={styles.button}
-//               onPress={() => Alert.alert('Click Action')}
-//             >
-//               <Ionicons name={'apps-sharp'} color="gray" size={25} />
-//             </TouchableOpacity>
-//           </Animated.View>
-//         )}
-//         tabBar={renderTabBar}
-//       >
-//         <CurvedBottomBarExpo.Screen
-//           name="title1"
-//           position="LEFT"
-//           component={() => <HomeScreen />}
-//         />
-//         <CurvedBottomBarExpo.Screen
-//           name="title2"
-//           component={() => <FavoriteScreen />}
-//           position="RIGHT"
-//         />
-//       </CurvedBottomBarExpo.Navigator>
+  const xOffset = useDerivedValue(() => {
+    // Our code hasn't finished rendering yet, so we can't use the layout values
+    if (layout.length !== routes.length) return 0;
+    // We can use the layout values
+    // Copy layout to avoid errors between different threads
+    // We subtract 25 so the active background is centered behind our TabBar Components
+    // 20 pixels is the width of the left part of the svg (the quarter circle outwards)
+    // 5 pixels come from the little gap between the active background and the circle of the TabBar Components
+    return [...layout].find(({ index }) => index === activeIndex)!.x - 25
+    // Calculate the offset new if the activeIndex changes (e.g. when a new tab is selected)
+    // or the layout changes (e.g. when the components haven't finished rendering yet)
+  }, [activeIndex, layout])
 
-//   );
-// }
+  const animatedStyles = useAnimatedStyle(() => {
+    return {
+      // translateX to the calculated offset with a smooth transition
+      transform: [{ translateX: withTiming(xOffset.value, { duration: 250 }) }],
+    }
+  })
 
-// export const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     padding: 20,
-//   },
-//   shawdow: {
-//     shadowColor: '#DDDDDD',
-//     shadowOffset: {
-//       width: 0,
-//       height: 0,
-//     },
-//     shadowOpacity: 1,
-//     shadowRadius: 5,
-//   },
-//   button: {
-//     flex: 1,
-//     justifyContent: 'center',
-//   },
-//   bottomBar: {},
-//   btnCircleUp: {
-//     width: 60,
-//     height: 60,
-//     borderRadius: 30,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     backgroundColor: '#E8E8E8',
-//     bottom: 30,
-//     shadowColor: '#000',
-//     shadowOffset: {
-//       width: 0,
-//       height: 1,
-//     },
-//     shadowOpacity: 0.2,
-//     shadowRadius: 1.41,
-//     elevation: 1,
-//   },
-//   imgCircle: {
-//     width: 30,
-//     height: 30,
-//     tintColor: 'gray',
-//   },
-//   tabbarItem: {
-//     flex: 1,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   img: {
-//     width: 30,
-//     height: 30,
-//   },
-//   screen1: {
-//     flex: 1,
-//     backgroundColor: '#BFEFFF',
-//   },
-//   screen2: {
-//     flex: 1,
-//     backgroundColor: '#FFEBCD',
-//   },
-// });
+  return (
+    <View style={[styles.tabBar, { paddingBottom: bottomPadding }]}>
+      <AnimatedSvg
+        width={110}
+        height={60}
+        viewBox="0 0 110 60"
+        style={[styles.activeBackground, animatedStyles]}
+      >
+        <Path
+          fill="#F4F7FB"
+          d="M20 0H0c11.046 0 20 8.953 20 20v5c0 19.33 15.67 35 35 35s35-15.67 35-35v-5c0-11.045 8.954-20 20-20H20z"
+        />
+      </AnimatedSvg>
+
+      <View style={styles.tabBarContainer}>
+        {routes.map((route: any, index: number) => {
+          const active = index === activeIndex
+          const { options } = descriptors[route.key]
+
+          return (
+            <TabBarComponent
+              key={route.key}
+              active={active}
+              options={options}
+              onLayout={(e) => handleLayout(e, index)}
+              onPress={() => navigation.navigate(route.name)}
+            />
+          )
+        })}
+      </View>
+    </View>
+  )
+}
+
+// ------------------------------------------------------------------
+
+type TabBarComponentProps = {
+  active?: boolean
+  options: BottomTabNavigationOptions
+  onLayout: (e: LayoutChangeEvent) => void
+  onPress: () => void
+}
+
+const TabBarComponent = ({ active, options, onLayout, onPress }: TabBarComponentProps) => {
+  // handle lottie animation -----------------------------------------
+  const ref = useRef(null)
+
+  useEffect(() => {
+    if (active && ref?.current) {
+      // @ts-ignore
+      ref.current.play()
+    }
+  }, [active])
+
+  // animations ------------------------------------------------------
+
+  const animatedComponentCircleStyles = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          scale: withTiming(active ? 1 : 0, { duration: 250 })
+        }
+      ]
+    }
+  })
+
+  const animatedIconContainerStyles = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(active ? 1 : 0.5, { duration: 250 })
+    }
+  })
+
+  return (
+    <Pressable onPress={onPress} onLayout={onLayout} style={styles.component}>
+      <Animated.View
+        style={[styles.componentCircle, animatedComponentCircleStyles]}
+      />
+      <Animated.View style={[styles.iconContainer, animatedIconContainerStyles]}>
+        {/* @ts-ignore */}
+        {options.tabBarIcon ? options.tabBarIcon({ ref }) : <Text>?</Text>}
+      </Animated.View>
+    </Pressable>
+  )
+}
+
+// ------------------------------------------------------------------
+
+const styles = StyleSheet.create({
+  tabBar: {
+    backgroundColor: '#00153B',
+
+  },
+  activeBackground: {
+    position: 'absolute',
+  },
+  tabBarContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+  },
+  component: {
+    height: 60,
+    width: 60,
+    marginTop: -5,
+  },
+  componentCircle: {
+    flex: 1,
+    borderRadius: 30,
+    backgroundColor: '#5694FF',
+  },
+  iconContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  icon: {
+    height: 36,
+    width: 36,
+  }
+})
