@@ -1,8 +1,14 @@
+<<<<<<< HEAD
 import { decrement, increment } from "@/redux/actions/counter.actions";
 import { RootState } from "@/redux/store";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+=======
+// components/button/quantityButton/QuantityButton.tsx
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+>>>>>>> 33233d9b6d3106c261911d2a5a8e6b10c46be77f
 
 interface QuantitySelectorProps {
   initial?: number;
@@ -15,6 +21,7 @@ const QuantityCard: React.FC<QuantitySelectorProps> = ({
   onChange,
   disAble = false,
 }) => {
+<<<<<<< HEAD
   //const [quantity, setQuantity] = React.useState(initial);
 
   const dispatch = useDispatch();
@@ -39,6 +46,24 @@ const QuantityCard: React.FC<QuantitySelectorProps> = ({
   console.log("increment:::::--->",handleIncrease);
   console.log("decrement:::------>",handleDecrease);
 
+=======
+  const [quantity, setQuantity] = React.useState(initial);
+
+  const handleDecrease = () => {
+    if (quantity > 1) {
+      const newQuantity = quantity - 1;
+      setQuantity(newQuantity);
+      onChange?.(newQuantity);
+    }
+  };
+
+  const handleIncrease = () => {
+    const newQuantity = quantity + 1;
+    setQuantity(newQuantity);
+    onChange?.(newQuantity);
+  };
+
+>>>>>>> 33233d9b6d3106c261911d2a5a8e6b10c46be77f
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -98,4 +123,8 @@ const styles = StyleSheet.create({
   },
 });
 
+<<<<<<< HEAD
 export default QuantityCard;
+=======
+export default QuantityCard;
+>>>>>>> 33233d9b6d3106c261911d2a5a8e6b10c46be77f

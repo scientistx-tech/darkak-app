@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> 33233d9b6d3106c261911d2a5a8e6b10c46be77f
 import QuantityCard from "@/components/button/quantityButton/QuantityCard";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -50,7 +53,11 @@ const CART_ITEMS = [
   },
 ];
 
+<<<<<<< HEAD
 const CartScreen = () => {
+=======
+const Cart = () => {
+>>>>>>> 33233d9b6d3106c261911d2a5a8e6b10c46be77f
   const router = useRouter();
   const [cartItems, setCartItems] = useState(CART_ITEMS);
 
@@ -162,7 +169,11 @@ const CartScreen = () => {
                     <Text style={styles.quantityLabel}>Quantity</Text>
                     <QuantityCard
                       initial={item.quantity}
+<<<<<<< HEAD
                       onChange={(value:any) => updateQuantity(item.id, value)}
+=======
+                      onChange={(value) => updateQuantity(item.id, value)}
+>>>>>>> 33233d9b6d3106c261911d2a5a8e6b10c46be77f
                       disAble={false}
                     />
                   </View>
@@ -429,4 +440,8 @@ const styles = StyleSheet.create({
   },
 });
 
+<<<<<<< HEAD
 export default CartScreen;
+=======
+export default Cart;
+>>>>>>> 33233d9b6d3106c261911d2a5a8e6b10c46be77f
