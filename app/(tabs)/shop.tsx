@@ -1,37 +1,3 @@
-<<<<<<< HEAD
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useState } from "react";
-import { SearchBar } from "@/components/search/SearchBarNative";
-import CustomDropdown from "@/components/button/customDropDownButton.tsx/CustomDropdown";
-import HomePage from "@/components/home/ProductCaroselSection";
-import FooterUpperSection from "@/components/home/FooterUpperSection";
-import FooterQuestionSection from "@/components/home/FooterQuestionSection";
-import NewsletterSubscribeCard from "@/components/newsletterSubscribeCard/NewsletterSubscribeCard";
-import MobileFooter from "@/components/mobileFooter/MobileFooter";
-import FilterModal from "@/components/filterModal/FilterModal";
-import HeaderComponent from "@/components/headerComponent/HeaderComponent";
-
-
-const Cart = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedValue, setSelectedValue] = useState<string>("Newer");
-  const [filterModalVisible, setFilterModalVisible] = useState(false);
-  
-  const handleSelect = (item: string) => {
-    setSelectedValue(item);
-  };
-
-  const handleFilterPress = () => {
-    setFilterModalVisible(true);
-  };
-=======
 // import { ProductGrid } from '@/components/shop/ProductGrid';
 // import { Header } from '@/components/ui/Header';
 // import { Colors, Spacing, Typography } from '@/constants/theme';
@@ -59,61 +25,11 @@ const Cart = () => {
 //   const [favorites, setFavorites] = useState<Set<string>>(new Set());
 //   const tabs = ['ZTE', 'ASUS', 'Apple', 'SAMSUNG'];
 //   const [activeTab, setActiveTab] = useState(tabs[0]);
->>>>>>> 33233d9b6d3106c261911d2a5a8e6b10c46be77f
 
-  const handleCloseFilter = () => {
-    setFilterModalVisible(false);
-  };
+  // const handleCloseFilter = () => {
+  //   setFilterModalVisible(false);
+  // };
 
-<<<<<<< HEAD
-  return (
-    <SafeAreaView style={styles.container}>
-      <HeaderComponent/>
-      
-      <ScrollView 
-        showsVerticalScrollIndicator={false} 
-        contentContainerStyle={{ paddingBottom: 23 }}
-      >
-        <View style={styles.homeContent}>
-          <TouchableOpacity>
-            <Text style={styles.homeTxt}>Home /</Text>
-          </TouchableOpacity>
-          <Text style={styles.cattxt}>Category</Text>
-        </View>
-        
-        <View style={styles.allcontainer}>
-          <Text style={styles.cattxt}>All Products</Text>
-        </View>
-        
-        <View style={styles.dropdutton}>
-          <View>
-            <Text style={styles.cattxt}>Sort By</Text>
-          </View>
-          <CustomDropdown
-            data={["Newer", "Older", "Popular","Low to High Price","High To Low Price"]}
-            onSelect={handleSelect}
-            selectedValue={selectedValue}
-            showShadow={true}
-            shadowStyle={{
-              shadowColor: "#000",
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.3,
-              shadowRadius: 6,
-              elevation: 6,
-            }}
-          />
-        </View>
-
-        <View style={styles.searchContainer}>
-          <SearchBar
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            onFilterPress={handleFilterPress} 
-            placeholder="Search products..."
-          />
-        </View>
-
-=======
 //   // For now show all products (search removed from this screen UI)
 //   const filteredProducts = mockProducts;
 
@@ -412,7 +328,6 @@ const Cart = () => {
           />
         </View>
 
->>>>>>> 33233d9b6d3106c261911d2a5a8e6b10c46be77f
         <HomePage />
         <HomePage />
 
@@ -422,25 +337,13 @@ const Cart = () => {
         <SafeAreaView style={styles.Featcontainer}>
           <NewsletterSubscribeCard />
         </SafeAreaView>
-<<<<<<< HEAD
-        
-=======
-
->>>>>>> 33233d9b6d3106c261911d2a5a8e6b10c46be77f
         <SafeAreaView style={styles.Featcontainer}>
           <MobileFooter />
         </SafeAreaView>
       </ScrollView>
 
       {/* Filter Modal */}
-<<<<<<< HEAD
-      <FilterModal 
-        visible={filterModalVisible} 
-        onClose={handleCloseFilter} 
-      />
-=======
       <FilterModal visible={filterModalVisible} onClose={handleCloseFilter} />
->>>>>>> 33233d9b6d3106c261911d2a5a8e6b10c46be77f
     </SafeAreaView>
   );
 };
@@ -487,8 +390,4 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F8F9FA",
   },
-<<<<<<< HEAD
 });
-=======
-});
->>>>>>> 33233d9b6d3106c261911d2a5a8e6b10c46be77f

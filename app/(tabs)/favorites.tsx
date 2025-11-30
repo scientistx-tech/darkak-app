@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 // import { ProductGrid } from '@/components/shop/ProductGrid';
 // import { Header } from '@/components/ui/Header';
 // import { Colors, Spacing, Typography } from '@/constants/theme';
@@ -117,7 +115,6 @@
 //   },
 // });
 
->>>>>>> 33233d9b6d3106c261911d2a5a8e6b10c46be77f
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import {
@@ -398,8 +395,4 @@ const styles = StyleSheet.create({
   },
 });
 
-<<<<<<< HEAD
 export default FavoriteScreen;
-=======
-export default FavoriteScreen;
->>>>>>> 33233d9b6d3106c261911d2a5a8e6b10c46be77f
