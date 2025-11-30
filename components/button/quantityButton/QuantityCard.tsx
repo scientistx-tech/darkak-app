@@ -1,5 +1,8 @@
+import { decrement, increment } from "@/redux/actions/counter.actions";
+import { RootState } from "@/redux/store";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 
 interface QuantitySelectorProps {
   initial?: number;
@@ -12,21 +15,29 @@ const QuantityCard: React.FC<QuantitySelectorProps> = ({
   onChange,
   disAble = false,
 }) => {
-  const [quantity, setQuantity] = React.useState(initial);
+  //const [quantity, setQuantity] = React.useState(initial);
+
+  const dispatch = useDispatch();
+  const quantity = useSelector((state:RootState) => state.counter.value);
 
   const handleDecrease = () => {
-    if (quantity > 1) {
-      const newQuantity = quantity - 1;
-      setQuantity(newQuantity);
-      onChange?.(newQuantity);
-    }
+    // if (quantity > 1) {
+    //   const newQuantity = quantity - 1;
+    //   setQuantity(newQuantity);
+    //   onChange?.(newQuantity);
+    // }
+    dispatch(decrement())
   };
 
   const handleIncrease = () => {
-    const newQuantity = quantity + 1;
-    setQuantity(newQuantity);
-    onChange?.(newQuantity);
+    // const newQuantity = quantity + 1;
+    // setQuantity(newQuantity);
+    // onChange?.(newQuantity);
+    dispatch(increment());
   };
+
+  console.log("increment:::::--->",handleIncrease);
+  console.log("decrement:::------>",handleDecrease);
 
   return (
     <View style={styles.container}>

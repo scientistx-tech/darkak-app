@@ -3,6 +3,9 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import "../global.css";
+import { Provider } from 'react-redux';
+import store from '@/redux/store';
+
 
 export const unstable_settings = {
   anchor: '(tabs)',
@@ -12,7 +15,10 @@ export default function RootLayout() {
 
   // Force light theme as default for the app
   return (
+
+    <Provider store={store}>
     <ThemeProvider value={DefaultTheme}>
+    
 
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -27,5 +33,6 @@ export default function RootLayout() {
       {/* StatusBar set for light background (dark content) */}
       <StatusBar style="dark" />
     </ThemeProvider>
+    </Provider>
   );
 }
