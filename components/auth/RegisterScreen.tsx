@@ -11,6 +11,10 @@ import {
 } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { clearRegistrationData, setRegistrationRequest } from '@/redux/actions/registration.action';
+import { RootState } from '@/redux/store';
+
 
 // Props interface
 interface RegisterScreenProps {
@@ -24,13 +28,25 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
   onLoginPress,
   onGuestContinue 
 }) => {
+  const dispatch = useDispatch(); 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+
+  const registredData = useSelector((state: RootState) => state?.registrationUser);
 
   const handleRegister = () => {
     console.log('Register pressed');
+    dispatch(clearRegistrationData());
+    const registrationPayload = {
+      name: name,
+      email: email,
+      password: password,
+    };
+    dispatch(setRegistrationRequest(registrationPayload));
     if (onRegisterSuccess) {
       onRegisterSuccess();
     }
@@ -142,6 +158,8 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
               placeholder="Full Name"
               placeholderTextColor="#999"
               autoCapitalize="words"
+              value={name}
+              onChangeText={setName}
             />
 
             <TextInput
@@ -150,6 +168,8 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
               placeholderTextColor="#999"
               keyboardType="email-address"
               autoCapitalize="none"
+              value={email}
+              onChangeText={setEmail}
             />
 
             <View style={styles.passwordContainer}>
