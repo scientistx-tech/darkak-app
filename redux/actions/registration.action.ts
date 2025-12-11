@@ -1,5 +1,5 @@
 import actionTypes from "../constants/actionTypes";
-import { IRegistrationRequest, IRegistrationResponse } from "../types/registered";
+import { IOtpVerifyRequest, IOtpVerifyResponse, IRegistrationRequest, IRegistrationResponse } from "../types/registered";
 
 const setRegistrationRequest = (payload:IRegistrationRequest) =>{
     return {
@@ -29,5 +29,38 @@ const clearRegistrationData = () => {
   };
 };
 
+//for otp verification
 
-export{setRegistrationRequest,setRegistrationSuccess,setRegistrationFailure,clearRegistrationData}
+const setOtpVerificationRequest = (payload:IOtpVerifyRequest) =>{
+    return {
+        type:actionTypes.SET_OTP_REQUEST,
+        payload,
+    };
+};
+
+const setOtpVerificationSuccess = (payload:IOtpVerifyResponse) =>{
+    return {
+        type:actionTypes.SET_OTP_SUCCESS,
+        payload,
+    };
+};
+
+
+const setOtpVerificationFailure = (payload:string) =>{
+    return {
+        type:actionTypes.SET_OTP_FAILURE,
+        payload,
+    };
+};
+
+
+
+
+export{
+    setRegistrationRequest,
+    setRegistrationSuccess,
+    setRegistrationFailure,
+    clearRegistrationData,
+    setOtpVerificationRequest,
+    setOtpVerificationSuccess,
+    setOtpVerificationFailure}

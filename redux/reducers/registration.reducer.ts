@@ -12,6 +12,17 @@ const initialState = {
     password: '',
     name: '',
   },
+  otpVerifyData:{
+    statusCode: 0,
+    data: null,
+    message: '',
+    token:'',
+    errors: null,
+  },
+  emailOtpVerificationRequest:{
+    email:'',
+    otp:'',
+  },
   loading: false,
   error: null,
 };
@@ -48,6 +59,33 @@ export const registrationReducer = (
     case actionTypes.CLEAR_REGISTRATION:
       console.log(' Reducer: CLEAR_REGISTRATION triggered');
       return initialState;
+
+    //otp verify for email
+    case actionTypes.SET_OTP_REQUEST:
+      console.log('Otp verifying for email triggered',action.payload);
+      return{
+        ...state,
+        emailOtpVerificationRequest:action.payload,
+        loading: true, 
+        error: null
+      }
+    // success otp
+     case actionTypes.SET_OTP_SUCCESS:
+      console.log('Otp verifying for email triggered 1',action.payload);
+      return{
+        ...state,
+        loading: false, 
+        otpVerifyData:action.payload,
+        error: null
+      }
+      // if falil
+      case actionTypes.SET_OTP_FAILURE:
+        console.log('Otp verifying for email triggered 2',action.payload);
+        return{
+          ...state, 
+          loading: false,
+          error: action.payload
+        }
       
     default:
       return state;
