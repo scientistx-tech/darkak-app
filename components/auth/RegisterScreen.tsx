@@ -1212,15 +1212,11 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
     if (registrationData?.statusCode === 200 && registrationData?.data) {
       console.log("Registration successful, calling onRegisterSuccessWithOtp");
 
-      // OTP মোডাল ওপেন করার অপশন
       if (onRegisterSuccessWithOtp) {
         console.log("Calling onRegisterSuccessWithOtp with email:", email);
         onRegisterSuccessWithOtp(email.trim().toLowerCase());
       } else if (onRegisterSuccess) {
-        // পুরানো ফাংশন
         onRegisterSuccess();
-        
-        // ফর্ম রিসেট
         setName("");
         setEmail("");
         setPassword("");
