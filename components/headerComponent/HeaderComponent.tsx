@@ -184,17 +184,19 @@
 //   },
 // });
 
-import { Image, StyleSheet, TouchableOpacity, View, Animated, Modal } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
-import AuthModal from "../auth/AuthModal"; // Adjust the import path
+import { DrawerNavigationProp } from '@react-navigation/drawer';
+import { useNavigation } from '@react-navigation/native';
+import { useEffect, useRef } from "react";
+import { Animated, StyleSheet, TouchableOpacity, View } from "react-native";
+
+type DrawerNavigation = DrawerNavigationProp<any>;
 
 const HeaderComponent = () => {
+  const navigation = useNavigation<DrawerNavigation>();
   const logoAnim = useRef(new Animated.Value(-100)).current; 
   const iconAnim = useRef(new Animated.Value(100)).current; 
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const modalAnim = useRef(new Animated.Value(-300)).current;
-  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     Animated.parallel([
@@ -216,23 +218,8 @@ const HeaderComponent = () => {
     ]).start();
   }, []);
 
-  const openModal = () => {
-    setIsModalVisible(true);
-    Animated.timing(modalAnim, {
-      toValue: 0,
-      duration: 400,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const closeModal = () => {
-    Animated.timing(modalAnim, {
-      toValue: -300,
-      duration: 400,
-      useNativeDriver: true,
-    }).start(() => {
-      setIsModalVisible(false);
-    });
+  const openDrawer = () => {
+    navigation.openDrawer();
   };
 
   return (
@@ -256,53 +243,18 @@ const HeaderComponent = () => {
             transform: [{ translateX: iconAnim }],
           }}
         >
-          <TouchableOpacity style={styles.iconButton} onPress={openModal}>
+          <TouchableOpacity style={styles.iconButton} onPress={openDrawer}>
             <FontAwesome5 name="align-justify" size={22} color="white" />
           </TouchableOpacity>
         </Animated.View>
       </Animated.View>
-
-      {/* Modal for Auth Component */}
-      <Modal
-        visible={isModalVisible}
-        transparent={true}
-        animationType="none"
-        onRequestClose={closeModal}
-      >
-        <View style={styles.modalOverlay}>
-          <TouchableOpacity 
-            style={styles.overlayTouchable}
-            activeOpacity={1}
-            onPress={closeModal}
-          >
-            <Animated.View 
-              style={[
-                styles.modalContent,
-                {
-                  transform: [{ translateX: modalAnim }]
-                }
-              ]}
-            >
-              <TouchableOpacity 
-                style={styles.closeButton}
-                onPress={closeModal}
-              >
-                <FontAwesome5 name="times" size={20} color="#333" />
-              </TouchableOpacity>
-              
-              {/* AuthModal Component */}
-              <AuthModal />
-            </Animated.View>
-          </TouchableOpacity>
-        </View>
-      </Modal>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   mainContainer: {
-    //flex: 1,
+    
   },
   container: {
     backgroundColor: "#0066FF",
@@ -320,50 +272,6 @@ const styles = StyleSheet.create({
   },
   iconButton: {
     padding: 8,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  overlayTouchable: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-  modalContent: {
-    width: 300,
-    height: '100%',
-    backgroundColor: '#f8f9fa',
-    borderTopRightRadius: 20,
-    borderBottomRightRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 2,
-      height: 0,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 10,
-    elevation: 10,
-    overflow: 'hidden',
-  },
-  closeButton: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    zIndex: 1000,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    borderRadius: 15,
-    width: 30,
-    height: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
   },
 });
 
