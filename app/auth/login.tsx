@@ -1,6 +1,6 @@
 import { FontAwesome5, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     KeyboardAvoidingView,
     Platform,
@@ -10,19 +10,107 @@ import {
     TextInput,
     TouchableOpacity,
     View,
+    ActivityIndicator,
+    Alert,
 } from 'react-native';
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { setLogInUserRequest, clearRegistrationData } from '@/redux/actions/registration.action';
 
 const LoginScreen = () => {
+  const dispatch = useDispatch();
+  const router = useRouter();
+  
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const router = useRouter();
+  const [validationError, setValidationError] = useState('');
+  const { 
+    loginData, 
+    loading: loginLoading, 
+    error: loginError 
+  } = useSelector((state: RootState) => state.registrationUser);
+  useEffect(() => {
+    if (loginError) {
+      setValidationError(loginError);
+      Alert.alert('Login Error', loginError);
+    }
+  }, [loginError]);
+  useEffect(() => {
+    if (loginData?.statusCode === 200 && loginData?.data) {
+      console.log('Login successful:', loginData);
+      const user = loginData.data?.user || loginData.data;
+      
+      if (user?.isActive) {
+        Alert.alert('Success', 'Login successful!', [
+          { 
+            text: 'OK', 
+            onPress: () => {
+              console.log('User logged in:', user);
+              router.push('/(tabs)');
+            }
+          }
+        ]);
+      } else if (user && !user.isActive) {
+        Alert.alert(
+          'Account Not Verified',
+          'Please verify your email first. We have sent an OTP to your email.',
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                console.log('Navigate to OTP screen for email:', user.email);
+              }
+            }
+          ]
+        );
+      }
+    }
+  }, [loginData]);
+
+  const validateForm = () => {
+    if (!email.trim()) {
+      setValidationError('Please enter your email');
+      return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setValidationError('Please enter a valid email');
+      return false;
+    }
+
+    if (!password) {
+      setValidationError('Please enter a password');
+      return false;
+    }
+
+    if (password.length < 6) {
+      setValidationError('Password must be at least 6 characters');
+      return false;
+    }
+
+    setValidationError('');
+    return true;
+  };
 
   const handleLogin = () => {
-    console.log('Login pressed');
-    // Add your login logic here
+    if (!validateForm()) {
+      return;
+    }
+
+    console.log('Login pressed with:', { email, password });
+    dispatch(clearRegistrationData());
+    const loginPayload = {
+      email: email.trim().toLowerCase(),
+      password: password,
+    };
+    
+    dispatch(setLogInUserRequest(loginPayload));
     router.push('/(tabs)');
+    setEmail("");
+    setPassword("");
   };
 
   const handleForgotPassword = () => {
@@ -43,6 +131,7 @@ const LoginScreen = () => {
 
   const handleSocialLogin = (provider: string) => {
     console.log(`${provider} login pressed`);
+    Alert.alert('Coming Soon', `${provider} login will be available soon!`);
   };
 
   const togglePasswordVisibility = () => {
@@ -55,7 +144,10 @@ const LoginScreen = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardAvoid}
       >
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <ScrollView 
+          contentContainerStyle={styles.scrollContainer}
+          showsVerticalScrollIndicator={false}
+        >
           {/* Header */}
           <View style={styles.header}>
             <Text style={styles.title}>Welcome Back</Text>
@@ -70,6 +162,7 @@ const LoginScreen = () => {
             <TouchableOpacity 
               style={[styles.socialButton, styles.googleButton]} 
               onPress={() => handleSocialLogin('Google')}
+              disabled={loginLoading}
             >
               <View style={styles.socialButtonContent}>
                 <View style={styles.iconContainer}>
@@ -86,6 +179,7 @@ const LoginScreen = () => {
             <TouchableOpacity 
               style={[styles.socialButton, styles.facebookButton]} 
               onPress={() => handleSocialLogin('Facebook')}
+              disabled={loginLoading}
             >
               <View style={styles.socialButtonContent}>
                 <View style={styles.iconContainer}>
@@ -102,6 +196,7 @@ const LoginScreen = () => {
             <TouchableOpacity 
               style={[styles.socialButton, styles.phoneButton]} 
               onPress={() => handleSocialLogin('Phone')}
+              disabled={loginLoading}
             >
               <View style={styles.socialButtonContent}>
                 <View style={styles.iconContainer}>
@@ -122,6 +217,13 @@ const LoginScreen = () => {
             <View style={styles.dividerLine} />
           </View>
 
+          {/* Error Message */}
+          {validationError ? (
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText}>{validationError}</Text>
+            </View>
+          ) : null}
+
           {/* Email and Password Inputs */}
           <View style={styles.formContainer}>
             <TextInput
@@ -132,6 +234,7 @@ const LoginScreen = () => {
               autoCapitalize="none"
               value={email}
               onChangeText={setEmail}
+              editable={!loginLoading}
             />
 
             <View style={styles.passwordContainer}>
@@ -142,10 +245,12 @@ const LoginScreen = () => {
                 secureTextEntry={!showPassword}
                 value={password}
                 onChangeText={setPassword}
+                editable={!loginLoading}
               />
               <TouchableOpacity 
                 style={styles.eyeButton} 
                 onPress={togglePasswordVisibility}
+                disabled={loginLoading}
               >
                 <Ionicons 
                   name={showPassword ? "eye-off" : "eye"} 
@@ -158,25 +263,31 @@ const LoginScreen = () => {
             <TouchableOpacity 
               style={styles.forgotPasswordButton}
               onPress={handleForgotPassword}
+              disabled={loginLoading}
             >
               <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
             </TouchableOpacity>
 
             <TouchableOpacity 
-              style={styles.loginButton} 
+              style={[styles.loginButton, loginLoading && styles.buttonDisabled]} 
               onPress={handleLogin}
+              disabled={loginLoading || !email || !password}
             >
-              <Text style={styles.loginButtonText}>Login</Text>
+              {loginLoading ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.loginButtonText}>Login</Text>
+              )}
             </TouchableOpacity>
           </View>
 
           {/* Register Section */}
-          <View style={styles.registerContainer}>
-            <Text style={styles.registerText}>
-              Don't have an account?{' '}
+          <View style={styles.loginContainer}>
+            <Text style={styles.loginText}>
+              Dont have an account?{' '}
             </Text>
-            <TouchableOpacity onPress={handleRegister}>
-              <Text style={styles.registerButton}>Register Now</Text>
+            <TouchableOpacity onPress={handleRegister} disabled={loginLoading}>
+              <Text style={styles.loginButtonText}>Register Now</Text>
             </TouchableOpacity>
           </View>
 
@@ -192,6 +303,7 @@ const LoginScreen = () => {
             <TouchableOpacity 
               style={styles.textButton} 
               onPress={handleGuestContinue}
+              disabled={loginLoading}
             >
               <Text style={styles.textButtonText}>Continue as a Guest</Text>
             </TouchableOpacity>
@@ -199,6 +311,7 @@ const LoginScreen = () => {
             <TouchableOpacity 
               style={styles.textButton} 
               onPress={handleModeratorLogin}
+              disabled={loginLoading}
             >
               <Text style={styles.textButtonText}>Moderator Login</Text>
             </TouchableOpacity>
@@ -300,6 +413,17 @@ const styles = StyleSheet.create({
     color: '#666',
     fontSize: 14,
   },
+  errorContainer: {
+    backgroundColor: '#fee',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 16,
+  },
+  errorText: {
+    color: '#c00',
+    fontSize: 14,
+    textAlign: 'center',
+  },
   formContainer: {
     marginBottom: 24,
   },
@@ -353,21 +477,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  registerContainer: {
+  buttonDisabled: {
+    opacity: 0.6,
+  },
+  loginContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
   },
-  registerText: {
+  loginText: {
     fontSize: 14,
     color: '#666',
   },
-  registerButton: {
-    fontSize: 14,
-    color: '#007bff',
-    fontWeight: 'bold',
-  },
+ 
   optionsContainer: {
     alignItems: 'center',
   },

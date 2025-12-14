@@ -20,7 +20,7 @@ export default function RootLayout() {
         <Provider store={store}>
           <ThemeProvider value={DefaultTheme}>
             <Drawer
-              drawerContent={(props) => <CustomDrawerContent {...props} />}
+              drawerContent={(props:any) => <CustomDrawerContent {...props} />}
               screenOptions={{
                 headerShown: false,
                 drawerType: 'front',
