@@ -487,13 +487,14 @@
 // });
 
 // export default RegisterScreen;
+//---------------one to one--------------------------------------
 
 import OtpVerificationModal from '@/components/auth/OtpVerificationModal';
 import { clearRegistrationData, setRegistrationRequest } from '@/redux/actions/registration.action';
 import { RootState } from '@/redux/store';
 import { FontAwesome5, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import {
     ActivityIndicator,
     Alert,
@@ -510,7 +511,6 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from 'react-redux';
 
-
 const RegisterScreen = () => {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -522,36 +522,61 @@ const RegisterScreen = () => {
   const [email, setEmail] = useState('');
   const [validationError, setValidationError] = useState('');
   const [showOtpModal, setShowOtpModal] = useState(false);
-  const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { registrationData, loading, error } = useSelector(
     (state: RootState) => state?.registrationUser
   );
 
+  // Debug logs
   useEffect(() => {
-    if (registrationData) {
-      if (registrationData?.statusCode === 200 || 
-          registrationData?.statusCode === 201 || 
-          registrationData?.data) {
-        setRegistrationSuccess(true);
+    console.log('🔄 Registration State Update:', {
+      loading,
+      error,
+      registrationData,
+      showOtpModal
+    });
+  }, [loading, error, registrationData, showOtpModal]);
+
+  // Handle registration response
+  useEffect(() => {
+    if (isSubmitting && !loading && registrationData) {
+      console.log('📨 Registration API Response:', registrationData);
+      
+      // Check for ANY successful response
+      const isSuccess = (
+        registrationData?.statusCode === 200 ||
+        registrationData?.statusCode === 201 ||
+        registrationData?.success === true ||
+        registrationData?.data ||
+        registrationData?.message?.toLowerCase().includes('success') ||
+        registrationData?.message?.toLowerCase().includes('otp') ||
+        registrationData?.message?.toLowerCase().includes('send')
+      );
+      
+      if (isSuccess) {
+        console.log('✅ Registration successful! Showing OTP modal...');
         setShowOtpModal(true);
+        setIsSubmitting(false);
+      } else {
+        console.log('❌ Registration response not recognized as success:', registrationData);
       }
     }
-  }, [registrationData]);
+  }, [registrationData, loading, isSubmitting]);
 
+  // Handle errors
   useEffect(() => {
-    if (!loading && registrationData && !error) {
-      if (registrationData?.data || registrationData?.statusCode === 200) {
-        setShowOtpModal(true);
-      }
-    }
-  }, [loading, registrationData, error]);
-
-  useEffect(() => {
-    if (error) {
+    if (error && isSubmitting) {
+      console.log('❌ Registration Error:', error);
       setValidationError(error);
+      setIsSubmitting(false);
+      setShowOtpModal(false);
+      
+      setTimeout(() => {
+        setValidationError('');
+      }, 5000);
     }
-  }, [error]);
+  }, [error, isSubmitting]);
 
   const validateForm = () => {
     if (!name.trim()) {
@@ -594,7 +619,10 @@ const RegisterScreen = () => {
       return;
     }
 
-    dispatch(clearRegistrationData());
+    console.log('🚀 Starting registration process...');
+    setIsSubmitting(true);
+    setValidationError('');
+    setShowOtpModal(false);
     
     const registrationPayload = {
       name: name.trim(),
@@ -602,16 +630,9 @@ const RegisterScreen = () => {
       password: password,
     };
 
+    console.log('📤 Dispatching registration request:', registrationPayload);
+    dispatch(clearRegistrationData());
     dispatch(setRegistrationRequest(registrationPayload));
-    setEmail("");
-    setName("");
-    setPassword("");
-    setConfirmPassword("");
-    setTimeout(() => {
-      if (!error) {
-        setShowOtpModal(true);
-      }
-    }, 3000);
   };
 
   const handleLogin = () => {
@@ -624,6 +645,7 @@ const RegisterScreen = () => {
 
   const handleSocialSignUp = (provider: string) => {
     console.log(`${provider} sign up pressed`);
+    Alert.alert('Coming Soon', `${provider} sign up will be available soon!`);
   };
 
   const togglePasswordVisibility = () => {
@@ -636,6 +658,12 @@ const RegisterScreen = () => {
 
   const handleOtpVerificationSuccess = () => {
     setShowOtpModal(false);
+    // Clear form fields
+    setEmail("");
+    setName("");
+    setPassword("");
+    setConfirmPassword("");
+    
     Alert.alert('Success', 'Account verified successfully!', [
       { text: 'OK', onPress: () => router.push('/(tabs)') }
     ]);
@@ -643,8 +671,15 @@ const RegisterScreen = () => {
 
   const handleOtpCancel = () => {
     setShowOtpModal(false);
-    Alert.alert('Info', 'Please complete OTP verification to access your account');
+    setIsSubmitting(false);
+    Alert.alert(
+      'Verification Required',
+      'Please complete OTP verification to access your account. You can try again later.',
+      [{ text: 'OK' }]
+    );
   };
+
+  const isRegisterButtonLoading = loading || isSubmitting;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -667,7 +702,7 @@ const RegisterScreen = () => {
             <TouchableOpacity
               style={[styles.socialButton, styles.googleButton]}
               onPress={() => handleSocialSignUp('Google')}
-              disabled={loading}
+              disabled={isRegisterButtonLoading}
             >
               <View style={styles.socialButtonContent}>
                 <View style={styles.iconContainer}>
@@ -683,7 +718,7 @@ const RegisterScreen = () => {
             <TouchableOpacity
               style={[styles.socialButton, styles.facebookButton]}
               onPress={() => handleSocialSignUp('Facebook')}
-              disabled={loading}
+              disabled={isRegisterButtonLoading}
             >
               <View style={styles.socialButtonContent}>
                 <View style={styles.iconContainer}>
@@ -699,7 +734,7 @@ const RegisterScreen = () => {
             <TouchableOpacity
               style={[styles.socialButton, styles.phoneButton]}
               onPress={() => handleSocialSignUp('Phone')}
-              disabled={loading}
+              disabled={isRegisterButtonLoading}
             >
               <View style={styles.socialButtonContent}>
                 <View style={styles.iconContainer}>
@@ -721,6 +756,7 @@ const RegisterScreen = () => {
 
           {validationError ? (
             <View style={styles.errorContainer}>
+              <Ionicons name="alert-circle" size={20} color="#c00" />
               <Text style={styles.errorText}>{validationError}</Text>
             </View>
           ) : null}
@@ -733,7 +769,7 @@ const RegisterScreen = () => {
               autoCapitalize="words"
               value={name}
               onChangeText={setName}
-              editable={!loading}
+              editable={!isRegisterButtonLoading}
             />
 
             <TextInput
@@ -744,7 +780,7 @@ const RegisterScreen = () => {
               autoCapitalize="none"
               value={email}
               onChangeText={setEmail}
-              editable={!loading}
+              editable={!isRegisterButtonLoading}
             />
 
             <View style={styles.passwordContainer}>
@@ -755,11 +791,12 @@ const RegisterScreen = () => {
                 secureTextEntry={!showPassword}
                 value={password}
                 onChangeText={setPassword}
-                editable={!loading}
+                editable={!isRegisterButtonLoading}
               />
               <TouchableOpacity
                 style={styles.eyeButton}
                 onPress={togglePasswordVisibility}
+                disabled={isRegisterButtonLoading}
               >
                 <Ionicons
                   name={showPassword ? "eye-off" : "eye"}
@@ -777,11 +814,12 @@ const RegisterScreen = () => {
                 secureTextEntry={!showConfirmPassword}
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
-                editable={!loading}
+                editable={!isRegisterButtonLoading}
               />
               <TouchableOpacity
                 style={styles.eyeButton}
                 onPress={toggleConfirmPasswordVisibility}
+                disabled={isRegisterButtonLoading}
               >
                 <Ionicons
                   name={showConfirmPassword ? "eye-off" : "eye"}
@@ -792,11 +830,11 @@ const RegisterScreen = () => {
             </View>
 
             <TouchableOpacity
-              style={[styles.registerButton, loading && styles.buttonDisabled]}
+              style={[styles.registerButton, isRegisterButtonLoading && styles.buttonDisabled]}
               onPress={handleRegister}
-              disabled={loading}
+              disabled={isRegisterButtonLoading}
             >
-              {loading ? (
+              {isRegisterButtonLoading ? (
                 <ActivityIndicator color="#fff" />
               ) : (
                 <Text style={styles.registerButtonText}>Sign Up</Text>
@@ -808,7 +846,7 @@ const RegisterScreen = () => {
             <Text style={styles.loginText}>
               Already have an account?{' '}
             </Text>
-            <TouchableOpacity onPress={handleLogin} disabled={loading}>
+            <TouchableOpacity onPress={handleLogin} disabled={isRegisterButtonLoading}>
               <Text style={styles.loginButton}>Login</Text>
             </TouchableOpacity>
           </View>
@@ -823,7 +861,7 @@ const RegisterScreen = () => {
             <TouchableOpacity
               style={styles.textButton}
               onPress={handleGuestContinue}
-              disabled={loading}
+              disabled={isRegisterButtonLoading}
             >
               <Text style={styles.textButtonText}>Continue as a Guest</Text>
             </TouchableOpacity>
@@ -837,6 +875,7 @@ const RegisterScreen = () => {
         animationType="slide"
         transparent={true}
         onRequestClose={handleOtpCancel}
+        statusBarTranslucent={true}
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
@@ -948,11 +987,16 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     marginBottom: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
   },
   errorText: {
     color: '#c00',
     fontSize: 14,
     textAlign: 'center',
+    flex: 1,
   },
   formContainer: {
     marginBottom: 24,
@@ -1032,10 +1076,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 20,
   },
   modalContainer: {
-    width: '90%',
-    maxHeight: '80%',
+    width: '100%',
+    maxWidth: 400,
     backgroundColor: '#fff',
     borderRadius: 20,
     overflow: 'hidden',
@@ -1048,3 +1093,6 @@ const styles = StyleSheet.create({
 });
 
 export default RegisterScreen;
+
+
+

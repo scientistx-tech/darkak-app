@@ -8,633 +8,6 @@
 //   StyleSheet,
 //   Alert,
 //   Keyboard,
-//   TextInputProps,
-// } from 'react-native';
-// import { useDispatch, useSelector } from 'react-redux';
-
-// const OtpVerificationModal = () => {
-//   //const ditchpatch = useDispatch();
-
-//   //const verificationOtpAll =  useSelector((state:RootState)=>state.registrationUser?.otpVerifyData)
-
-//   const [otp, setOtp] = useState<string[]>(['', '', '', '', '', '']);
-//   const [timer, setTimer] = useState<number>(30);
-//   const [canResend, setCanResend] = useState<boolean>(false);
-//   const inputRefs = useRef<Array<TextInput | null>>([]);
-
-//   useEffect(() => {
-//     // Initialize refs array
-//     inputRefs.current = inputRefs.current.slice(0, 6);
-//   }, []);
-
-//   useEffect(() => {
-//     if (timer > 0) {
-//       const countdown = setTimeout(() => setTimer(timer - 1), 1000);
-//       return () => clearTimeout(countdown);
-//     } else {
-//       setCanResend(true);
-//     }
-//   }, [timer]);
-
-//   const handleOtpChange = (text: string, index: number) => {
-//     if (/^\d?$/.test(text)) {
-//       const newOtp = [...otp];
-//       newOtp[index] = text;
-//       setOtp(newOtp);
-
-//       // Auto focus to next input
-//       if (text && index < 5) {
-//         inputRefs.current[index + 1]?.focus();
-//       }
-
-//       // Auto backspace to previous input
-//       if (!text && index > 0) {
-//         inputRefs.current[index - 1]?.focus();
-//       }
-//     }
-//   };
-
-//   const handleKeyPress = (e: any, index: number) => {
-//     if (e.nativeEvent.key === 'Backspace' && !otp[index] && index > 0) {
-//       inputRefs.current[index - 1]?.focus();
-//     }
-//   };
-
-//   const handleSubmit = () => {
-//     const otpString = otp.join('');
-//     if (otpString.length === 6) {
-//       Alert.alert('Success', `OTP Submitted: ${otpString}`);
-//       Keyboard.dismiss();
-//     } else {
-//       Alert.alert('Error', 'Please enter complete OTP');
-//     }
-//   };
-
-//   const handleResendOtp = () => {
-//     if (canResend) {
-//       setTimer(15);
-//       setCanResend(false);
-//       setOtp(['', '', '', '', '', '']);
-//       inputRefs.current[0]?.focus();
-//       Alert.alert('OTP Sent', 'New OTP has been sent to your email');
-//     }
-//   };
-
-//   const handleCancel = () => {
-//     Alert.alert('Cancelled', 'Verification cancelled');
-//     setOtp(['', '', '', '', '', '']);
-//     Keyboard.dismiss();
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       <Text style={styles.title}>Verify Email</Text>
-//       <Text style={styles.subtitle}>
-//         OTP has been sent to <Text style={styles.emailText}>Email</Text>
-//       </Text>
-
-//       <View style={styles.otpContainer}>
-//         {otp.map((digit, index) => (
-//           <TextInput
-//             key={index}
-//             ref={(ref) => {
-//               inputRefs.current[index] = ref;
-//             }}
-//             style={[
-//               styles.otpInput,
-//               digit && styles.otpInputFilled,
-//             ]}
-//             value={digit}
-//             onChangeText={(text) => handleOtpChange(text, index)}
-//             onKeyPress={(e) => handleKeyPress(e, index)}
-//             keyboardType="numeric"
-//             maxLength={1}
-//             selectTextOnFocus
-//           />
-//         ))}
-//       </View>
-
-//       <View style={styles.buttonContainer}>
-//         <TouchableOpacity
-//           style={[styles.button, styles.cancelButton]}
-//           onPress={handleCancel}
-//         >
-//           <Text style={styles.cancelButtonText}>Cancel</Text>
-//         </TouchableOpacity>
-
-//         <TouchableOpacity
-//           style={[styles.button, styles.submitButton]}
-//           onPress={handleSubmit}
-//         >
-//           <Text style={styles.submitButtonText}>Submit OTP</Text>
-//         </TouchableOpacity>
-//       </View>
-
-//       <View style={styles.separator} />
-
-//       <TouchableOpacity
-//         style={[
-//           styles.resendButton,
-//           !canResend && styles.resendButtonDisabled,
-//         ]}
-//         onPress={handleResendOtp}
-//         disabled={!canResend}
-//       >
-//         <Text
-//           style={[
-//             styles.resendText,
-//             !canResend && styles.resendTextDisabled,
-//           ]}
-//         >
-//           {canResend
-//             ? 'Resend OTP'
-//             : `Resend OTP in ${timer}s`}
-//         </Text>
-//       </TouchableOpacity>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     padding: 20,
-//     justifyContent: 'center',
-//   },
-//   title: {
-//     fontSize: 28,
-//     fontWeight: 'bold',
-//     textAlign: 'center',
-//     marginBottom: 10,
-//     color: '#333',
-//   },
-//   subtitle: {
-//     fontSize: 16,
-//     textAlign: 'center',
-//     marginBottom: 40,
-//     color: '#666',
-//   },
-//   emailText: {
-//     fontWeight: 'bold',
-//     color: '#007AFF',
-//   },
-//   otpContainer: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     marginBottom: 40,
-//     paddingHorizontal: 20,
-//   },
-//   otpInput: {
-//     width: 45,
-//     height: 55,
-//     borderWidth: 2,
-//     borderColor: '#E0E0E0',
-//     borderRadius: 12,
-//     textAlign: 'center',
-//     fontSize: 20,
-//     fontWeight: '600',
-//     color: '#333',
-//     backgroundColor: '#F8F9FA',
-//   },
-//   otpInputFilled: {
-//     borderColor: '#007AFF',
-//     backgroundColor: '#F0F8FF',
-//   },
-//   buttonContainer: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     marginBottom: 30,
-//   },
-//   button: {
-//     flex: 1,
-//     paddingVertical: 15,
-//     borderRadius: 12,
-//     marginHorizontal: 5,
-//   },
-//   cancelButton: {
-//     backgroundColor: '#F8F9FA',
-//     borderWidth: 2,
-//     borderColor: '#E0E0E0',
-//   },
-//   submitButton: {
-//     backgroundColor: '#007AFF',
-//   },
-//   cancelButtonText: {
-//     color: '#666',
-//     textAlign: 'center',
-//     fontSize: 16,
-//     fontWeight: '600',
-//   },
-//   submitButtonText: {
-//     color: '#fff',
-//     textAlign: 'center',
-//     fontSize: 16,
-//     fontWeight: '600',
-//   },
-//   separator: {
-//     height: 1,
-//     backgroundColor: '#E0E0E0',
-//     marginBottom: 30,
-//   },
-//   resendButton: {
-//     paddingVertical: 15,
-//     borderRadius: 12,
-//   },
-//   resendButtonDisabled: {
-//     opacity: 0.5,
-//   },
-//   resendText: {
-//     textAlign: 'center',
-//     fontSize: 16,
-//     color: '#007AFF',
-//     fontWeight: '600',
-//   },
-//   resendTextDisabled: {
-//     color: '#666',
-//   },
-// });
-
-// export default OtpVerificationModal;
-//-----------------------------------------------------
-// import { RootState } from '@/redux/store';
-// import React, { useState, useRef, useEffect } from 'react';
-// import {
-//   View,
-//   Text,
-//   TextInput,
-//   TouchableOpacity,
-//   StyleSheet,
-//   Alert,
-//   Keyboard,
-//   ActivityIndicator,
-// } from 'react-native';
-// import { useDispatch, useSelector } from 'react-redux';
-
-// interface OtpVerificationModalProps {
-//   email: string;
-//   onVerificationSuccess: () => void;
-//   onCancel: () => void;
-// }
-
-// const OtpVerificationModal: React.FC<OtpVerificationModalProps> = ({
-//   email,
-//   onVerificationSuccess,
-//   onCancel,
-// }) => {
-//   const dispatch = useDispatch();
- 
-//   const [otp, setOtp] = useState<string[]>(['', '', '', '', '', '']);
-//   const [timer, setTimer] = useState<number>(30);
-//   const [canResend, setCanResend] = useState<boolean>(false);
-//   const [loading, setLoading] = useState<boolean>(false);
-//   const inputRefs = useRef<Array<TextInput | null>>([]);
-
-//    const{emailUser,otpverify} = useSelector((state:RootState)=>state.registrationUser.otpVerifyData);
-
-
-//   useEffect(() => {
-//     console.log('📱 OTP Modal: Email received:', email);
-//     // Initialize refs array
-//     inputRefs.current = inputRefs.current.slice(0, 6);
-    
-//     // Focus first input
-//     setTimeout(() => {
-//       inputRefs.current[0]?.focus();
-//     }, 500);
-//   }, []);
-
-//   useEffect(() => {
-//     if (timer > 0) {
-//       const countdown = setTimeout(() => setTimer(timer - 1), 1000);
-//       return () => clearTimeout(countdown);
-//     } else {
-//       setCanResend(true);
-//     }
-//   }, [timer]);
-
-//   const handleOtpChange = (text: string, index: number) => {
-//     if (/^\d?$/.test(text)) {
-//       const newOtp = [...otp];
-//       newOtp[index] = text;
-//       setOtp(newOtp);
-
-//       // Auto focus to next input
-//       if (text && index < 5) {
-//         setTimeout(() => {
-//           inputRefs.current[index + 1]?.focus();
-//         }, 10);
-//       }
-
-//       // Auto backspace to previous input
-//       if (!text && index > 0) {
-//         setTimeout(() => {
-//           inputRefs.current[index - 1]?.focus();
-//         }, 10);
-//       }
-
-//       // Auto submit if all digits are entered
-//       if (index === 5 && text) {
-//         const otpString = [...newOtp].join('');
-//         if (otpString.length === 6) {
-//           setTimeout(() => {
-//             handleSubmit();
-//           }, 100);
-//         }
-//       }
-//     }
-//   };
-
-//   const handleKeyPress = (e: any, index: number) => {
-//     if (e.nativeEvent.key === 'Backspace' && !otp[index] && index > 0) {
-//       inputRefs.current[index - 1]?.focus();
-//     }
-//   };
-
-//   const handleSubmit = async () => {
-//     const otpString = otp.join('');
-//     if (otpString.length !== 6) {
-//       Alert.alert('Error', 'Please enter complete 6-digit OTP');
-//       return;
-//     }
-
-//     setLoading(true);
-//     Keyboard.dismiss();
-    
-//     try {
-//       console.log('📱 OTP Modal: Verifying OTP for email:', email);
-      
-//       // এখানে আপনার OTP verification API কল করুন
-//       // dispatch(verifyOtpAction({ email, otp: otpString }));
-      
-//       // Simulate API call
-//       await new Promise(resolve => setTimeout(resolve, 2000));
-      
-//       console.log('✅ OTP Modal: Verification successful');
-//       Alert.alert('Success', 'Email verified successfully!');
-//       onVerificationSuccess();
-      
-//     } catch (error) {
-//       console.error('❌ OTP Modal: Verification error:', error);
-//       Alert.alert('Error', 'Invalid OTP. Please try again.');
-//       // Reset OTP on error
-//       setOtp(['', '', '', '', '', '']);
-//       inputRefs.current[0]?.focus();
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const handleResendOtp = async () => {
-//     if (canResend) {
-//       setLoading(true);
-//       try {
-//         console.log('📱 OTP Modal: Resending OTP to:', email);
-//         await new Promise(resolve => setTimeout(resolve, 1000));
-        
-//         setTimer(30);
-//         setCanResend(false);
-//         setOtp(['', '', '', '', '', '']);
-//         inputRefs.current[0]?.focus();
-//         Alert.alert('OTP Sent', `New OTP has been sent to ${email}`);
-        
-//       } catch (error) {
-//         console.error('❌ OTP Modal: Resend error:', error);
-//         Alert.alert('Error', 'Failed to resend OTP. Please try again.');
-//       } finally {
-//         setLoading(false);
-//       }
-//     }
-//   };
-
-//   const handleCancel = () => {
-//     Alert.alert('Cancelled', 'Verification cancelled');
-//     setOtp(['', '', '', '', '', '']);
-//     Keyboard.dismiss();
-//     onCancel();
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       <Text style={styles.title}>Verify Your Email</Text>
-//       <Text style={styles.subtitle}>
-//         Enter the 6-digit OTP sent to
-//       </Text>
-//       <Text style={styles.emailText}>{email}</Text>
-
-//       <View style={styles.otpContainer}>
-//         {otp.map((digit, index) => (
-//           <TextInput
-//             key={index}
-//             ref={(ref) => {
-//               inputRefs.current[index] = ref;
-//             }}
-//             style={[
-//               styles.otpInput,
-//               digit && styles.otpInputFilled,
-//             ]}
-//             value={digit}
-//             onChangeText={(text) => handleOtpChange(text, index)}
-//             onKeyPress={(e) => handleKeyPress(e, index)}
-//             keyboardType="numeric"
-//             maxLength={1}
-//             selectTextOnFocus
-//             editable={!loading}
-//           />
-//         ))}
-//       </View>
-
-//       {loading && (
-//         <View style={styles.loadingOverlay}>
-//           <ActivityIndicator size="large" color="#003366" />
-//           <Text style={styles.loadingText}>Verifying OTP...</Text>
-//         </View>
-//       )}
-
-//       <View style={styles.buttonContainer}>
-//         <TouchableOpacity
-//           style={[styles.button, styles.cancelButton]}
-//           onPress={handleCancel}
-//           disabled={loading}
-//         >
-//           <Text style={styles.cancelButtonText}>Cancel</Text>
-//         </TouchableOpacity>
-
-//         <TouchableOpacity
-//           style={[styles.button, styles.submitButton, loading && styles.buttonDisabled]}
-//           onPress={handleSubmit}
-//           disabled={loading}
-//         >
-//           {loading ? (
-//             <ActivityIndicator color="#fff" size="small" />
-//           ) : (
-//             <Text style={styles.submitButtonText}>Verify OTP</Text>
-//           )}
-//         </TouchableOpacity>
-//       </View>
-
-//       <View style={styles.separator} />
-
-//       <TouchableOpacity
-//         style={[
-//           styles.resendButton,
-//           (!canResend || loading) && styles.resendButtonDisabled,
-//         ]}
-//         onPress={handleResendOtp}
-//         disabled={!canResend || loading}
-//       >
-//         <Text
-//           style={[
-//             styles.resendText,
-//             (!canResend || loading) && styles.resendTextDisabled,
-//           ]}
-//         >
-//           {canResend
-//             ? 'Resend OTP'
-//             : `Resend OTP in ${timer}s`}
-//         </Text>
-//       </TouchableOpacity>
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     //padding: 20,
-//     justifyContent: 'center',
-//   },
-//   title: {
-//     fontSize: 28,
-//     fontWeight: 'bold',
-//     textAlign: 'center',
-//     marginBottom: 10,
-//     color: '#333',
-//   },
-//   subtitle: {
-//     fontSize: 16,
-//     textAlign: 'center',
-//     color: '#666',
-//     marginBottom: 5,
-//   },
-//   emailText: {
-//     fontSize: 18,
-//     fontWeight: 'bold',
-//     textAlign: 'center',
-//     marginBottom: 40,
-//     color: '#003366',
-//   },
-//   otpContainer: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     gap:3,
-//     marginBottom: 40,
-//     paddingHorizontal: 20,
-//   },
-//   otpInput: {
-//     width: 50,
-//     height: 60,
-//     borderWidth: 2,
-//     borderColor: '#E0E0E0',
-//     borderRadius: 12,
-//     textAlign: 'center',
-//     fontSize: 24,
-//     fontWeight: '600',
-//     color: '#333',
-//     backgroundColor: '#F8F9FA',
-//   },
-//   otpInputFilled: {
-//     borderColor: '#003366',
-//     backgroundColor: '#F0F8FF',
-//   },
-//   buttonContainer: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     marginBottom: 30,
-//   },
-//   button: {
-//     flex: 1,
-//     paddingVertical: 16,
-//     borderRadius: 12,
-//     marginHorizontal: 5,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   buttonDisabled: {
-//     opacity: 0.6,
-//   },
-//   cancelButton: {
-//     backgroundColor: '#F8F9FA',
-//     borderWidth: 2,
-//     borderColor: '#E0E0E0',
-//   },
-//   submitButton: {
-//     backgroundColor: '#003366',
-//   },
-//   cancelButtonText: {
-//     color: '#666',
-//     fontSize: 16,
-//     fontWeight: '600',
-//   },
-//   submitButtonText: {
-//     color: '#fff',
-//     fontSize: 16,
-//     fontWeight: '600',
-//   },
-//   separator: {
-//     height: 1,
-//     backgroundColor: '#E0E0E0',
-//     marginBottom: 30,
-//   },
-//   resendButton: {
-//     paddingVertical: 16,
-//     borderRadius: 12,
-//     alignItems: 'center',
-//   },
-//   resendButtonDisabled: {
-//     opacity: 0.5,
-//   },
-//   resendText: {
-//     fontSize: 16,
-//     color: '#003366',
-//     fontWeight: '600',
-//   },
-//   resendTextDisabled: {
-//     color: '#666',
-//   },
-//   loadingOverlay: {
-//     position: 'absolute',
-//     top: 0,
-//     left: 0,
-//     right: 0,
-//     bottom: 0,
-//     backgroundColor: 'rgba(255, 255, 255, 0.9)',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     zIndex: 10,
-//   },
-//   loadingText: {
-//     marginTop: 10,
-//     fontSize: 16,
-//     color: '#003366',
-//     fontWeight: '600',
-//   },
-// });
-
-// export default OtpVerificationModal;
-
-
-// import { RootState } from '@/redux/store';
-// import React, { useState, useRef, useEffect } from 'react';
-// import {
-//   View,
-//   Text,
-//   TextInput,
-//   TouchableOpacity,
-//   StyleSheet,
-//   Alert,
-//   Keyboard,
 //   ActivityIndicator,
 // } from 'react-native';
 // import { useDispatch, useSelector } from 'react-redux';
@@ -662,14 +35,13 @@
 //   const [otp, setOtp] = useState<string[]>(['', '', '', '', '', '']);
 //   const [timer, setTimer] = useState<number>(30);
 //   const [canResend, setCanResend] = useState<boolean>(false);
+//   const [localError, setLocalError] = useState<string>('');
 //   const inputRefs = useRef<Array<TextInput | null>>([]);
 
 //   useEffect(() => {
-//     console.log('📱 OTP Modal: Email received:', email);
-//     // Initialize refs array
+//     console.log('📱 OTP Modal Opened for:', email);
 //     inputRefs.current = inputRefs.current.slice(0, 6);
     
-//     // Focus first input
 //     setTimeout(() => {
 //       inputRefs.current[0]?.focus();
 //     }, 500);
@@ -684,56 +56,71 @@
 //     }
 //   }, [timer]);
 
-//   // OTP verification response monitor করুন
+//   // Error handling - Redux error
 //   useEffect(() => {
 //     if (otpError) {
-//       Alert.alert('Error', otpError || 'Invalid OTP. Please try again.');
-//       // Reset OTP on error
+//       console.log('❌ OTP Error from Redux:', otpError);
+      
+//       // Check if it's JSON parse error
+//       if (otpError.includes('JSON') || otpError.includes('json')) {
+//         setLocalError('Server response error. Please try again.');
+//       } else {
+//         setLocalError(otpError);
+//       }
+      
+//       // Reset OTP inputs
 //       setOtp(['', '', '', '', '', '']);
 //       inputRefs.current[0]?.focus();
 //     }
 //   }, [otpError]);
 
-//   // Success response monitor করুন
+//   // Success handling
 //   useEffect(() => {
-//     if (otpVerifyData && otpVerifyData.data) {
-//       if (otpVerifyData.data.isActive) {
-//         Alert.alert('Success', 'Email verified successfully!', [
-//           {
-//             text: 'OK',
-//             onPress: () => {
-//               console.log('✅ User verified and active:', otpVerifyData.data);
-//               onVerificationSuccess();
-//             }
-//           }
-//         ]);
-//       } else {
-//         Alert.alert('Error', 'OTP verification failed. User is not active.');
+//     console.log('📊 OTP Verify Data:', otpVerifyData);
+    
+//     if (otpVerifyData) {
+//       // Check multiple success conditions
+//       if (otpVerifyData.data?.isActive || 
+//           otpVerifyData.statusCode === 200 || 
+//           otpVerifyData.message?.toLowerCase().includes('success')) {
+        
+//         console.log('✅ OTP Verification Successful');
+//         setLocalError('');
+//         onVerificationSuccess();
+//       } else if (otpVerifyData.statusCode !== 200) {
+//         // Handle failed verification
+//         const errorMsg = otpVerifyData.message || 'OTP verification failed';
+//         setLocalError(errorMsg);
+//         setOtp(['', '', '', '', '', '']);
+//         inputRefs.current[0]?.focus();
 //       }
 //     }
 //   }, [otpVerifyData]);
 
 //   const handleOtpChange = (text: string, index: number) => {
+//     // Clear error when user starts typing
+//     if (localError) {
+//       setLocalError('');
+//     }
+
 //     if (/^\d?$/.test(text)) {
 //       const newOtp = [...otp];
 //       newOtp[index] = text;
 //       setOtp(newOtp);
 
-//       // Auto focus to next input
 //       if (text && index < 5) {
 //         setTimeout(() => {
 //           inputRefs.current[index + 1]?.focus();
 //         }, 10);
 //       }
 
-//       // Auto backspace to previous input
 //       if (!text && index > 0) {
 //         setTimeout(() => {
 //           inputRefs.current[index - 1]?.focus();
 //         }, 10);
 //       }
 
-//       // Auto submit if all digits are entered
+//       // Auto submit when all 6 digits entered
 //       if (index === 5 && text) {
 //         const otpString = [...newOtp].join('');
 //         if (otpString.length === 6) {
@@ -753,42 +140,55 @@
 
 //   const handleSubmit = () => {
 //     const otpString = otp.join('');
+    
 //     if (otpString.length !== 6) {
-//      // Alert.alert('Error', 'Please enter complete 6-digit OTP');
+//       setLocalError('Please enter complete 6-digit OTP');
 //       return;
 //     }
 
+//     // Clear previous errors
+//     setLocalError('');
 //     Keyboard.dismiss();
     
-//     console.log('📱 OTP Modal: Verifying OTP for email:', email);
-//     console.log('📱 OTP Modal: OTP entered:', otpString);
+//     console.log('📤 Submitting OTP:', otpString);
+//     console.log('📧 For Email:', email);
     
-//     // Dispatch OTP verification request
-//     dispatch(setOtpVerificationRequest({
-//       email: email,
-//       otp: otpString
-//     }));
+//     // Dispatch OTP verification
+//     try {
+//       dispatch(setOtpVerificationRequest({
+//         email: email.trim().toLowerCase(),
+//         otp: otpString
+//       }));
+//     } catch (error) {
+//       console.error('❌ Error dispatching OTP:', error);
+//       setLocalError('Failed to verify OTP. Please try again.');
+//     }
 //   };
 
 //   const handleResendOtp = async () => {
 //     if (canResend) {
-//       // এখানে আপনি OTP resend API call করতে পারেন
-//       // অথবা temporary solution হিসেবে
-//       Alert.alert('OTP Resent', `New OTP has been sent to ${email}`);
+//       console.log('🔄 Resending OTP to:', email);
       
 //       setTimer(30);
 //       setCanResend(false);
 //       setOtp(['', '', '', '', '', '']);
+//       setLocalError('');
 //       inputRefs.current[0]?.focus();
+      
+   
 //     }
 //   };
 
 //   const handleCancel = () => {
-//     Alert.alert('Cancelled', 'Verification cancelled');
+//     console.log('❌ OTP Modal Cancelled');
 //     setOtp(['', '', '', '', '', '']);
+//     setLocalError('');
 //     Keyboard.dismiss();
 //     onCancel();
 //   };
+
+//   // Display error - prioritize local error over redux error
+//   const displayError = localError || otpError;
 
 //   return (
 //     <View style={styles.container}>
@@ -797,6 +197,12 @@
 //         Enter the 6-digit OTP sent to
 //       </Text>
 //       <Text style={styles.emailText}>{email}</Text>
+
+//       {displayError && (
+//         <View style={styles.errorContainer}>
+//           <Text style={styles.errorText}>{displayError}</Text>
+//         </View>
+//       )}
 
 //       <View style={styles.otpContainer}>
 //         {otp.map((digit, index) => (
@@ -808,6 +214,7 @@
 //             style={[
 //               styles.otpInput,
 //               digit && styles.otpInputFilled,
+//               displayError && styles.otpInputError,
 //             ]}
 //             value={digit}
 //             onChangeText={(text) => handleOtpChange(text, index)}
@@ -821,9 +228,9 @@
 //       </View>
 
 //       {otpLoading && (
-//         <View style={styles.loadingOverlay}>
-//           <ActivityIndicator size="large" color="#003366" />
-//           <Text style={styles.loadingText}>Verifying OTP...</Text>
+//         <View style={styles.loadingContainer}>
+//           <ActivityIndicator size="small" color="#003366" />
+//           <Text style={styles.loadingText}>Verifying...</Text>
 //         </View>
 //       )}
 
@@ -844,12 +251,10 @@
 //           {otpLoading ? (
 //             <ActivityIndicator color="#fff" size="small" />
 //           ) : (
-//             <Text style={styles.submitButtonText}>Verify OTP</Text>
+//             <Text style={styles.submitButtonText}>Verify</Text>
 //           )}
 //         </TouchableOpacity>
 //       </View>
-
-//       <View style={styles.separator} />
 
 //       <TouchableOpacity
 //         style={[
@@ -867,7 +272,7 @@
 //         >
 //           {canResend
 //             ? 'Resend OTP'
-//             : `Resend OTP in ${timer}s`}
+//             : `Resend in ${timer}s`}
 //         </Text>
 //       </TouchableOpacity>
 //     </View>
@@ -876,45 +281,56 @@
 
 // const styles = StyleSheet.create({
 //   container: {
-//     flex: 1,
 //     backgroundColor: '#fff',
 //     padding: 20,
-//     justifyContent: 'center',
+//     borderRadius: 20,
 //   },
 //   title: {
-//     fontSize: 28,
+//     fontSize: 22,
 //     fontWeight: 'bold',
 //     textAlign: 'center',
-//     marginBottom: 10,
+//     marginBottom: 8,
 //     color: '#333',
 //   },
 //   subtitle: {
-//     fontSize: 16,
+//     fontSize: 14,
 //     textAlign: 'center',
 //     color: '#666',
-//     marginBottom: 5,
+//     marginBottom: 4,
 //   },
 //   emailText: {
-//     fontSize: 18,
+//     fontSize: 15,
 //     fontWeight: 'bold',
 //     textAlign: 'center',
-//     marginBottom: 40,
+//     marginBottom: 24,
 //     color: '#003366',
+//   },
+//   errorContainer: {
+//     backgroundColor: '#fee',
+//     padding: 10,
+//     borderRadius: 8,
+//     marginBottom: 16,
+//   },
+//   errorText: {
+//     color: '#c00',
+//     fontSize: 13,
+//     textAlign: 'center',
 //   },
 //   otpContainer: {
 //     flexDirection: 'row',
 //     justifyContent: 'space-between',
-//     marginBottom: 40,
-//     paddingHorizontal: 20,
+//     marginBottom: 24,
+//     paddingHorizontal: 5,
+//     gap:3
 //   },
 //   otpInput: {
-//     width: 50,
-//     height: 60,
+//     width: 45,
+//     height: 50,
 //     borderWidth: 2,
 //     borderColor: '#E0E0E0',
-//     borderRadius: 12,
+//     borderRadius: 10,
 //     textAlign: 'center',
-//     fontSize: 24,
+//     fontSize: 20,
 //     fontWeight: '600',
 //     color: '#333',
 //     backgroundColor: '#F8F9FA',
@@ -923,16 +339,32 @@
 //     borderColor: '#003366',
 //     backgroundColor: '#F0F8FF',
 //   },
+//   otpInputError: {
+//     borderColor: '#c00',
+//     backgroundColor: '#fee',
+//   },
+//   loadingContainer: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//     marginBottom: 16,
+//   },
+//   loadingText: {
+//     marginLeft: 8,
+//     fontSize: 14,
+//     color: '#003366',
+//     fontWeight: '500',
+//   },
 //   buttonContainer: {
 //     flexDirection: 'row',
 //     justifyContent: 'space-between',
-//     marginBottom: 30,
+//     marginBottom: 16,
 //   },
 //   button: {
 //     flex: 1,
-//     paddingVertical: 16,
-//     borderRadius: 12,
-//     marginHorizontal: 5,
+//     paddingVertical: 12,
+//     borderRadius: 10,
+//     marginHorizontal: 4,
 //     alignItems: 'center',
 //     justifyContent: 'center',
 //   },
@@ -941,7 +373,7 @@
 //   },
 //   cancelButton: {
 //     backgroundColor: '#F8F9FA',
-//     borderWidth: 2,
+//     borderWidth: 1.5,
 //     borderColor: '#E0E0E0',
 //   },
 //   submitButton: {
@@ -949,55 +381,34 @@
 //   },
 //   cancelButtonText: {
 //     color: '#666',
-//     fontSize: 16,
+//     fontSize: 15,
 //     fontWeight: '600',
 //   },
 //   submitButtonText: {
 //     color: '#fff',
-//     fontSize: 16,
+//     fontSize: 15,
 //     fontWeight: '600',
 //   },
-//   separator: {
-//     height: 1,
-//     backgroundColor: '#E0E0E0',
-//     marginBottom: 30,
-//   },
 //   resendButton: {
-//     paddingVertical: 16,
-//     borderRadius: 12,
+//     paddingVertical: 12,
+//     borderRadius: 10,
 //     alignItems: 'center',
 //   },
 //   resendButtonDisabled: {
 //     opacity: 0.5,
 //   },
 //   resendText: {
-//     fontSize: 16,
+//     fontSize: 14,
 //     color: '#003366',
 //     fontWeight: '600',
 //   },
 //   resendTextDisabled: {
 //     color: '#666',
 //   },
-//   loadingOverlay: {
-//     position: 'absolute',
-//     top: 0,
-//     left: 0,
-//     right: 0,
-//     bottom: 0,
-//     backgroundColor: 'rgba(255, 255, 255, 0.9)',
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     zIndex: 10,
-//   },
-//   loadingText: {
-//     marginTop: 10,
-//     fontSize: 16,
-//     color: '#003366',
-//     fontWeight: '600',
-//   },
 // });
 
 // export default OtpVerificationModal;
+
 
 import { RootState } from '@/redux/store';
 import React, { useState, useRef, useEffect } from 'react';
@@ -1038,15 +449,25 @@ const OtpVerificationModal: React.FC<OtpVerificationModalProps> = ({
   const [canResend, setCanResend] = useState<boolean>(false);
   const [localError, setLocalError] = useState<string>('');
   const inputRefs = useRef<Array<TextInput | null>>([]);
+  const mountedRef = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
 
   useEffect(() => {
     console.log('📱 OTP Modal Opened for:', email);
-    inputRefs.current = inputRefs.current.slice(0, 6);
     
-    setTimeout(() => {
-      inputRefs.current[0]?.focus();
-    }, 500);
-  }, []);
+    const focusTimer = setTimeout(() => {
+      if (mountedRef.current && inputRefs.current[0]) {
+        inputRefs.current[0]?.focus();
+      }
+    }, 300);
+    
+    return () => clearTimeout(focusTimer);
+  }, [email]);
 
   useEffect(() => {
     if (timer > 0) {
@@ -1057,51 +478,105 @@ const OtpVerificationModal: React.FC<OtpVerificationModalProps> = ({
     }
   }, [timer]);
 
-  // Error handling - Redux error
+  // Error handling
   useEffect(() => {
     if (otpError) {
       console.log('❌ OTP Error from Redux:', otpError);
+      setLocalError(otpError);
       
-      // Check if it's JSON parse error
-      if (otpError.includes('JSON') || otpError.includes('json')) {
-        setLocalError('Server response error. Please try again.');
-      } else {
-        setLocalError(otpError);
-      }
+      const resetOtp = ['', '', '', '', '', ''];
+      setOtp(resetOtp);
       
-      // Reset OTP inputs
-      setOtp(['', '', '', '', '', '']);
-      inputRefs.current[0]?.focus();
+      const errorTimer = setTimeout(() => {
+        if (mountedRef.current) {
+          setLocalError('');
+        }
+      }, 5000);
+      
+      setTimeout(() => {
+        if (mountedRef.current && inputRefs.current[0]) {
+          inputRefs.current[0]?.focus();
+        }
+      }, 100);
+      
+      return () => clearTimeout(errorTimer);
     }
   }, [otpError]);
 
-  // Success handling
+  // Success handling - UPDATED
   useEffect(() => {
-    console.log('📊 OTP Verify Data:', otpVerifyData);
-    
     if (otpVerifyData) {
-      // Check multiple success conditions
-      if (otpVerifyData.data?.isActive || 
-          otpVerifyData.statusCode === 200 || 
-          otpVerifyData.message?.toLowerCase().includes('success')) {
-        
-        console.log('✅ OTP Verification Successful');
+      console.log('📊 OTP Verify Data from Redux:', otpVerifyData);
+      
+      // Check if response has user and token (your API response structure)
+      const hasUserAndToken = otpVerifyData?.user && otpVerifyData?.token;
+      
+      // Check different success conditions
+      const isSuccess = (
+        otpVerifyData.statusCode === 200 ||
+        otpVerifyData.success === true ||
+        hasUserAndToken ||
+        otpVerifyData.message?.toLowerCase().includes('success') ||
+        otpVerifyData.message?.toLowerCase().includes('verified') ||
+        otpVerifyData.data?.isActive === true ||
+        otpVerifyData.user?.isActive === true
+      );
+      
+      console.log('✅ OTP Success Check:', {
+        statusCode: otpVerifyData.statusCode,
+        success: otpVerifyData.success,
+        hasUserAndToken,
+        message: otpVerifyData.message,
+        isActive: otpVerifyData.user?.isActive,
+        isSuccess
+      });
+      
+      if (isSuccess) {
+        console.log('✅ OTP Verification Successful - Calling onVerificationSuccess');
         setLocalError('');
-        onVerificationSuccess();
-      } else if (otpVerifyData.statusCode !== 200) {
-        // Handle failed verification
+        
+        // Small delay to ensure UI updates
+        setTimeout(() => {
+          onVerificationSuccess();
+        }, 100);
+      } else if (otpVerifyData.message) {
+        // Failed verification
         const errorMsg = otpVerifyData.message || 'OTP verification failed';
+        console.log('❌ OTP Verification Failed:', errorMsg);
         setLocalError(errorMsg);
-        setOtp(['', '', '', '', '', '']);
-        inputRefs.current[0]?.focus();
+        
+        const resetOtp = ['', '', '', '', '', ''];
+        setOtp(resetOtp);
+        
+        setTimeout(() => {
+          if (mountedRef.current && inputRefs.current[0]) {
+            inputRefs.current[0]?.focus();
+          }
+        }, 100);
       }
     }
-  }, [otpVerifyData]);
+  }, [otpVerifyData, onVerificationSuccess]);
 
   const handleOtpChange = (text: string, index: number) => {
-    // Clear error when user starts typing
     if (localError) {
       setLocalError('');
+    }
+
+    // Handle paste (if user pastes 6 digits)
+    if (text.length === 6 && /^\d{6}$/.test(text)) {
+      const otpArray = text.split('').slice(0, 6);
+      setOtp(otpArray);
+      
+      setTimeout(() => {
+        if (mountedRef.current && inputRefs.current[5]) {
+          inputRefs.current[5]?.focus();
+        }
+      }, 0);
+      
+      setTimeout(() => {
+        handleSubmit();
+      }, 200);
+      return;
     }
 
     if (/^\d?$/.test(text)) {
@@ -1111,23 +586,27 @@ const OtpVerificationModal: React.FC<OtpVerificationModalProps> = ({
 
       if (text && index < 5) {
         setTimeout(() => {
-          inputRefs.current[index + 1]?.focus();
-        }, 10);
+          if (mountedRef.current && inputRefs.current[index + 1]) {
+            inputRefs.current[index + 1]?.focus();
+          }
+        }, 0);
       }
 
       if (!text && index > 0) {
         setTimeout(() => {
-          inputRefs.current[index - 1]?.focus();
-        }, 10);
+          if (mountedRef.current && inputRefs.current[index - 1]) {
+            inputRefs.current[index - 1]?.focus();
+          }
+        }, 0);
       }
 
-      // Auto submit when all 6 digits entered
       if (index === 5 && text) {
-        const otpString = [...newOtp].join('');
+        const otpString = newOtp.join('');
         if (otpString.length === 6) {
+          Keyboard.dismiss();
           setTimeout(() => {
             handleSubmit();
-          }, 100);
+          }, 150);
         }
       }
     }
@@ -1135,7 +614,11 @@ const OtpVerificationModal: React.FC<OtpVerificationModalProps> = ({
 
   const handleKeyPress = (e: any, index: number) => {
     if (e.nativeEvent.key === 'Backspace' && !otp[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
+      setTimeout(() => {
+        if (mountedRef.current && inputRefs.current[index - 1]) {
+          inputRefs.current[index - 1]?.focus();
+        }
+      }, 0);
     }
   };
 
@@ -1147,14 +630,12 @@ const OtpVerificationModal: React.FC<OtpVerificationModalProps> = ({
       return;
     }
 
-    // Clear previous errors
     setLocalError('');
     Keyboard.dismiss();
     
     console.log('📤 Submitting OTP:', otpString);
     console.log('📧 For Email:', email);
     
-    // Dispatch OTP verification
     try {
       dispatch(setOtpVerificationRequest({
         email: email.trim().toLowerCase(),
@@ -1174,10 +655,14 @@ const OtpVerificationModal: React.FC<OtpVerificationModalProps> = ({
       setCanResend(false);
       setOtp(['', '', '', '', '', '']);
       setLocalError('');
-      inputRefs.current[0]?.focus();
       
-      // TODO: Call your resend OTP API here
-      // dispatch(setResendOtpRequest({ email }));
+      setTimeout(() => {
+        if (mountedRef.current && inputRefs.current[0]) {
+          inputRefs.current[0]?.focus();
+        }
+      }, 100);
+      
+      Alert.alert('Info', 'OTP has been resent to your email');
     }
   };
 
@@ -1189,7 +674,6 @@ const OtpVerificationModal: React.FC<OtpVerificationModalProps> = ({
     onCancel();
   };
 
-  // Display error - prioritize local error over redux error
   const displayError = localError || otpError;
 
   return (
@@ -1222,9 +706,10 @@ const OtpVerificationModal: React.FC<OtpVerificationModalProps> = ({
             onChangeText={(text) => handleOtpChange(text, index)}
             onKeyPress={(e) => handleKeyPress(e, index)}
             keyboardType="numeric"
-            maxLength={1}
+            maxLength={6}
             selectTextOnFocus
             editable={!otpLoading}
+            autoFocus={index === 0}
           />
         ))}
       </View>
@@ -1246,7 +731,11 @@ const OtpVerificationModal: React.FC<OtpVerificationModalProps> = ({
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.button, styles.submitButton, otpLoading && styles.buttonDisabled]}
+          style={[
+            styles.button, 
+            styles.submitButton, 
+            (otpLoading || otp.join('').length !== 6) && styles.buttonDisabled
+          ]}
           onPress={handleSubmit}
           disabled={otpLoading || otp.join('').length !== 6}
         >
@@ -1284,127 +773,143 @@ const OtpVerificationModal: React.FC<OtpVerificationModalProps> = ({
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
-    padding: 20,
+    padding: 24,
     borderRadius: 20,
+    minWidth: 300,
+    maxWidth: 400,
   },
   title: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 8,
     color: '#333',
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: 15,
     textAlign: 'center',
     color: '#666',
     marginBottom: 4,
   },
   emailText: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 24,
+    marginBottom: 32,
     color: '#003366',
   },
   errorContainer: {
-    backgroundColor: '#fee',
-    padding: 10,
+    backgroundColor: '#FEF2F2',
+    padding: 12,
     borderRadius: 8,
-    marginBottom: 16,
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: '#FECACA',
   },
   errorText: {
-    color: '#c00',
-    fontSize: 13,
+    color: '#DC2626',
+    fontSize: 14,
     textAlign: 'center',
+    fontWeight: '500',
   },
   otpContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 24,
-    paddingHorizontal: 10,
+    marginBottom: 32,
+    //paddingHorizontal: 10,
+    gap:1
   },
   otpInput: {
-    width: 45,
-    height: 50,
+    width: 48,
+    height: 56,
     borderWidth: 2,
-    borderColor: '#E0E0E0',
-    borderRadius: 10,
+    borderColor: '#E5E7EB',
+    borderRadius: 12,
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: '600',
-    color: '#333',
-    backgroundColor: '#F8F9FA',
+    color: '#1F2937',
+    backgroundColor: '#F9FAFB',
   },
   otpInputFilled: {
     borderColor: '#003366',
-    backgroundColor: '#F0F8FF',
+    backgroundColor: '#EFF6FF',
+    shadowColor: '#003366',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   otpInputError: {
-    borderColor: '#c00',
-    backgroundColor: '#fee',
+    borderColor: '#DC2626',
+    backgroundColor: '#FEF2F2',
   },
   loadingContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 16,
+    marginBottom: 24,
+    paddingVertical: 8,
   },
   loadingText: {
-    marginLeft: 8,
-    fontSize: 14,
+    marginLeft: 12,
+    fontSize: 15,
     color: '#003366',
     fontWeight: '500',
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 16,
+    marginBottom: 24,
+    gap: 12,
   },
   button: {
     flex: 1,
-    paddingVertical: 12,
-    borderRadius: 10,
-    marginHorizontal: 4,
+    paddingVertical: 14,
+    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
+    minHeight: 48,
   },
   buttonDisabled: {
-    opacity: 0.6,
+    opacity: 0.5,
   },
   cancelButton: {
-    backgroundColor: '#F8F9FA',
+    backgroundColor: '#F3F4F6',
     borderWidth: 1.5,
-    borderColor: '#E0E0E0',
+    borderColor: '#D1D5DB',
   },
   submitButton: {
     backgroundColor: '#003366',
   },
   cancelButtonText: {
-    color: '#666',
-    fontSize: 15,
+    color: '#4B5563',
+    fontSize: 16,
     fontWeight: '600',
   },
   submitButtonText: {
     color: '#fff',
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: '600',
   },
   resendButton: {
-    paddingVertical: 12,
-    borderRadius: 10,
+    paddingVertical: 14,
+    borderRadius: 12,
     alignItems: 'center',
+    backgroundColor: '#F3F4F6',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
   },
   resendButtonDisabled: {
     opacity: 0.5,
   },
   resendText: {
-    fontSize: 14,
+    fontSize: 15,
     color: '#003366',
     fontWeight: '600',
   },
   resendTextDisabled: {
-    color: '#666',
+    color: '#6B7280',
   },
 });
 

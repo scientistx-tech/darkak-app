@@ -73,6 +73,13 @@ export default function RootLayout() {
                   title: 'Contact Us',
                 }} 
               />
+               <Drawer.Screen 
+                name="logOut" 
+                options={{ 
+                  headerShown: false,
+                  title: 'LogOut',
+                }} 
+              />
               <Drawer.Screen 
                 name="product/index" 
                 options={{ 
