@@ -2,8 +2,13 @@ import { BannerCard } from '@/components/banner/banner-card';
 import { Colors, Spacing } from '@/constants/theme';
 import { mockBanners } from '@/data/mock-data';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { getSliderRequest } from '@/redux/actions/slider.action';
+import { RootState } from '@/redux/store';
+import { useFocusEffect } from '@react-navigation/native';
+import React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { Dimensions, FlatList, StyleSheet, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 
 export function BannerSection() {
   const colorScheme = useColorScheme() ?? 'light';
@@ -12,6 +17,20 @@ export function BannerSection() {
   const bannerWidth = screenWidth - Spacing.base * 2;
   const flatListRef = useRef<FlatList<any> | null>(null);
   const [bannerIndex, setBannerIndex] = useState(0);
+
+  const dispatch = useDispatch();
+
+
+  const sliderDataHeader = useSelector((state:RootState)=>state.sliderAll);
+
+  console.log("slider data shown:---------",sliderDataHeader);
+
+
+  useFocusEffect(
+    React.useCallback(() => {
+      dispatch(getSliderRequest());
+    }, [dispatch]),
+  );
 
   useEffect(() => {
     if (!mockBanners || mockBanners.length <= 1) return;

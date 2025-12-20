@@ -204,6 +204,16 @@ export const registrationReducer = (
         error: action.payload,
       };
 
+      case actionTypes.SET_LOGOUT:
+      console.log("Reducer: SET_LOGOUT triggered");
+      return {
+        ...initialState,
+        // If you want to preserve some data during logout (like registration form fields), 
+        // you can modify this to only reset certain fields:
+        // registrationRequest: state.registrationRequest, // Keep registration form data
+        // resetPasswordRequest: state.resetPasswordRequest, // Keep reset password email
+      };
+
     //reset password
 
      case actionTypes.SET_RESETPASSWORD_REQUEST:

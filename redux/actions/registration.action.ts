@@ -81,7 +81,12 @@ const setLogInUserFailure = (payload: string) => {
   };
 };
 
-//
+//log out 
+const setLogoutUser = () => {
+  return {
+    type: actionTypes.SET_LOGOUT,
+  };
+};
 
 const setResetPasswordRequest = (payload: IResetPasswordRequest) => {
   return {
@@ -117,5 +122,6 @@ export {
   setLogInUserFailure,
   setResetPasswordRequest,
   setResetPasswordSuccess,
-  setResetPasswordFailure
+  setResetPasswordFailure,
+   setLogoutUser
 };
