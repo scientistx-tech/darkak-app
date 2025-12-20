@@ -1,30 +1,40 @@
+import React, { useEffect, useRef, useState } from 'react';
+import { Dimensions, FlatList, StyleSheet, View } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
+
 import { BannerCard } from '@/components/banner/banner-card';
 import { Colors, Spacing } from '@/constants/theme';
-import { mockBanners } from '@/data/mock-data';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { getSliderRequest } from '@/redux/actions/slider.action';
 import { RootState } from '@/redux/store';
-import { useFocusEffect } from '@react-navigation/native';
-import React from 'react';
-import { useEffect, useRef, useState } from 'react';
-import { Dimensions, FlatList, StyleSheet, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import type { Banner } from '@/types';
 
 export function BannerSection() {
   const colorScheme = useColorScheme() ?? 'light';
   const colors = Colors[colorScheme];
-  const screenWidth = Dimensions.get('window').width;
-  const bannerWidth = screenWidth - Spacing.base * 2;
-  const flatListRef = useRef<FlatList<any> | null>(null);
-  const [bannerIndex, setBannerIndex] = useState(0);
-
   const dispatch = useDispatch();
 
+  const screenWidth = Dimensions.get('window').width;
+  const bannerWidth = screenWidth - Spacing.base * 2;
 
-  const sliderDataHeader = useSelector((state:RootState)=>state.sliderAll);
+  // Correct ref typing
+  const flatListRef = useRef<FlatList<Banner>>(null);
+  const [bannerIndex, setBannerIndex] = useState(0);
 
-  console.log("slider data shown:---------",sliderDataHeader);
+  const sliderState = useSelector((state: RootState) => state.sliderAll);
 
+  //  API → Banner mapping
+  const banners: Banner[] =
+    sliderState?.sliderData?.map((item: any) => ({
+      id: String(item.id),
+      title: item.title,
+      subtitle: item.details,
+      image: item.banner,
+      discount: item.offer_name,
+      actionText: 'Shop Now',
+      backgroundColor: ['#4F46E5', '#3B82F6'],
+    })) ?? [];
 
   useFocusEffect(
     React.useCallback(() => {
@@ -33,29 +43,32 @@ export function BannerSection() {
   );
 
   useEffect(() => {
-    if (!mockBanners || mockBanners.length <= 1) return;
+    if (banners.length <= 1) return;
+
     const interval = setInterval(() => {
-      setBannerIndex((prev) => (prev + 1) % mockBanners.length);
+      setBannerIndex((prev) => (prev + 1) % banners.length);
     }, 3500);
+
     return () => clearInterval(interval);
-  }, []);
+  }, [banners.length]);
 
   useEffect(() => {
     if (!flatListRef.current) return;
-    const offset = bannerIndex * (bannerWidth + Spacing.md);
-    try {
-      flatListRef.current.scrollToOffset({ offset, animated: true });
-    } catch {
-      // ignore scroll errors
-    }
+
+    flatListRef.current.scrollToOffset({
+      offset: bannerIndex * (bannerWidth + Spacing.md),
+      animated: true,
+    });
   }, [bannerIndex, bannerWidth]);
+
+  if (!banners.length) return null;
 
   return (
     <View style={styles.container}>
       <FlatList
-        ref={(r) => { flatListRef.current = r; }}
+        ref={flatListRef}                
         horizontal
-        data={mockBanners}
+        data={banners}
         keyExtractor={(item) => item.id}
         showsHorizontalScrollIndicator={false}
         pagingEnabled
@@ -65,18 +78,22 @@ export function BannerSection() {
         contentContainerStyle={styles.bannerList}
         renderItem={({ item }) => (
           <View style={{ width: bannerWidth, marginRight: Spacing.sm }}>
-            <BannerCard banner={item} onPress={() => {}} />
+            <BannerCard banner={item} />
           </View>
         )}
       />
 
+      {/* 🔹 Dots indicator */}
       <View style={styles.dotsContainer}>
-        {mockBanners.map((_, idx) => (
+        {banners.map((_, idx) => (
           <View
-            key={`dot-${idx}`}
+            key={idx}
             style={[
               styles.dot,
-              { backgroundColor: idx === bannerIndex ? colors.primary : '#D6E1F2' },
+              {
+                backgroundColor:
+                  idx === bannerIndex ? colors.primary : '#D6E1F2',
+              },
             ]}
           />
         ))}
@@ -94,7 +111,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop:10,
+    marginTop: 10,
   },
   dot: {
     width: 8,
