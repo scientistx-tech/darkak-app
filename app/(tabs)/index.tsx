@@ -400,7 +400,7 @@ export default function HomeScreen() {
       </View>
 
       {/* Search Section - With Padding */}
-      <View style={styles.searchContainer}>
+      {/* <View style={styles.searchContainer}>
         <View style={styles.searchSection}>
           <View style={{ flex: 1 }}>
             <SearchBar
@@ -430,7 +430,7 @@ export default function HomeScreen() {
             <View style={[styles.badge, { backgroundColor: colors.primary }]} />
           </TouchableOpacity>
         </View>
-      </View>
+      </View> */}
 
       <ScrollView
         style={styles.scrollView}
@@ -584,6 +584,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     flex: 1,
+    marginTop:25,
   },
   scrollContent: {
     paddingBottom: Spacing.xl,
