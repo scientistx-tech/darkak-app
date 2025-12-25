@@ -3,5 +3,7 @@ const verifyOtp = '/auth/verify-email-otp';
 const LogIn = '/auth/login-with-email';
 const resetPassword = '/auth/password-reset-mail';
 const sliderHead = '/public/slider?limit=20&sort=slider';
+const featureProduct = '/public/featured';
+const mostVisited = '/public/most-visited';
 
-export{ registration,verifyOtp,LogIn,resetPassword,sliderHead}
+export{ registration,verifyOtp,LogIn,resetPassword,sliderHead,featureProduct,mostVisited}

@@ -346,7 +346,7 @@ import FooterQuestionSection from "@/components/home/FooterQuestionSection";
 import FooterUpperSection from "@/components/home/FooterUpperSection";
 import { HotDealsSection } from "@/components/home/HotDealsSection";
 import InfoCardsSection from "@/components/home/InfoCardsSection";
-import HomePage from "@/components/home/ProductCaroselSection";
+//import HomePage from "@/components/home/ProductCaroselSection";
 import MobileFooter from "@/components/mobileFooter/MobileFooter";
 import NewsletterSubscribeCard from "@/components/newsletterSubscribeCard/NewsletterSubscribeCard";
 import { SearchBar } from "@/components/search/SearchBarNative";
@@ -367,6 +367,8 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import HeaderComponent from "@/components/headerComponent/HeaderComponent";
+import FeaturedProductSection from "@/components/home/FeaturedProductSection";
+import MostVisitedProductSection from "@/components/home/MostVisitedProductSection";
 
 export default function HomeScreen() {
   const colorScheme = useColorScheme() ?? "light";
@@ -475,7 +477,8 @@ export default function HomeScreen() {
           <Text style = {styles.featProduct}>FEATURE PRODUCTS</Text>
           <AntDesign name="arrow-right" size={24} color="black" />
         </View>
-        <HomePage />
+        {/* <HomePage /> */}
+        <FeaturedProductSection/>
 
         <View style={[styles.section, { paddingHorizontal: 5 }]}>
           <BannerCard banner={bannerData1} />
@@ -489,7 +492,8 @@ export default function HomeScreen() {
           <Text style = {styles.featProduct}>MOST VISITED</Text>
           <AntDesign name="arrow-right" size={24} color="black" />
         </View>
-        <HomePage />
+        {/* <HomePage /> */}
+        <MostVisitedProductSection/>
 
         <View style={[styles.section, { paddingHorizontal: 5 }]}>
           <BannerCard banner={bannerData1} />
@@ -503,7 +507,7 @@ export default function HomeScreen() {
           <Text style = {styles.featProduct}>BEST SELLING PRODUCTS</Text>
           <AntDesign name="arrow-right" size={24} color="black" />
         </View>
-        <HomePage />
+        {/* <HomePage /> */}
 
         <View style={[styles.section, { paddingHorizontal: 5 }]}>
           <BannerCard banner={bannerData1} />
@@ -518,13 +522,13 @@ export default function HomeScreen() {
           <AntDesign name="arrow-right" size={24} color="black" />
         </View>
 
-        <HomePage />
+        {/* <HomePage /> */}
 
         <View style={styles.iconContainer}>
           <Text style = {styles.featProduct}>TODAYS DEAL</Text>
           <AntDesign name="arrow-right" size={24} color="black" />
         </View>
-        <HomePage />
+        {/* <HomePage /> */}
 
         <FooterUpperSection />
         <FooterQuestionSection />
