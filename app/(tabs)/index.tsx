@@ -369,6 +369,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import HeaderComponent from "@/components/headerComponent/HeaderComponent";
 import FeaturedProductSection from "@/components/home/FeaturedProductSection";
 import MostVisitedProductSection from "@/components/home/MostVisitedProductSection";
+import MostSellingProductSection from "@/components/home/MostSellingProductSection";
 
 export default function HomeScreen() {
   const colorScheme = useColorScheme() ?? "light";
@@ -508,6 +509,7 @@ export default function HomeScreen() {
           <AntDesign name="arrow-right" size={24} color="black" />
         </View>
         {/* <HomePage /> */}
+        <MostSellingProductSection/>
 
         <View style={[styles.section, { paddingHorizontal: 5 }]}>
           <BannerCard banner={bannerData1} />
