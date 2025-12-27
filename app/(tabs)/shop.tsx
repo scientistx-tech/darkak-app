@@ -80,14 +80,14 @@ const Cart = () => {
           />
         </View>
 
-        <View style={styles.searchContainer}>
+        {/* <View style={styles.searchContainer}>
           <SearchBar
             value={searchQuery}
             onChangeText={setSearchQuery}
             onFilterPress={handleFilterPress}
             placeholder="Search products..."
           />
-        </View>
+        </View> */}
 
         <HomePage />
         <HomePage />
