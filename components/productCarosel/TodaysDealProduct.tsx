@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -6,17 +6,32 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
-  ScrollView,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { ProductCardProps } from "@/types/productCaroselInterface/productcaroselType";
+
+// MostSellingProductProps থেকে TodaysDealProductProps
+export interface TodaysDealProductProps {
+  id: string; // string হিসেবে রাখুন
+  productName: string;
+  originalPrice: number;
+  discountedPrice: number;
+  discountPercentage: number;
+  images: string[];
+  stock: number;
+  onPressBuy: () => void;
+  onPressAddToCart: () => void;
+  onPressPreOrder: () => void;
+  onPressFavorite: () => void;
+  onPressView: () => void;
+  onPressCompare: () => void;
+}
 
 const { width } = Dimensions.get("window");
 const CARD_MARGIN = 8;
 export const CARD_WIDTH = width / 2 - CARD_MARGIN * 2;
 
-const ProductCaosel: React.FC<ProductCardProps> = ({
+const TodaysDealProduct: React.FC<TodaysDealProductProps> = ({
   id, 
   productName,
   originalPrice,
@@ -31,71 +46,36 @@ const ProductCaosel: React.FC<ProductCardProps> = ({
   onPressView,
   onPressCompare,
 }) => {
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const scrollRef = useRef<ScrollView>(null);
   const router = useRouter();
 
-  // Auto Image Slider
-  useEffect(() => {
-    if (images.length === 0) return;
-
-    const interval = setInterval(() => {
-      setActiveImageIndex((prev) => {
-        const next = (prev + 1) % images.length;
-        scrollRef.current?.scrollTo({ x: next * CARD_WIDTH, animated: true });
-        return next;
-      });
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [images.length]);
-
-  const onScroll = (e: any) => {
-    const x = e.nativeEvent.contentOffset.x;
-    const index = Math.round(x / CARD_WIDTH);
-    setActiveImageIndex(index);
-  };
-
   const handleOnPressCard = () => {
-
     router.push(`/product/${id}`);
   };
 
+  // শুধু প্রথম ইমেজটি নিন
+  const mainImage = images && images.length > 0 ? images[0] : 'https://via.placeholder.com/200';
+
   return (
     <TouchableOpacity onPress={() => handleOnPressCard()} style={styles.card}>
-      {/* IMAGE SLIDER */}
-      <View style={styles.imageSliderContainer}>
-        <ScrollView
-          ref={scrollRef}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onScroll={onScroll}
-          scrollEventThrottle={16}
-        >
-          {images.map((img, i) => (
-            <Image
-              key={i}
-              source={{ uri: img }}
-              style={[styles.productImage, { width: CARD_WIDTH }]}
-            />
-          ))}
-        </ScrollView>
+      {/* TODAY'S DEAL BADGE */}
+      {/* <View style={styles.dealBadge}>
+        <Text style={styles.dealBadgeText}>🔥 DEAL</Text>
+      </View> */}
 
-        {/* PAGINATION */}
-        <View style={styles.pagination}>
-          {images.map((_, i) => (
-            <View
-              key={i}
-              style={[styles.dot, activeImageIndex === i && styles.dotActive]}
-            />
-          ))}
-        </View>
+      {/* SINGLE IMAGE (NO SLIDER) */}
+      <View style={styles.imageContainer}>
+        <Image
+          source={{ uri: mainImage }}
+          style={styles.productImage}
+          resizeMode="cover"
+        />
 
         {/* DISCOUNT BADGE */}
-        <View style={styles.discountBadge}>
-          <Text style={styles.discountText}>{discountPercentage}% OFF</Text>
-        </View>
+        {discountPercentage > 0 && (
+          <View style={styles.discountBadge}>
+            <Text style={styles.discountText}>{discountPercentage}% OFF</Text>
+          </View>
+        )}
 
         {/* ACTION BUTTONS */}
         <View style={styles.actionButtons}>
@@ -120,8 +100,14 @@ const ProductCaosel: React.FC<ProductCardProps> = ({
       {/* DETAILS */}
       <View style={styles.detailsContainer}>
         <View style={styles.priceContainer}>
-          <Text style={styles.originalPrice}>{originalPrice} BDT</Text>
-          <Text style={styles.discountedPrice}>{discountedPrice} BDT</Text>
+          {discountPercentage > 0 ? (
+            <>
+              <Text style={styles.originalPrice}>{originalPrice} BDT</Text>
+              <Text style={styles.discountedPrice}>{discountedPrice} BDT</Text>
+            </>
+          ) : (
+            <Text style={styles.discountedPrice}>{originalPrice} BDT</Text>
+          )}
         </View>
 
         <Text style={styles.productName} numberOfLines={2}>
@@ -163,90 +149,105 @@ const styles = StyleSheet.create({
     width: CARD_WIDTH,
     overflow: "hidden",
     elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
-  imageSliderContainer: {
+  dealBadge: {
+    position: "absolute",
+    top: 10,
+    right: 0,
+    backgroundColor: "#FF6B6B",
+    paddingVertical: 3,
+    paddingHorizontal: 8,
+    borderTopLeftRadius: 6,
+    borderBottomLeftRadius: 6,
+    zIndex: 2,
+  },
+  dealBadgeText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 10,
+    fontFamily: "System",
+  },
+  imageContainer: {
     width: "100%",
     height: 180,
-    backgroundColor: "#fff",
+    backgroundColor: "#f8f8f8",
     position: "relative",
   },
   productImage: {
-    height: "85%",
+    width: "100%",
+    height: "100%",
     resizeMode: "cover",
   },
-
-  pagination: {
-    position: "absolute",
-    bottom: 10,
-    flexDirection: "row",
-    alignSelf: "center",
-  },
-  dot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: "rgba(0,0,0,0.2)",
-    marginHorizontal: 3,
-  },
-  dotActive: {
-    width: 24,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: "#003366",
-    marginHorizontal: 3,
-  },
-
   discountBadge: {
     position: "absolute",
     top: 10,
     left: 0,
     backgroundColor: "#003366",
     paddingVertical: 4,
-    paddingHorizontal: 10,
+    paddingHorizontal: 8,
     borderTopRightRadius: 6,
     borderBottomRightRadius: 6,
+    zIndex: 2,
   },
-  discountText: { color: "#fff", fontWeight: "bold", fontSize: 12 },
-
+  discountText: { 
+    color: "#fff", 
+    fontWeight: "bold", 
+    fontSize: 10 
+  },
   actionButtons: {
     position: "absolute",
-    top: 10,
-    right: 10,
+    top: 8,
+    right: 8,
   },
   actionButton: {
     backgroundColor: "rgba(255,255,255,0.85)",
-    padding: 5,
+    padding: 4,
     borderRadius: 20,
     marginBottom: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
-
-  detailsContainer: { padding: 10 },
+  detailsContainer: { 
+    padding: 12,
+    paddingBottom: 14 
+  },
   priceContainer: {
     flexDirection: "row",
     alignItems: "baseline",
+    marginBottom: 6,
   },
   originalPrice: {
     textDecorationLine: "line-through",
     color: "#999",
     fontSize: 12,
     marginRight: 6,
+    fontFamily: "System",
   },
   discountedPrice: {
     fontSize: 16,
     fontWeight: "bold",
     color: "#003366",
+    fontFamily: "System",
   },
   productName: {
     fontSize: 14,
     color: "#333",
-    marginTop: 6,
-    minHeight: 38,
+    minHeight: 40,
+    marginBottom: 10,
+    lineHeight: 18,
+    fontFamily: "System",
   },
-
   buyRow: {
     flexDirection: "row",
-    marginTop: 10,
     justifyContent: "space-between",
+    alignItems: "center",
   },
   buyButton: {
     flex: 1,
@@ -256,30 +257,34 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginRight: 8,
   },
-  buyButtonText: { color: "#fff", fontSize: 14, fontWeight: "bold" },
-
+  buyButtonText: { 
+    color: "#fff", 
+    fontSize: 14, 
+    fontWeight: "bold",
+    fontFamily: "System",
+  },
   cartButton: {
-    width: 48,
-    height: 48,
+    width: 40,
+    height: 40,
     borderWidth: 2,
     borderColor: "#003366",
     borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "white",
   },
-
   preOrderButton: {
     backgroundColor: "#003366",
     paddingVertical: 10,
     borderRadius: 8,
-    marginTop: 10,
     alignItems: "center",
   },
   preOrderButtonText: {
     color: "#fff",
     fontWeight: "bold",
     fontSize: 14,
+    fontFamily: "System",
   },
 });
 
-export default ProductCaosel;
+export default TodaysDealProduct;

@@ -23,6 +23,7 @@
       "predictiveBackGestureEnabled": false,
       "package": "com.shakib175.darkakapp",
       "jsEngine": "hermes"
+
     },
     "web": {
       "output": "static",

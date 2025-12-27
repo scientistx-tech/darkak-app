@@ -5,6 +5,8 @@ import { sliderReducer } from './slider.reducer';
 import featureProductReducer from './featureProduct.reducer';
 import mostVisitedReducer from './mostVisitedProduct.reducer';
 import mostSellingReducer from './mostsellingproduct.reducer';
+import newArrivalReducer from './newarrivalproduct.reducer';
+import todaysDealReducer from './todaysdealproduct.reducer';
 
 const rootReducer = combineReducers({
     counter: counterReducer,
@@ -13,6 +15,8 @@ const rootReducer = combineReducers({
     featureProductData:featureProductReducer,
     mostVisitedProductData:mostVisitedReducer,
     mostSellingProductData:mostSellingReducer,
+    newArrivalProductData:newArrivalReducer,
+    todaysDealProductData:todaysDealReducer,
 })
 
 export default rootReducer;
